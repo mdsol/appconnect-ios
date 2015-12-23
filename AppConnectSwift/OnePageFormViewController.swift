@@ -91,6 +91,7 @@ class OnePageFormViewController: UIViewController {
                         }
                     }
                 }
+                // Keep the datastore alive until after the request is completed
                 datastore = nil
             })
         }
