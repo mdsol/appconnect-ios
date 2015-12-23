@@ -77,18 +77,21 @@ class OnePageFormViewController: UIViewController {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             
-            client.sendResponsesForForm(self.form, inDatastore: self.datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
-                if error != nil {
-                    self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
-                } else {
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.showDialog("Success", message: "Your form has been submitted.") {
-                            self.navigationController?.popViewControllerAnimated(true)
+            let bgQueue = NSOperationQueue()
+            bgQueue.addOperationWithBlock {
+                let datastore = MDDatastoreFactory.create()
+                client.sendResponsesForForm(self.form, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+                    if error != nil {
+                        self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
+                    } else {
+                        NSOperationQueue.mainQueue().addOperationWithBlock {
+                            self.showDialog("Success", message: "Your form has been submitted.") {
+                                self.navigationController?.popViewControllerAnimated(true)
+                            }
                         }
                     }
-                }
-            })
-            
+                })
+            }
         }
     }
     
