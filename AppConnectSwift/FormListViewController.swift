@@ -12,15 +12,12 @@ class FormListViewController: UITableViewController {
 
     var objects = [AnyObject]()
     var userID : Int64!
-    var datastore : MDDatastore!
     
     var spinner : UIActivityIndicatorView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.datastore = MDDatastoreFactory.create()
-
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
         spinner.center = CGPointMake(160, 240);
         spinner.hidesWhenStopped = true;
@@ -49,7 +46,7 @@ class FormListViewController: UITableViewController {
     
     func loadForms() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            let datastore = MDDatastoreFactory.create()
+            var datastore = MDDatastoreFactory.create()
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             let user = datastore.userWithID(Int64(self.userID))
@@ -69,6 +66,7 @@ class FormListViewController: UITableViewController {
                             dispatch_async(dispatch_get_main_queue()) {
                                 self.populateForms()
                                 self.spinner.stopAnimating()
+                                datastore = nil
                             }
                         }
                     }
@@ -79,11 +77,11 @@ class FormListViewController: UITableViewController {
 
     func populateForms() {
         var forms : [MDForm]
-        
-        if let user = self.datastore.userWithID(Int64(self.userID)) {
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        if let user = datastore.userWithID(Int64(self.userID)) {
             let subjects = user.subjects as! [MDSubject]
             forms = subjects.map({ (subject : MDSubject) -> [MDForm] in
-                self.datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
+                datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
             }).reduce([], combine: +)
             self.objects = forms
         }

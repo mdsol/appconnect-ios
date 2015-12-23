@@ -11,12 +11,13 @@ import UIKit
 class FieldViewController: UIViewController {
 
     @IBOutlet var fieldHeader : UILabel!
-    
-    var datastore = MDDatastoreFactory.create()
-    
+        
     var field : MDField!
     var fieldID : Int64! {
-        didSet { field = datastore.fieldWithID(fieldID) }
+        didSet {
+            let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+            field = datastore.fieldWithID(fieldID)
+        }
     }
     
     override func viewDidLoad() {

@@ -11,11 +11,12 @@ import UIKit
 class OnePageFormViewController: UIViewController {
     var dataObject: String = ""
     
-    var datastore = MDDatastoreFactory.create()
-    
     var form : MDForm!
     var formID : Int64! {
-        didSet { form = self.datastore.formWithID(formID) }
+        didSet {
+            let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+            form = datastore.formWithID(formID)
+        }
     }
     
     @IBOutlet var formTitle : UILabel!
@@ -77,21 +78,21 @@ class OnePageFormViewController: UIViewController {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             
-            let bgQueue = NSOperationQueue()
-            bgQueue.addOperationWithBlock {
-                let datastore = MDDatastoreFactory.create()
-                client.sendResponsesForForm(self.form, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
-                    if error != nil {
-                        self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
-                    } else {
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
-                            self.showDialog("Success", message: "Your form has been submitted.") {
-                                self.navigationController?.popViewControllerAnimated(true)
-                            }
+            //let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+            var datastore = MDDatastoreFactory.create()
+            let f = datastore.formWithID(self.formID)
+            client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+                if error != nil {
+                    self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
+                } else {
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.showDialog("Success", message: "Your form has been submitted.") {
+                            self.navigationController?.popViewControllerAnimated(true)
                         }
                     }
-                })
-            }
+                }
+                datastore = nil
+            })
         }
     }
     
