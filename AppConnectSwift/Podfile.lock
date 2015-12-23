@@ -1,0 +1,42 @@
+PODS:
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Babbage (1.1-pre.127):
+    - AFNetworking (= 2.5.3)
+    - HTMLReader (~> 0.7.1)
+    - OpenSSL-Universal (~> 1.0.1j)
+    - UICKeyChainStore (= 2.0.6)
+  - HTMLReader (0.7.1)
+  - OpenSSL-Universal (1.0.1.q)
+  - UICKeyChainStore (2.0.6)
+
+DEPENDENCIES:
+  - Babbage (~> 1.1-pre)
+
+SPEC CHECKSUMS:
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  Babbage: 06f5980ba61b4b74b0c632d3010284e427f7708b
+  HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
+  OpenSSL-Universal: 6166f82e7fef4f244d23e0f6df9569faf28e5147
+  UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
+
+COCOAPODS: 0.39.0

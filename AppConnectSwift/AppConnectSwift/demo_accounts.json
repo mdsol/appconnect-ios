@@ -1,0 +1,21 @@
+[
+     {
+         "name": "sample",
+         "username": "sample",
+         "firstName": "Sample",
+         "lastName": "User",
+         "pin": "1111",
+         "password": "Sample1234",
+         "uuid": "mock-uuid",
+         "studies": [
+             {
+                 "name": "Sample SDK Study",
+                 "baseURL": "http://eprodemo.mdsol.com",
+                 "uuid": "000000-0000-0000-000000000001",
+                 "baseDate": "20 JAN 2013 06:00",
+                 "isJSON": 1,
+                 "taskFile": "sample"
+             }
+         ]
+     }
+ ]
