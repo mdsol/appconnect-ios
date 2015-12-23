@@ -85,10 +85,10 @@
             </objects>
             <point key="canvasLocation" x="1417" y="-521"/>
         </scene>
-        <!--View Controller-->
+        <!--Field View Controller-->
         <scene sceneID="n5F-F5-YEy">
             <objects>
-                <viewController id="sE8-kf-7A1" sceneMemberID="viewController">
+                <viewController id="sE8-kf-7A1" customClass="FieldViewController" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="Wqd-pE-JAE"/>
                         <viewControllerLayoutGuide type="bottom" id="UnR-Ut-KzY"/>
@@ -96,7 +96,18 @@
                     <view key="view" contentMode="scaleToFill" id="4b0-58-sRT">
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
+                        <subviews>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g58-uL-Wvm">
+                                <rect key="frame" x="279" y="44" width="42" height="21"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                        </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstItem="g58-uL-Wvm" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="2YW-8X-Phn"/>
+                        </constraints>
                     </view>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ba6-Xv-thF" userLabel="First Responder" sceneMemberID="firstResponder"/>
@@ -206,7 +217,7 @@
                                     <constraint firstAttribute="width" constant="200" id="P6H-J1-cUg"/>
                                 </constraints>
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
-                                <textInputTraits key="textInputTraits"/>
+                                <textInputTraits key="textInputTraits" secureTextEntry="YES"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="jaW-EH-qfb">
                                 <rect key="frame" x="281" y="263" width="38" height="30"/>

@@ -14,13 +14,13 @@ class LoginViewController: UIViewController {
     @IBOutlet var passwordField : UITextField!;
     @IBOutlet var loginButton   : UIButton!;
     
-    var user : MDUser?
+    var userID : Int64?
     
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        usernameField.text = "sample" //"sub02@sqa.com"
-        passwordField.text = "Sample1234" //"Password1"
+        usernameField.text = "sdk@101.com" //"sub02@sqa.com"
+        passwordField.text = "Password90" //"Password1"
         
         MDClient.setEnvironment(.Validation);
 
@@ -37,15 +37,27 @@ class LoginViewController: UIViewController {
         let password = passwordField.text
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Demo);
+        let client = clientFactory.clientOfType(MDClientType.Network);
         
-        let datastore = MDDatastoreFactory.create()
-        
-        client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
-            if (user != nil) {
-                self.user = user
-                print("username: \(user.username)")
-                self.performSegueWithIdentifier("LoginSuccess", sender: nil)
+        let bgQueue = NSOperationQueue()
+        bgQueue.addOperationWithBlock {
+            let datastore = MDDatastoreFactory.create()
+            client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
+                if (user != nil) {
+                    self.userID = user.objectID
+                    print("username: \(user.username)")
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.performSegueWithIdentifier("LoginSuccess", sender: nil)
+                    }
+                } else if (error != nil) {
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        alert.addAction(
+                            UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
+                        )
+                        self.presentViewController(alert, animated: true, completion: nil)
+                    }
+                }
             }
         }
     }
@@ -54,7 +66,7 @@ class LoginViewController: UIViewController {
         if segue.identifier == "LoginSuccess" {
             let navigationController = segue.destinationViewController as! UINavigationController
             let formListViewController = navigationController.viewControllers.first as! FormListViewController
-            formListViewController.setUserID(self.user!.objectID)
+            formListViewController.setUserID(self.userID!)
         }
     }
 

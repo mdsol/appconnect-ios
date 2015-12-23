@@ -71,7 +71,7 @@ class OnePageFormViewController: UIViewController {
     @IBAction func doSubmit(sender: AnyObject) {
         if validateResponses() {
             let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Demo);
+            let client = clientFactory.clientOfType(MDClientType.Network);
             
             client.sendResponsesForForm(self.form, inDatastore: self.datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
                 if error != nil {

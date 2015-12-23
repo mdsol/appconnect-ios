@@ -51,7 +51,7 @@ class FormListViewController: UITableViewController {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
             let datastore = MDDatastoreFactory.create()
             let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Demo);
+            let client = clientFactory.clientOfType(MDClientType.Network);
             let user = datastore.userWithID(Int64(self.userID))
 
             // TODO: - load the forms sequentially (or ensure that populateForms is called only once all have loaded)
