@@ -37,18 +37,22 @@ class OnePageFormViewController: UIViewController {
         formTitle.text = form.name
         
         for field in form.fields {
+            print("fieldOID: \(field.fieldOID)")
+            print("fieldName: \(field.name)")
+            print("fieldHeader: \(field.header)")
+            print("fieldLabel: \(field.label)")
             switch field.fieldOID {
-            case "FIELD1":
+            case "TEXTFIELD1":
                 let tf = field as! MDTextField
-                field1Label.text = tf.header
+                field1Label.text = tf.label
                 field1Response.placeholder = "Max Length: \(tf.maximumResponseLength)"
-            case "FIELD2":
+            case "NUMBERS":
                 let nf = field as! MDNumericField
-                field2Label.text = nf.header
+                field2Label.text = nf.label
                 field2Response.placeholder = numericFieldFormat(nf);
-            case "FIELD3":
+            case "NUMERICVALUE":
                 let nf = field as! MDNumericField
-                field3Label.text = nf.header
+                field3Label.text = nf.label
                 field3Response.placeholder = numericFieldFormat(nf);
             default:
                 break
@@ -77,8 +81,10 @@ class OnePageFormViewController: UIViewController {
                 if error != nil {
                     self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
                 } else {
-                    self.showDialog("Success", message: "Your form has been submitted.") {
-                        self.navigationController?.popViewControllerAnimated(true)
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.showDialog("Success", message: "Your form has been submitted.") {
+                            self.navigationController?.popViewControllerAnimated(true)
+                        }
                     }
                 }
             })
