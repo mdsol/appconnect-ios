@@ -51,18 +51,20 @@ class FormListViewController: UITableViewController {
             let client = clientFactory.clientOfType(MDClientType.Network);
             let user = datastore.userWithID(Int64(self.userID))
 
+            var loadedSubjects : [MDSubject] = []
             // TODO: - load the forms sequentially (or ensure that populateForms is called only once all have loaded)
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                if let error = error {
-                    print("error: \(error.localizedFailureReason), \(error.localizedDescription), \(error.code)")
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
+                guard error == nil else {
+                    dispatch_async(dispatch_get_main_queue(), {
                         self.spinner.stopAnimating()
                     })
                     return
                 }
+
                 for subject in subjects as! [MDSubject]! {
                     client.loadFormsForSubject(subject, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
-                        if subject.isEqualToSubject(subjects.last as! MDSubject) {
+                        loadedSubjects.append(subject)
+                        if loadedSubjects.count == subjects.count {
                             dispatch_async(dispatch_get_main_queue()) {
                                 self.populateForms()
                                 self.spinner.stopAnimating()

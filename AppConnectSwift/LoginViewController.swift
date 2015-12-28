@@ -22,17 +22,14 @@ class LoginViewController: UIViewController {
         usernameField.text = "sdk@101.com" //"sub02@sqa.com"
         passwordField.text = "Password90" //"Password1"
         
+        loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
+        
         MDClient.setEnvironment(.Validation);
-
-        // Do any additional setup after loading the view.
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
     }
     
     @IBAction func doLogin(sender: UIButton) {
+        loginButton.enabled = false
+        
         let username = usernameField.text
         let password = passwordField.text
         
@@ -45,9 +42,9 @@ class LoginViewController: UIViewController {
             client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
                 if (user != nil) {
                     self.userID = user.objectID
-                    print("username: \(user.username)")
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.performSegueWithIdentifier("LoginSuccess", sender: nil)
+                        self.loginButton.enabled = true
                     }
                 } else if (error != nil) {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -56,6 +53,7 @@ class LoginViewController: UIViewController {
                             UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
                         )
                         self.presentViewController(alert, animated: true, completion: nil)
+                        self.loginButton.enabled = true
                     }
                 }
             }
