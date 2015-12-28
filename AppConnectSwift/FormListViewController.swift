@@ -45,7 +45,8 @@ class FormListViewController: UITableViewController {
     }
     
     func loadForms() {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
+        let bgQueue = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             var datastore = MDDatastoreFactory.create()
@@ -56,9 +57,9 @@ class FormListViewController: UITableViewController {
             
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
                 guard error == nil else {
-                    dispatch_async(dispatch_get_main_queue(), {
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.spinner.stopAnimating()
-                    })
+                    }
                     return
                 }
 
@@ -68,7 +69,7 @@ class FormListViewController: UITableViewController {
                         
                         // When all subjects have been loaded, populate the UI and stop the spinner
                         if loadedSubjects.count == subjects.count {
-                            dispatch_async(dispatch_get_main_queue()) {
+                            NSOperationQueue.mainQueue().addOperationWithBlock {
                                 self.populateForms()
                                 self.spinner.stopAnimating()
                                 datastore = nil
