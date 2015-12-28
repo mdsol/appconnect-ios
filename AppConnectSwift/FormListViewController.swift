@@ -112,7 +112,7 @@ class FormListViewController: UITableViewController {
                 let controller = segue.destinationViewController as! OnePageFormViewController
                 controller.setFormID(form.objectID)
             } else if form.formOID == "FORM2" {
-                let controller = segue.destinationViewController as! OnePageFormViewController
+                let controller = segue.destinationViewController as! MultiPageFormViewController
                 controller.setFormID(form.objectID)
             }
         }
@@ -122,7 +122,7 @@ class FormListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let form = objects[indexPath.row] as! MDForm
-        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowOnePageForm"][form.formOID]
+        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
         performSegueWithIdentifier(sequeIdentifier!, sender: self)
     }
 

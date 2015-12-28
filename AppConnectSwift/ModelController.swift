@@ -20,30 +20,29 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    var pageData: [String] = []
-
-
-    override init() {
-        super.init()
-        // Create the data model.
-        let dateFormatter = NSDateFormatter()
-        pageData = dateFormatter.monthSymbols
-    }
+    var fields: [MDField] = []
 
     func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> FieldViewController? {
         // Return the data view controller for the given index.
-        if (self.pageData.count == 0) || (index >= self.pageData.count) {
+        if (self.fields.count == 0) || (index >= self.fields.count) {
             return nil
         }
 
         // Create a new view controller and pass suitable data.
-        let dataViewController = storyboard.instantiateViewControllerWithIdentifier("DataViewController") as! FieldViewController
-        return dataViewController
+        let fieldViewController = storyboard.instantiateViewControllerWithIdentifier("FieldViewController") as! FieldViewController
+        fieldViewController.fieldID = fields[index].objectID
+        return fieldViewController
     }
 
     func indexOfViewController(viewController: FieldViewController) -> Int {
         // Return the index of the given data view controller.
         // For simplicity, this implementation uses a static array of model objects and the view controller stores the model object; you can therefore use the model object to identify the index.
+        
+        for (index, field) in fields.enumerate() {
+            if field.objectID == viewController.fieldID {
+                return index
+            }
+        }
         return 0
     }
 
@@ -66,7 +65,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         }
         
         index++
-        if index == self.pageData.count {
+        if index == self.fields.count {
             return nil
         }
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)

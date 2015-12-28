@@ -22,7 +22,7 @@ class FieldViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fieldHeader.text = field.header
+        fieldHeader.text = field.label
         // Do any additional setup after loading the view.
     }
 
