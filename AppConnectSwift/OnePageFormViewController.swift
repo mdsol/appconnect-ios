@@ -1,5 +1,5 @@
 //
-//  DataViewController.swift
+//  OnePageFormViewController.swift
 //  AppConnectSample
 //
 //  Created by Steve Roy on 2015-12-16.
@@ -11,8 +11,8 @@ import UIKit
 class OnePageFormViewController: UIViewController {
     var dataObject: String = ""
     
-    var form : MDForm!
-    private(set) var formID : Int64! {
+    private var form : MDForm!
+    var formID : Int64! {
         didSet {
             form = UIThreadDatastore().formWithID(formID)
         }

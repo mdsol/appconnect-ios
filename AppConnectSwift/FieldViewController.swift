@@ -12,7 +12,7 @@ class FieldViewController: UIViewController {
 
     @IBOutlet var fieldHeader : UILabel!
         
-    var field : MDField!
+    private var field : MDField!
     var fieldID : Int64! {
         didSet {
             field = UIThreadDatastore().fieldWithID(fieldID)
