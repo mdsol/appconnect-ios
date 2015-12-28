@@ -1,0 +1,6 @@
+Pods/
+build
+products
+.DS_Store
+xcuserdata/
+*.xccheckout

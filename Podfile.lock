@@ -1,0 +1,46 @@
+PODS:
+  - AFNetworking (2.5.3):
+    - AFNetworking/NSURLConnection (= 2.5.3)
+    - AFNetworking/NSURLSession (= 2.5.3)
+    - AFNetworking/Reachability (= 2.5.3)
+    - AFNetworking/Security (= 2.5.3)
+    - AFNetworking/Serialization (= 2.5.3)
+    - AFNetworking/UIKit (= 2.5.3)
+  - AFNetworking/NSURLConnection (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/NSURLSession (2.5.3):
+    - AFNetworking/Reachability
+    - AFNetworking/Security
+    - AFNetworking/Serialization
+  - AFNetworking/Reachability (2.5.3)
+  - AFNetworking/Security (2.5.3)
+  - AFNetworking/Serialization (2.5.3)
+  - AFNetworking/UIKit (2.5.3):
+    - AFNetworking/NSURLConnection
+    - AFNetworking/NSURLSession
+  - Babbage (1.1-pre.129):
+    - AFNetworking (= 2.5.3)
+    - HTMLReader (~> 0.7.1)
+    - OpenSSL-Universal (~> 1.0.1j)
+    - UICKeyChainStore (= 2.0.6)
+  - HTMLReader (0.7.1)
+  - OpenSSL-Universal (1.0.1.16)
+  - UICKeyChainStore (2.0.6)
+
+DEPENDENCIES:
+  - Babbage (from `AppConnectSwift/Babbage.podspec`)
+
+EXTERNAL SOURCES:
+  Babbage:
+    :podspec: AppConnectSwift/Babbage.podspec
+
+SPEC CHECKSUMS:
+  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
+  Babbage: ba588afb5f4a5cec3b1303fa5647834bf936e6e2
+  HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
+  OpenSSL-Universal: 85ef63bf81d0741b03c8719cd29685c37c59518d
+  UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
+
+COCOAPODS: 0.39.0
