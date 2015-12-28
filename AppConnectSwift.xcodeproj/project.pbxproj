@@ -13,6 +13,7 @@
 		5232B6E01C29B5B5006D10EC /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 5232B6DF1C29B5B5006D10EC /* sample.json */; settings = {ASSET_TAGS = (); }; };
 		5268D2A31C2497FC00C75096 /* FormListViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 5268D2A21C2497FC00C75096 /* FormListViewController.swift */; settings = {ASSET_TAGS = (); }; };
 		526B32951C249BD400C4DBB8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B32941C249BD400C4DBB8 /* LoginViewController.swift */; settings = {ASSET_TAGS = (); }; };
+		52EC841B1C31863900683D5B /* Babbage.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 52EC841A1C31863900683D5B /* Babbage.podspec */; settings = {ASSET_TAGS = (); }; };
 		AAE6D3411C21C355009B0C6B /* AppDelegate.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D3401C21C355009B0C6B /* AppDelegate.swift */; };
 		AAE6D3431C21C355009B0C6B /* MultiPageFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D3421C21C355009B0C6B /* MultiPageFormViewController.swift */; };
 		AAE6D3451C21C355009B0C6B /* OnePageFormViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = AAE6D3441C21C355009B0C6B /* OnePageFormViewController.swift */; };
@@ -29,6 +30,7 @@
 		5232B6DF1C29B5B5006D10EC /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
 		5268D2A21C2497FC00C75096 /* FormListViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FormListViewController.swift; sourceTree = "<group>"; };
 		526B32941C249BD400C4DBB8 /* LoginViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = LoginViewController.swift; sourceTree = "<group>"; };
+		52EC841A1C31863900683D5B /* Babbage.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Babbage.podspec; sourceTree = "<group>"; };
 		68B4DBFBB3AADD545AED0B96 /* libPods-AppConnectSwift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppConnectSwift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
 		7DBB722A8551C4664E43C24F /* Pods-AppConnectSwift.release.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppConnectSwift.release.xcconfig"; path = "Pods/Target Support Files/Pods-AppConnectSwift/Pods-AppConnectSwift.release.xcconfig"; sourceTree = "<group>"; };
 		AAB90CF91C21C69500B7D4C7 /* Babbage-Bridging-Header.h */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.c.h; path = "Babbage-Bridging-Header.h"; sourceTree = "<group>"; };
@@ -43,6 +45,7 @@
 		AAE6D3501C21C355009B0C6B /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
 		B28CB405AFD30F0E55793744 /* Pods-AppConnectSwift.debug.xcconfig */ = {isa = PBXFileReference; includeInIndex = 1; lastKnownFileType = text.xcconfig; name = "Pods-AppConnectSwift.debug.xcconfig"; path = "Pods/Target Support Files/Pods-AppConnectSwift/Pods-AppConnectSwift.debug.xcconfig"; sourceTree = "<group>"; };
 		B693BA43C0144AF8EB03E35A /* libPods-AppConnectSwift.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = "libPods-AppConnectSwift.a"; sourceTree = BUILT_PRODUCTS_DIR; };
+		F6DAE8BB5F5FE1980BF55F59 /* libPods.a */ = {isa = PBXFileReference; explicitFileType = archive.ar; includeInIndex = 0; path = libPods.a; sourceTree = BUILT_PRODUCTS_DIR; };
 /* End PBXFileReference section */
 
 /* Begin PBXFrameworksBuildPhase section */
@@ -63,6 +66,7 @@
 			children = (
 				68B4DBFBB3AADD545AED0B96 /* libPods-AppConnectSwift.a */,
 				B693BA43C0144AF8EB03E35A /* libPods-AppConnectSwift.a */,
+				F6DAE8BB5F5FE1980BF55F59 /* libPods.a */,
 			);
 			name = Frameworks;
 			sourceTree = "<group>";
@@ -109,6 +113,7 @@
 				AAE6D34B1C21C355009B0C6B /* Assets.xcassets */,
 				AAE6D34D1C21C355009B0C6B /* LaunchScreen.storyboard */,
 				AAE6D3501C21C355009B0C6B /* Info.plist */,
+				52EC841A1C31863900683D5B /* Babbage.podspec */,
 				5232B6DC1C29B49B006D10EC /* Supporting Files */,
 			);
 			name = AppConnectSample;
@@ -188,6 +193,7 @@
 				AAE6D34F1C21C355009B0C6B /* LaunchScreen.storyboard in Resources */,
 				AAE6D34C1C21C355009B0C6B /* Assets.xcassets in Resources */,
 				5232B6DE1C29B4BA006D10EC /* demo_accounts.json in Resources */,
+				52EC841B1C31863900683D5B /* Babbage.podspec in Resources */,
 				AAE6D34A1C21C355009B0C6B /* Main.storyboard in Resources */,
 				5232B6E01C29B5B5006D10EC /* sample.json in Resources */,
 			);
