@@ -100,15 +100,37 @@
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="8Ni-W6-SKr">
+                                <rect key="frame" x="121" y="114" width="358" height="224"/>
+                                <date key="date" timeIntervalSinceReferenceDate="473027251.025105">
+                                    <!--2015-12-28 20:27:31 +0000-->
+                                </date>
+                            </datePicker>
+                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2hn-W8-Gk7">
+                                <rect key="frame" x="121" y="140" width="358" height="172"/>
+                            </pickerView>
+                            <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Gc9-Q9-4tc">
+                                <rect key="frame" x="119" y="211" width="362" height="31"/>
+                            </slider>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="g58-uL-Wvm" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="2YW-8X-Phn"/>
-                            <constraint firstItem="g58-uL-Wvm" firstAttribute="top" secondItem="Wqd-pE-JAE" secondAttribute="bottom" constant="24" id="wgF-9Z-Iu5"/>
+                            <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="95O-T4-3aH"/>
+                            <constraint firstItem="2hn-W8-Gk7" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" priority="750" constant="-50" id="Xxy-ix-EAZ"/>
+                            <constraint firstItem="Gc9-Q9-4tc" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" priority="750" constant="-50" id="Y5B-uR-yrd"/>
+                            <constraint firstItem="8Ni-W6-SKr" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="e7l-lF-dnA"/>
+                            <constraint firstItem="g58-uL-Wvm" firstAttribute="top" secondItem="Wqd-pE-JAE" secondAttribute="bottom" constant="24" id="gZ4-lx-agb"/>
+                            <constraint firstItem="2hn-W8-Gk7" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="uYk-Jv-66A"/>
+                            <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="x1R-GD-6fD"/>
+                            <constraint firstItem="8Ni-W6-SKr" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" constant="-50" id="yBm-z9-T7h"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="dateField" destination="8Ni-W6-SKr" id="cIc-5c-qwV"/>
+                        <outlet property="dictionaryField" destination="2hn-W8-Gk7" id="IE2-ez-pQE"/>
                         <outlet property="fieldHeader" destination="g58-uL-Wvm" id="Chg-Ln-UcP"/>
+                        <outlet property="sliderField" destination="Gc9-Q9-4tc" id="Yhd-lw-ClM"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ba6-Xv-thF" userLabel="First Responder" sceneMemberID="firstResponder"/>

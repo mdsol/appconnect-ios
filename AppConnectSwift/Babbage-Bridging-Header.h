@@ -17,6 +17,7 @@
 #import <Babbage/MDDatastoreFactory.h>
 #import <Babbage/MDDateTimeField.h>
 #import <Babbage/MDDictionaryField.h>
+#import <Babbage/MDDictionaryResponse.h>
 #import <Babbage/MDDiscreteField.h>
 #import <Babbage/MDField.h>
 #import <Babbage/MDForm.h>
