@@ -12,7 +12,7 @@ class OnePageFormViewController: UIViewController {
     var dataObject: String = ""
     
     var form : MDForm!
-    var formID : Int64! {
+    private(set) var formID : Int64! {
         didSet {
             let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
             form = datastore.formWithID(formID)
@@ -74,27 +74,28 @@ class OnePageFormViewController: UIViewController {
     }
 
     @IBAction func doSubmit(sender: AnyObject) {
-        if validateResponses() {
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            
-            //let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
-            var datastore = MDDatastoreFactory.create()
-            let f = datastore.formWithID(self.formID)
-            client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
-                if error != nil {
-                    self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
-                } else {
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.showDialog("Success", message: "Your form has been submitted.") {
-                            self.navigationController?.popViewControllerAnimated(true)
-                        }
+        guard validateResponses() else {
+            return
+        }
+        
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Demo);
+        
+        var datastore = MDDatastoreFactory.create()
+        let f = datastore.formWithID(self.formID)
+        client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+            if error != nil {
+                self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
+            } else {
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.showDialog("Success", message: "Your form has been submitted.") {
+                        self.navigationController?.popViewControllerAnimated(true)
                     }
                 }
-                // Keep the datastore alive until after the request is completed
-                datastore = nil
-            })
-        }
+            }
+            // Keep the datastore alive until after the request is completed
+            datastore = nil
+        })
     }
     
     func validateResponses() -> Bool {
@@ -112,7 +113,6 @@ class OnePageFormViewController: UIViewController {
         }
         
         sequencer.moveToNext()
-        
         
         let field2 = sequencer.currentField as! MDNumericField
         field2.subjectResponse = field2.responseFromString(field2Response.text, decimalSeparator: decimal)
@@ -132,6 +132,7 @@ class OnePageFormViewController: UIViewController {
         
         // The sequencer must be in the reviewing state to be able to finish the form
         sequencer.moveToNext()
+        
         if sequencer.state != MDStepSequencerState.Reviewing{
             showDialog("Wrong Format", message: "There are more fields to be filled out in this form", completion:nil)
             return false
@@ -146,7 +147,6 @@ class OnePageFormViewController: UIViewController {
             return false
         }
         
-        
         return true
     }
     
@@ -159,16 +159,7 @@ class OnePageFormViewController: UIViewController {
         )
         self.presentViewController(alert, animated: true, completion: nil)
     }
-    
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-    }
-    
     internal func setFormID(formID: Int64) {
         self.formID = formID
     }
