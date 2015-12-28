@@ -38,10 +38,6 @@ class OnePageFormViewController: UIViewController {
         formTitle.text = form.name
         
         for field in form.fields {
-            print("fieldOID: \(field.fieldOID)")
-            print("fieldName: \(field.name)")
-            print("fieldHeader: \(field.header)")
-            print("fieldLabel: \(field.label)")
             switch field.fieldOID {
             case "TEXTFIELD1":
                 let tf = field as! MDTextField
