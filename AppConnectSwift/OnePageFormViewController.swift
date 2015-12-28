@@ -96,9 +96,8 @@ class OnePageFormViewController: UIViewController {
     }
     
     func validateResponses() -> Bool {
-        let decimalChar = ".".utf16
-        let decimal = decimalChar[decimalChar.startIndex]
-
+        let decimal = ".".utf16.first!
+        
         // You must use a StepSequencer to fill out the form. This is
         // hardcoded for the specific case where we know in advance that
         // FIELD1 is a TextField and the other two are NumericFields. If
