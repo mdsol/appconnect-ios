@@ -46,13 +46,14 @@ class FormListViewController: UITableViewController {
     
     func loadForms() {
         dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            var datastore = MDDatastoreFactory.create()
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
+            var datastore = MDDatastoreFactory.create()
             let user = datastore.userWithID(Int64(self.userID))
-
+            
+            // Keep track of loaded subjects so that we know when all have been loaded
             var loadedSubjects : [MDSubject] = []
-            // TODO: - load the forms sequentially (or ensure that populateForms is called only once all have loaded)
+            
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
                 guard error == nil else {
                     dispatch_async(dispatch_get_main_queue(), {
@@ -64,6 +65,8 @@ class FormListViewController: UITableViewController {
                 for subject in subjects as! [MDSubject]! {
                     client.loadFormsForSubject(subject, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
                         loadedSubjects.append(subject)
+                        
+                        // When all subjects have been loaded, populate the UI and stop the spinner
                         if loadedSubjects.count == subjects.count {
                             dispatch_async(dispatch_get_main_queue()) {
                                 self.populateForms()

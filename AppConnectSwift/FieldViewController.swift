@@ -15,8 +15,7 @@ class FieldViewController: UIViewController {
     var field : MDField!
     var fieldID : Int64! {
         didSet {
-            let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
-            field = datastore.fieldWithID(fieldID)
+            field = UIThreadDatastore().fieldWithID(fieldID)
         }
     }
     
