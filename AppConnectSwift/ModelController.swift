@@ -40,7 +40,8 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
                 return index
             }
         }
-        return 0
+        
+        return NSNotFound
     }
 
     // MARK: - Page View Controller Data Source
