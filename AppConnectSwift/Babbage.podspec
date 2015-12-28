@@ -1,5 +1,5 @@
-username = ENV['ARTIFACTORY_USERNAME'] || raise("Need an artifactory username")
-password = ENV['ARTIFACTORY_PASSWORD'] || raise("Need an artifactory password")
+username = ENV['ARTIFACTORY_USERNAME'] || raise("You must provide an artifactory username.")
+password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must provide an artifactory password.")
 
 Pod::Spec.new do |s|
     s.name               = "Babbage"
