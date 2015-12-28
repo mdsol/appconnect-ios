@@ -24,7 +24,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
 
     func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> FieldViewController? {
         // Return the data view controller for the given index.
-        if (self.fields.count == 0) || (index >= self.fields.count) {
+        guard self.fields.count > 0 && index < self.fields.count else {
             return nil
         }
 
@@ -35,9 +35,6 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     }
 
     func indexOfViewController(viewController: FieldViewController) -> Int {
-        // Return the index of the given data view controller.
-        // For simplicity, this implementation uses a static array of model objects and the view controller stores the model object; you can therefore use the model object to identify the index.
-        
         for (index, field) in fields.enumerate() {
             if field.objectID == viewController.fieldID {
                 return index
@@ -50,7 +47,8 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
         var index = self.indexOfViewController(viewController as! FieldViewController)
-        if (index == 0) || (index == NSNotFound) {
+        
+        guard index != 0 && index != NSNotFound else {
             return nil
         }
         
@@ -60,14 +58,11 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         var index = self.indexOfViewController(viewController as! FieldViewController)
-        if index == NSNotFound {
-            return nil
-        }
         
-        index++
-        if index == self.fields.count {
+        guard index != NSNotFound && ++index < self.fields.count else {
             return nil
         }
+
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 
