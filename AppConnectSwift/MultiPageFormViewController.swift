@@ -12,10 +12,15 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
     var pageViewController: UIPageViewController?
     
+    @IBOutlet var previousButton : UIButton!
+    @IBOutlet var nextButton : UIButton!
+    
     private var form : MDForm!
+    private var stepSequencer : MDStepSequencer!
     var formID : Int64! {
         didSet {
             form = UIThreadDatastore().formWithID(formID)
+            stepSequencer = MDStepSequencer(form: form)
         }
     }
 
@@ -26,7 +31,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         self.pageViewController!.delegate = self
         
         // Setup field data in the ModelController
-        self.modelController.fields = form.fields as! [MDField]
+        self.modelController.form = form
         self.pageViewController!.dataSource = self.modelController
 
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!)!
@@ -35,11 +40,60 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
         self.addChildViewController(self.pageViewController!)
         self.view.addSubview(self.pageViewController!.view)
-
+        
+        var pageViewRect = self.view.bounds
+        pageViewRect = CGRectInset(pageViewRect, 40.0, 40.0)
+        self.pageViewController!.view.frame = pageViewRect
+        
         self.pageViewController!.didMoveToParentViewController(self)
 
         // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
         self.view.gestureRecognizers = self.pageViewController!.gestureRecognizers
+        
+        // Start the step sequencer
+        stepSequencer.start()
+        
+        updateButtonState()
+    }
+    
+    @IBAction func doMoveToNext() {
+        let field = stepSequencer.currentField
+        print("field: \(field.label), \(field.objectID)")
+        if let df = field as? MDDictionaryField {
+            print("response 2 \(df.subjectResponse?.userValue)")
+        }
+        if !stepSequencer.moveToNext() {
+            let alert = UIAlertController(title: "Invalid Answer", message: "The answer provided for \(field.label) is not valid.", preferredStyle: UIAlertControllerStyle.Alert)
+            
+            alert.addAction(
+                UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
+            )
+            self.presentViewController(alert, animated: true, completion: nil)
+        } else {
+            let index = modelController.indexOfField(field.objectID)
+            let newViewController = modelController.viewControllerAtIndex(index+1, storyboard: self.storyboard!)
+            
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+        }
+        
+        updateButtonState()
+    }
+    
+    @IBAction func doMoveToPrevious() {
+        if stepSequencer.moveToPreviousWithResponseRequired(false) {
+            let index = modelController.indexOfField(stepSequencer.currentField.objectID)
+            let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
+            
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Reverse, animated: true, completion: nil)
+        }
+    }
+    
+    func updateButtonState() {
+        let reviewing = (stepSequencer.state == MDStepSequencerState.Reviewing)
+        let field = stepSequencer.currentField
+
+        previousButton.enabled = (modelController.indexOfField(field.objectID) != 0)
+        nextButton.setTitle(reviewing ? "Submit" : "Next", forState: UIControlState.Normal)
     }
 
     var modelController: ModelController {
@@ -55,6 +109,13 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
     internal func setFormID(formID: Int64) {
         self.formID = formID
+    }
+    
+    func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+        // TODO: handle going back as well
+        stepSequencer.moveToNext()
+        updateButtonState()
     }
 
 }

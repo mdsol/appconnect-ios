@@ -18,12 +18,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     var dictionaryResponses : [String] = []
         
-    private var field : MDField!
-    var fieldID : Int64! {
-        didSet {
-            field = UIThreadDatastore().fieldWithID(fieldID)
-        }
-    }
+    var field : MDField!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -39,14 +34,16 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             let df = field as! MDDictionaryField
             dictionaryField.hidden = false
             dictionaryResponses = df.possibleResponses.map { (resp) -> String in
-                print("response: \(resp.userValue)")
                 return resp.userValue
             }
             dictionaryField.delegate = self
+    
+            print("field: \(field.label), \(field.objectID)")
+            // Set the response to the first possible response
+            //df.subjectResponse = df.possibleResponses.first! as! MDDictionaryResponse
+            print("response 2 \(df.subjectResponse?.userValue)")
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
-            
-            dateField.hidden = false
         case is MDScaleField:
             let sf = field as! MDScaleField
             sliderField.hidden = false
@@ -55,7 +52,6 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         default:
             break
         }
-        // Do any additional setup after loading the view.
     }
 
     override func didReceiveMemoryWarning() {
@@ -73,5 +69,10 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return dictionaryResponses[row]
+    }
+    
+    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+        let df = field as! MDDictionaryField
+        df.subjectResponse = df.possibleResponses[row] as! MDDictionaryResponse
     }
 }

@@ -20,27 +20,39 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    var fields: [MDField] = []
+    var stepSequencer : MDStepSequencer!
+    private var fields: [MDField] = []
+    var form: MDForm! {
+        didSet {
+            self.fields = form.fields as! [MDField]
+            self.stepSequencer = MDStepSequencer(form: form)
+        }
+    }
 
     func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> FieldViewController? {
         // Return the data view controller for the given index.
         guard self.fields.count > 0 && index < self.fields.count else {
             return nil
         }
+        
+        let field = fields[index]
 
         // Create a new view controller and pass suitable data.
         let fieldViewController = storyboard.instantiateViewControllerWithIdentifier("FieldViewController") as! FieldViewController
-        fieldViewController.fieldID = fields[index].objectID
+        fieldViewController.field = field
         return fieldViewController
     }
 
     func indexOfViewController(viewController: FieldViewController) -> Int {
-        for (index, field) in fields.enumerate() {
-            if field.objectID == viewController.fieldID {
+        return indexOfField(viewController.field.objectID)
+    }
+    
+    func indexOfField(fieldID: Int64) -> Int {
+        for (index, f) in fields.enumerate() {
+            if f.objectID == fieldID {
                 return index
             }
         }
-        
         return NSNotFound
     }
 
@@ -60,9 +72,14 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
         var index = self.indexOfViewController(viewController as! FieldViewController)
         
-        guard index != NSNotFound && ++index < self.fields.count else {
+        // Don't allow progression to the next field unless the current
+        // field has been properly answered
+        let field = fields[index]
+        guard field.responseProblem == MDFieldProblem.None else {
             return nil
         }
+        
+        index++
 
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
