@@ -36,8 +36,8 @@ class LoginViewController: UIViewController {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
         
-        let bgQueue = NSOperationQueue()
-        bgQueue.addOperationWithBlock {
+        var bgQueue : NSOperationQueue? = NSOperationQueue()
+        bgQueue!.addOperationWithBlock {
             let datastore = MDDatastoreFactory.create()
             client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
                 if (user != nil) {
@@ -45,6 +45,7 @@ class LoginViewController: UIViewController {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.performSegueWithIdentifier("LoginSuccess", sender: nil)
                         self.loginButton.enabled = true
+                        bgQueue = nil
                     }
                 } else if (error != nil) {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -54,6 +55,7 @@ class LoginViewController: UIViewController {
                         )
                         self.presentViewController(alert, animated: true, completion: nil)
                         self.loginButton.enabled = true
+                        bgQueue = nil
                     }
                 }
             }
