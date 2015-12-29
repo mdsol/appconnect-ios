@@ -42,6 +42,14 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             // Set the response to the first possible response
             //df.subjectResponse = df.possibleResponses.first! as! MDDictionaryResponse
             print("response 2 \(df.subjectResponse?.userValue)")
+            
+            var index = 0
+            if let response = df.subjectResponse {
+                index = dictionaryResponses.indexOf(response.userValue)!
+            }
+            
+            dictionaryField.selectRow(index, inComponent: 0, animated: true)
+            self.pickerView(self.dictionaryField, didSelectRow: 0, inComponent: 0)
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
         case is MDScaleField:

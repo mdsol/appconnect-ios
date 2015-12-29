@@ -62,6 +62,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         if let df = field as? MDDictionaryField {
             print("response 2 \(df.subjectResponse?.userValue)")
         }
+        print("------")
         if !stepSequencer.moveToNext() {
             let alert = UIAlertController(title: "Invalid Answer", message: "The answer provided for \(field.label) is not valid.", preferredStyle: UIAlertControllerStyle.Alert)
             
