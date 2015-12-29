@@ -44,7 +44,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
             
             dictionaryField.selectRow(index, inComponent: 0, animated: true)
-            self.pickerView(self.dictionaryField, didSelectRow: 0, inComponent: 0)
+            self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
             dateField.hidden = false

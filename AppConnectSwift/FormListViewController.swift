@@ -56,7 +56,7 @@ class FormListViewController: UITableViewController {
             var loadedSubjectsAndErrors : [AnyObject] = []
             
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                guard error == nil else {
+                if error != nil {
                     loadedSubjectsAndErrors.append(error)
                     if loadedSubjectsAndErrors.count == subjects.count {
                         NSOperationQueue.mainQueue().addOperationWithBlock {
