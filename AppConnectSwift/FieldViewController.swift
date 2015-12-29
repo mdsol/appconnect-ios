@@ -44,9 +44,14 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
             dictionaryField.delegate = self
         case is MDDateTimeField:
+            let df = field as! MDDateTimeField
+            
             dateField.hidden = false
         case is MDScaleField:
+            let sf = field as! MDScaleField
             sliderField.hidden = false
+            sliderField.minimumValue = Float(sf.minimumResponse)
+            sliderField.maximumValue = Float(sf.maximumResponse)
         default:
             break
         }
