@@ -58,6 +58,14 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         }
     }
     
+    // MARK: - UISlider handling
+    
+    @IBAction func sliderValueDidChange(sender: UISlider) {
+        let sf = field as! MDScaleField
+        sf.subjectResponse = sender.value
+    }
+    
+    
     // MARK: - UIDatePicker handling
     
     @IBAction func dateDidChange(sender: UIDatePicker) {

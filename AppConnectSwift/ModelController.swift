@@ -28,10 +28,16 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         }
     }
 
-    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> FieldViewController? {
+    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> UIViewController? {
         // Return the data view controller for the given index.
-        guard self.fields.count > 0 && index < self.fields.count else {
+        guard self.fields.count > 0 || index <= self.fields.count else {
             return nil
+        }
+        
+        if index == self.fields.count {
+            let reviewViewController = storyboard.instantiateViewControllerWithIdentifier("ReviewViewController") as! ReviewViewController
+            reviewViewController.form = form
+            return reviewViewController
         }
         
         let field = fields[index]
@@ -42,8 +48,11 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         return fieldViewController
     }
 
-    func indexOfViewController(viewController: FieldViewController) -> Int {
-        return indexOfField(viewController.field.objectID)
+    func indexOfViewController(viewController: UIViewController) -> Int {
+        if viewController.isMemberOfClass(ReviewViewController) {
+            return fields.count
+        }
+        return indexOfField((viewController as! FieldViewController).field.objectID)
     }
     
     func indexOfField(fieldID: Int64) -> Int {
@@ -58,7 +67,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     // MARK: - Page View Controller Data Source
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        var index = self.indexOfViewController(viewController as! FieldViewController)
+        var index = self.indexOfViewController(viewController)
         
         guard index != 0 && index != NSNotFound else {
             return nil
@@ -69,7 +78,11 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     }
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        var index = self.indexOfViewController(viewController as! FieldViewController)
+        var index = self.indexOfViewController(viewController)
+        
+        guard index < self.fields.count else {
+            return nil
+        }
         
         // Don't allow progression to the next field unless the current
         // field has been properly answered
@@ -79,7 +92,6 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         }
         
         index++
-
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 
