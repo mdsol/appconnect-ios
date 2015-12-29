@@ -45,8 +45,8 @@ class FormListViewController: UITableViewController {
     }
     
     func loadForms() {
-        var bgQueue : NSOperationQueue? = NSOperationQueue()
-        bgQueue!.addOperationWithBlock() {
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             var datastore = MDDatastoreFactory.create()

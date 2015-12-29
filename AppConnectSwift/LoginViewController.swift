@@ -36,8 +36,8 @@ class LoginViewController: UIViewController {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
         
-        var bgQueue : NSOperationQueue? = NSOperationQueue()
-        bgQueue!.addOperationWithBlock {
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock {
             let datastore = MDDatastoreFactory.create()
             client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
                 if (user != nil) {
