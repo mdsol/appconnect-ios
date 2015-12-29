@@ -11,18 +11,18 @@ import UIKit
 class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet var fieldHeader : UILabel!
-    
     @IBOutlet var dictionaryField : UIPickerView!
     @IBOutlet var dateField : UIDatePicker!
     @IBOutlet var sliderField : UISlider!
     
     var dictionaryResponses : [String] = []
-        
     var field : MDField!
+    
+    // MARK: - UIViewController overrides
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+                
         fieldHeader.text = field.label
         
         dictionaryField.hidden = true
@@ -37,12 +37,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 return resp.userValue
             }
             dictionaryField.delegate = self
-    
-            print("field: \(field.label), \(field.objectID)")
-            // Set the response to the first possible response
-            //df.subjectResponse = df.possibleResponses.first! as! MDDictionaryResponse
-            print("response 2 \(df.subjectResponse?.userValue)")
-            
+
             var index = 0
             if let response = df.subjectResponse {
                 index = dictionaryResponses.indexOf(response.userValue)!
@@ -52,6 +47,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             self.pickerView(self.dictionaryField, didSelectRow: 0, inComponent: 0)
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
+            dateField.hidden = false
         case is MDScaleField:
             let sf = field as! MDScaleField
             sliderField.hidden = false
@@ -61,11 +57,16 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             break
         }
     }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
+    
+    // MARK: - UIDatePicker handling
+    
+    @IBAction func dateDidChange(sender: UIDatePicker) {
+        let df = field as! MDDateTimeField
+        df.subjectResponse = sender.date
     }
+
+    
+    // MARK: - UIPickerView Delegate Methods
     
     func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
         return 1

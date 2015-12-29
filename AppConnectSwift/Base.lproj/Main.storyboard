@@ -120,6 +120,9 @@
                                 <date key="date" timeIntervalSinceReferenceDate="473027251.025105">
                                     <!--2015-12-28 20:27:31 +0000-->
                                 </date>
+                                <connections>
+                                    <action selector="dateDidChange:" destination="sE8-kf-7A1" eventType="valueChanged" id="Wlh-qY-8Se"/>
+                                </connections>
                             </datePicker>
                             <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Gc9-Q9-4tc">
                                 <rect key="frame" x="119" y="211" width="362" height="31"/>

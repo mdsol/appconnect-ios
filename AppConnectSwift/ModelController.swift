@@ -20,12 +20,11 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    var stepSequencer : MDStepSequencer!
     private var fields: [MDField] = []
+
     var form: MDForm! {
         didSet {
             self.fields = form.fields as! [MDField]
-            self.stepSequencer = MDStepSequencer(form: form)
         }
     }
 

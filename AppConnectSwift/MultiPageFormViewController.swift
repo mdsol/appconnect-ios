@@ -33,6 +33,9 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         // Setup field data in the ModelController
         self.modelController.form = form
         self.pageViewController!.dataSource = self.modelController
+        
+        // Start the step sequencer
+        stepSequencer.start()
 
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!)!
         let viewControllers = [startingViewController]
@@ -50,19 +53,14 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
         self.view.gestureRecognizers = self.pageViewController!.gestureRecognizers
         
-        // Start the step sequencer
-        stepSequencer.start()
+
         
         updateButtonState()
     }
     
     @IBAction func doMoveToNext() {
         let field = stepSequencer.currentField
-        print("field: \(field.label), \(field.objectID)")
-        if let df = field as? MDDictionaryField {
-            print("response 2 \(df.subjectResponse?.userValue)")
-        }
-        print("------")
+
         if !stepSequencer.moveToNext() {
             let alert = UIAlertController(title: "Invalid Answer", message: "The answer provided for \(field.label) is not valid.", preferredStyle: UIAlertControllerStyle.Alert)
             
