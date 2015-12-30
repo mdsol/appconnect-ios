@@ -12,7 +12,7 @@ If you are running this application, it is assumed that:
 
 ### Setup
 
-AppConnect is packaged as a [CocoaPod](https://cocoapods.org/) to ease installation and usage. To properly access the AppConnect pod, you must have credentials for the Artifactory repository where the library is hosted. Set the following environment variables based on the credentials you were provided:
+The Babbage library is packaged as a [CocoaPod](https://cocoapods.org/) to ease installation and usage. To properly access the Babbage pod, you must have credentials for the Artifactory repository where the library is hosted. Set the following environment variables based on the credentials you were provided:
 
 
     export ARTIFACTORY_USERNAME=providedusername

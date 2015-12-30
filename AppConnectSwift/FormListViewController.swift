@@ -45,7 +45,7 @@ class FormListViewController: UITableViewController {
     }
     
     func loadForms() {
-        var bgQueue = NSOperationQueue()
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
@@ -63,6 +63,7 @@ class FormListViewController: UITableViewController {
                             self.populateForms()
                             self.spinner.stopAnimating()
                             datastore = nil
+                            bgQueue = nil
                         }
                     }
                     return
@@ -78,6 +79,7 @@ class FormListViewController: UITableViewController {
                                 self.populateForms()
                                 self.spinner.stopAnimating()
                                 datastore = nil
+                                bgQueue = nil
                             }
                         }
                     }
