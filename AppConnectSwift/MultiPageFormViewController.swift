@@ -24,15 +24,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         }
     }
     
-    var _modelController: ModelController? = nil
-    var modelController: ModelController {
-        // Return the model controller object, creating it if necessary.
-        // In more complex implementations, the model controller may be passed to the view controller.
-        if _modelController == nil {
-            _modelController = ModelController()
-        }
-        return _modelController!
-    }
+    var modelController: ModelController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -42,6 +34,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         self.pageViewController!.delegate = self
         
         // Setup field data in the ModelController
+        self.modelController = ModelController()
         self.modelController.form = form
         self.pageViewController!.dataSource = self.modelController
         
