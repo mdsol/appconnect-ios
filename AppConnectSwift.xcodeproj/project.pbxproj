@@ -114,6 +114,7 @@
 				AAE6D3421C21C355009B0C6B /* MultiPageFormViewController.swift */,
 				AAE6D3461C21C355009B0C6B /* ModelController.swift */,
 				520806B81C29FB640070BA54 /* FieldViewController.swift */,
+				52C702511C3332A200FC00CF /* ReviewViewController.swift */,
 				523069711C319AEA0012A478 /* UIViewController+Extensions.swift */,
 				AAB90CF91C21C69500B7D4C7 /* Babbage-Bridging-Header.h */,
 				AAE6D3481C21C355009B0C6B /* Main.storyboard */,
@@ -123,7 +124,6 @@
 				52EC841A1C31863900683D5B /* Babbage.podspec */,
 				5232B6DC1C29B49B006D10EC /* Supporting Files */,
 				523069731C31C04D0012A478 /* README.md */,
-				52C702511C3332A200FC00CF /* ReviewViewController.swift */,
 			);
 			name = AppConnectSample;
 			path = AppConnectSwift;

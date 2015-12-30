@@ -224,6 +224,14 @@
                             <constraint firstItem="7kf-Gl-c3F" firstAttribute="centerX" secondItem="Iki-AY-hwD" secondAttribute="centerX" id="zfG-rI-OPL"/>
                         </constraints>
                     </view>
+                    <connections>
+                        <outlet property="field1Answer" destination="6iM-4e-k0G" id="DgV-Ip-9Uh"/>
+                        <outlet property="field1Label" destination="iZ4-fH-2iX" id="PSD-cq-g2X"/>
+                        <outlet property="field2Answer" destination="gBe-id-7Di" id="q8o-o1-1L2"/>
+                        <outlet property="field2Label" destination="XWP-Yu-Kel" id="2ve-Cg-kti"/>
+                        <outlet property="field3Answer" destination="SXH-3W-zFI" id="RFP-Ne-FQp"/>
+                        <outlet property="field3Label" destination="7kf-Gl-c3F" id="SAo-Pm-JWn"/>
+                    </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="sOP-ux-3Db" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
