@@ -9,7 +9,7 @@
 /* Begin PBXBuildFile section */
 		33DF3A5D20D7C27322C5EBC2 /* libPods-AppConnectSwift.a in Frameworks */ = {isa = PBXBuildFile; fileRef = 68B4DBFBB3AADD545AED0B96 /* libPods-AppConnectSwift.a */; };
 		520806B91C29FB640070BA54 /* FieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520806B81C29FB640070BA54 /* FieldViewController.swift */; settings = {ASSET_TAGS = (); }; };
-		523069721C319AEA0012A478 /* UIViewController+UIThreadDatastore.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523069711C319AEA0012A478 /* UIViewController+UIThreadDatastore.swift */; settings = {ASSET_TAGS = (); }; };
+		523069721C319AEA0012A478 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523069711C319AEA0012A478 /* UIViewController+Extensions.swift */; settings = {ASSET_TAGS = (); }; };
 		523069741C31C04D0012A478 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 523069731C31C04D0012A478 /* README.md */; settings = {ASSET_TAGS = (); }; };
 		5232B6DE1C29B4BA006D10EC /* demo_accounts.json in Resources */ = {isa = PBXBuildFile; fileRef = 5232B6DD1C29B4BA006D10EC /* demo_accounts.json */; settings = {ASSET_TAGS = (); }; };
 		5232B6E01C29B5B5006D10EC /* sample.json in Resources */ = {isa = PBXBuildFile; fileRef = 5232B6DF1C29B5B5006D10EC /* sample.json */; settings = {ASSET_TAGS = (); }; };
@@ -29,7 +29,7 @@
 
 /* Begin PBXFileReference section */
 		520806B81C29FB640070BA54 /* FieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldViewController.swift; sourceTree = "<group>"; };
-		523069711C319AEA0012A478 /* UIViewController+UIThreadDatastore.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+UIThreadDatastore.swift"; sourceTree = "<group>"; };
+		523069711C319AEA0012A478 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
 		523069731C31C04D0012A478 /* README.md */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = net.daringfireball.markdown; path = README.md; sourceTree = SOURCE_ROOT; };
 		5232B6DD1C29B4BA006D10EC /* demo_accounts.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = demo_accounts.json; sourceTree = "<group>"; };
 		5232B6DF1C29B5B5006D10EC /* sample.json */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text.json; path = sample.json; sourceTree = "<group>"; };
@@ -114,7 +114,7 @@
 				AAE6D3421C21C355009B0C6B /* MultiPageFormViewController.swift */,
 				AAE6D3461C21C355009B0C6B /* ModelController.swift */,
 				520806B81C29FB640070BA54 /* FieldViewController.swift */,
-				523069711C319AEA0012A478 /* UIViewController+UIThreadDatastore.swift */,
+				523069711C319AEA0012A478 /* UIViewController+Extensions.swift */,
 				AAB90CF91C21C69500B7D4C7 /* Babbage-Bridging-Header.h */,
 				AAE6D3481C21C355009B0C6B /* Main.storyboard */,
 				AAE6D34B1C21C355009B0C6B /* Assets.xcassets */,
@@ -263,7 +263,7 @@
 			isa = PBXSourcesBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
-				523069721C319AEA0012A478 /* UIViewController+UIThreadDatastore.swift in Sources */,
+				523069721C319AEA0012A478 /* UIViewController+Extensions.swift in Sources */,
 				520806B91C29FB640070BA54 /* FieldViewController.swift in Sources */,
 				52C702521C3332A200FC00CF /* ReviewViewController.swift in Sources */,
 				526B32951C249BD400C4DBB8 /* LoginViewController.swift in Sources */,

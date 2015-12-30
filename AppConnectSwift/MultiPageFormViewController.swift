@@ -54,7 +54,28 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     }
     
     func doSubmit() {
+        stepSequencer.finish()
+        // Create a network client instance with which to send the responses
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
+        // Create a new datastore to use for the request
+        var datastore = MDDatastoreFactory.create()
+        let f = datastore.formWithID(self.formID)
+        
+        // The form provided to the client method must have been loaded from the datastore provided
+        client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+            if error != nil {
+                self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
+            } else {
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.showDialog("Success", message: "Your form has been submitted.") {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                }
+            }
+            // Keep the datastore alive until after the request is completed
+            datastore = nil
+        })
     }
     
     @IBAction func doMoveToNext() {

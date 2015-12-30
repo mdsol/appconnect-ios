@@ -153,16 +153,6 @@ class OnePageFormViewController: UIViewController {
         
         return true
     }
-    
-    func showDialog(title: String, message: String, completion: (() -> Void)?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(
-            UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction) -> Void in
-                completion?()
-            })
-        )
-        self.presentViewController(alert, animated: true, completion: nil)
-    }
 
     internal func setFormID(formID: Int64) {
         self.formID = formID
