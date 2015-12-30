@@ -18,11 +18,7 @@ extension UIViewController {
     // Helper method for showing an UIAlertController
     func showDialog(title: String, message: String, completion: (() -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(
-            UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: { (alert: UIAlertAction) -> Void in
-                completion?()
-            })
-        )
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) { alert in completion?() })
         self.presentViewController(alert, animated: true, completion: nil)
     }
 }

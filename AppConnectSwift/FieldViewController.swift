@@ -34,8 +34,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         switch field {
         case is MDDictionaryField:
             let df = field as! MDDictionaryField
-            dictionaryField.delegate = self
-            dictionaryField.hidden = false
+
             dictionaryResponses = df.possibleResponses.map { return $0.userValue }
 
             var index = 0
@@ -43,12 +42,13 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 index = dictionaryResponses.indexOf(response.userValue)!
             }
             
-            // Set the initial value in the picker
-            dictionaryField.selectRow(index, inComponent: 0, animated: true)
             self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
+            
+            dictionaryField.selectRow(index, inComponent: 0, animated: true)
+            dictionaryField.delegate = self
+            dictionaryField.hidden = false
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
-            dateField.hidden = false
             
             var date = NSDate()
             if let response = df.subjectResponse {
@@ -56,7 +56,9 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
             
             df.subjectResponse = date
+            
             dateField.date = date
+            dateField.hidden = false
         case is MDScaleField:
             let sf = field as! MDScaleField
             
@@ -66,8 +68,8 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
             
             sf.subjectResponse = value
-            sliderField.value = value
             
+            sliderField.value = value
             sliderField.hidden = false
             sliderField.minimumValue = Float(sf.minimumResponse)
             sliderField.maximumValue = Float(sf.maximumResponse)
