@@ -118,11 +118,8 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     
     func updateButtonState() {
         let reviewing = (stepSequencer.state == MDStepSequencerState.Reviewing)
-        let field = stepSequencer.currentField
 
-        if (reviewing == false) {
-            previousButton.enabled = (modelController.indexOfField((field?.objectID)!) != 0)
-        }
+        previousButton.enabled = modelController.indexOfViewController(pageViewController!.viewControllers!.first!) != 0
         nextButton.setTitle(reviewing ? "Submit" : "Next", forState: UIControlState.Normal)
     }
     
