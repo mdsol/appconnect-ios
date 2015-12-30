@@ -109,14 +109,20 @@
                         <rect key="frame" x="0.0" y="0.0" width="600" height="600"/>
                         <autoresizingMask key="autoresizingMask" widthSizable="YES" heightSizable="YES"/>
                         <subviews>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g58-uL-Wvm">
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="g58-uL-Wvm">
                                 <rect key="frame" x="279" y="44" width="42" height="21"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <color key="textColor" red="0.0" green="0.0" blue="0.0" alpha="1" colorSpace="calibratedRGB"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <datePicker contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="8Ni-W6-SKr">
-                                <rect key="frame" x="121" y="114" width="358" height="224"/>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" ambiguous="YES" misplaced="YES" text="Label" lineBreakMode="tailTruncation" numberOfLines="7" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="C4X-Io-Zg9">
+                                <rect key="frame" x="121" y="90" width="358" height="212"/>
+                                <fontDescription key="fontDescription" name="HelveticaNeue" family="Helvetica Neue" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
+                            <datePicker contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" datePickerMode="dateAndTime" minuteInterval="1" translatesAutoresizingMaskIntoConstraints="NO" id="8Ni-W6-SKr">
+                                <rect key="frame" x="121" y="302" width="358" height="224"/>
                                 <date key="date" timeIntervalSinceReferenceDate="473027251.025105">
                                     <!--2015-12-28 20:27:31 +0000-->
                                 </date>
@@ -125,31 +131,30 @@
                                 </connections>
                             </datePicker>
                             <slider opaque="NO" contentMode="scaleToFill" ambiguous="YES" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" value="0.5" minValue="0.0" maxValue="1" translatesAutoresizingMaskIntoConstraints="NO" id="Gc9-Q9-4tc">
-                                <rect key="frame" x="119" y="211" width="362" height="31"/>
+                                <rect key="frame" x="119" y="399" width="362" height="31"/>
                                 <connections>
                                     <action selector="sliderValueDidChange:" destination="sE8-kf-7A1" eventType="valueChanged" id="4cu-TO-AUF"/>
                                 </connections>
                             </slider>
-                            <pickerView contentMode="scaleToFill" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2hn-W8-Gk7">
-                                <rect key="frame" x="121" y="114" width="358" height="172"/>
+                            <pickerView contentMode="scaleToFill" ambiguous="YES" misplaced="YES" translatesAutoresizingMaskIntoConstraints="NO" id="2hn-W8-Gk7">
+                                <rect key="frame" x="121" y="302" width="358" height="172"/>
                             </pickerView>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="g58-uL-Wvm" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="2YW-8X-Phn"/>
                             <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="95O-T4-3aH"/>
-                            <constraint firstItem="2hn-W8-Gk7" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" priority="750" constant="-50" id="Xxy-ix-EAZ"/>
-                            <constraint firstItem="Gc9-Q9-4tc" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" priority="750" constant="-50" id="Y5B-uR-yrd"/>
                             <constraint firstItem="8Ni-W6-SKr" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="e7l-lF-dnA"/>
-                            <constraint firstItem="g58-uL-Wvm" firstAttribute="top" secondItem="Wqd-pE-JAE" secondAttribute="bottom" constant="24" id="gZ4-lx-agb"/>
+                            <constraint firstItem="C4X-Io-Zg9" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="fDc-do-jsr"/>
                             <constraint firstItem="2hn-W8-Gk7" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="uYk-Jv-66A"/>
                             <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="x1R-GD-6fD"/>
-                            <constraint firstItem="8Ni-W6-SKr" firstAttribute="top" secondItem="g58-uL-Wvm" secondAttribute="bottom" constant="-50" id="yBm-z9-T7h"/>
                         </constraints>
                     </view>
+                    <extendedEdge key="edgesForExtendedLayout" bottom="YES"/>
                     <connections>
                         <outlet property="dateField" destination="8Ni-W6-SKr" id="cIc-5c-qwV"/>
                         <outlet property="dictionaryField" destination="2hn-W8-Gk7" id="IE2-ez-pQE"/>
+                        <outlet property="fieldDescription" destination="C4X-Io-Zg9" id="VsH-hk-lU8"/>
                         <outlet property="fieldHeader" destination="g58-uL-Wvm" id="Chg-Ln-UcP"/>
                         <outlet property="sliderField" destination="Gc9-Q9-4tc" id="Yhd-lw-ClM"/>
                     </connections>

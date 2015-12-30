@@ -11,6 +11,7 @@ import UIKit
 class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
 
     @IBOutlet var fieldHeader : UILabel!
+    @IBOutlet var fieldDescription : UILabel!
     @IBOutlet var dictionaryField : UIPickerView!
     @IBOutlet var dateField : UIDatePicker!
     @IBOutlet var sliderField : UISlider!
@@ -29,6 +30,17 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         dateField.hidden = true
         sliderField.hidden = true
         
+        let fieldInfo = [
+            "FieldOID: \(field.fieldOID)",
+            "Type: \(field.fieldType)",
+            "Header: \(field.header)",
+            "Number: \(field.fieldNumber)",
+            "Label: \(field.label)",
+            "Format: tdb",
+            "Problem: \(field.responseProblem)"
+        ]
+        
+        fieldDescription.text = fieldInfo.joinWithSeparator("\n")
         // In this example app, we handle multiple fields in a single UIViewController. In a larger
         // application, it would make more sense to have a separate UIViewController for each field type.
         switch field {
