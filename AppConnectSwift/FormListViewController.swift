@@ -56,7 +56,7 @@ class FormListViewController: UITableViewController {
             var loadedSubjectsAndErrors : [AnyObject] = []
             
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                guard error == nil else {
+                if error != nil {
                     loadedSubjectsAndErrors.append(error)
                     if loadedSubjectsAndErrors.count == subjects.count {
                         NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -112,10 +112,10 @@ class FormListViewController: UITableViewController {
             let form = objects[indexPath.row] as! MDForm
             if form.formOID == "FORM1" {
                 let controller = segue.destinationViewController as! OnePageFormViewController
-                controller.setFormID(form.objectID)
+                controller.formID = form.objectID
             } else if form.formOID == "FORM2" {
-                let controller = segue.destinationViewController as! OnePageFormViewController
-                controller.setFormID(form.objectID)
+                let controller = segue.destinationViewController as! MultiPageFormViewController
+                controller.formID = form.objectID
             }
         }
     }
@@ -124,7 +124,7 @@ class FormListViewController: UITableViewController {
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
         let form = objects[indexPath.row] as! MDForm
-        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowOnePageForm"][form.formOID]
+        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
         performSegueWithIdentifier(sequeIdentifier!, sender: self)
     }
 

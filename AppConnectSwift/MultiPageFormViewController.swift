@@ -1,5 +1,5 @@
 //
-//  FormViewController.swift
+//  MultiPageFormViewController.swift
 //  AppConnectSample
 //
 //  Created by Steve Roy on 2015-12-16.
@@ -11,87 +11,139 @@ import UIKit
 class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegate {
 
     var pageViewController: UIPageViewController?
-    var formID : Int64!
+    
+    @IBOutlet var previousButton : UIButton!
+    @IBOutlet var nextButton : UIButton!
+    
+    private var form : MDForm!
+    private var stepSequencer : MDStepSequencer!
+    var formID : Int64! {
+        didSet {
+            form = UIThreadDatastore().formWithID(formID)
+            stepSequencer = MDStepSequencer(form: form)
+        }
+    }
+    
+    var modelController: ModelController!
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
+        
         // Configure the page view controller and add it as a child view controller.
         self.pageViewController = UIPageViewController(transitionStyle: .PageCurl, navigationOrientation: .Horizontal, options: nil)
         self.pageViewController!.delegate = self
-
-        let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!)!
-        let viewControllers = [startingViewController]
-        self.pageViewController!.setViewControllers(viewControllers, direction: .Forward, animated: false, completion: {done in })
-
+        
+        // Setup field data in the ModelController
+        self.modelController = ModelController()
+        self.modelController.form = form
         self.pageViewController!.dataSource = self.modelController
+        
+        // Start the step sequencer
+        stepSequencer.start()
 
+        // Setup the PageViewController with its initial ViewController
+        let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
+        self.pageViewController!.setViewControllers([startingViewController], direction: .Forward, animated: false, completion: {done in })
         self.addChildViewController(self.pageViewController!)
         self.view.addSubview(self.pageViewController!.view)
-
-        // Set the page view controller's bounds using an inset rect so that self's view is visible around the edges of the pages.
-        var pageViewRect = self.view.bounds
-        if UIDevice.currentDevice().userInterfaceIdiom == .Pad {
-            pageViewRect = CGRectInset(pageViewRect, 40.0, 40.0)
-        }
-        self.pageViewController!.view.frame = pageViewRect
-
+        self.pageViewController!.view.frame = CGRectInset(self.view.bounds, 0, 40.0)
         self.pageViewController!.didMoveToParentViewController(self)
 
-        // Add the page view controller's gesture recognizers to the book view controller's view so that the gestures are started more easily.
-        self.view.gestureRecognizers = self.pageViewController!.gestureRecognizers
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-
-    var modelController: ModelController {
-        // Return the model controller object, creating it if necessary.
-        // In more complex implementations, the model controller may be passed to the view controller.
-        if _modelController == nil {
-            _modelController = ModelController()
-        }
-        return _modelController!
-    }
-
-    var _modelController: ModelController? = nil
-
-    internal func setFormID(formID: Int64) {
-        self.formID = formID
+        // Set the initial state of our Previous and Next buttons
+        updateButtonState()
     }
     
-    // MARK: - UIPageViewController delegate methods
-
-    func pageViewController(pageViewController: UIPageViewController, spineLocationForInterfaceOrientation orientation: UIInterfaceOrientation) -> UIPageViewControllerSpineLocation {
-        if (orientation == .Portrait) || (orientation == .PortraitUpsideDown) || (UIDevice.currentDevice().userInterfaceIdiom == .Phone) {
-            // In portrait orientation or on iPhone: Set the spine position to "min" and the page view controller's view controllers array to contain just one view controller. Setting the spine position to 'UIPageViewControllerSpineLocationMid' in landscape orientation sets the doubleSided property to true, so set it to false here.
-            let currentViewController = self.pageViewController!.viewControllers![0]
-            let viewControllers = [currentViewController]
-            self.pageViewController!.setViewControllers(viewControllers, direction: .Forward, animated: true, completion: {done in })
-
-            self.pageViewController!.doubleSided = false
-            return .Min
-        }
-
-        // In landscape orientation: Set set the spine location to "mid" and the page view controller's view controllers array to contain two view controllers. If the current page is even, set it to contain the current and next view controllers; if it is odd, set the array to contain the previous and current view controllers.
-        let currentViewController = self.pageViewController!.viewControllers![0] as! FieldViewController
-        var viewControllers: [UIViewController]
-
-        let indexOfCurrentViewController = self.modelController.indexOfViewController(currentViewController)
-        if (indexOfCurrentViewController == 0) || (indexOfCurrentViewController % 2 == 0) {
-            let nextViewController = self.modelController.pageViewController(self.pageViewController!, viewControllerAfterViewController: currentViewController)
-            viewControllers = [currentViewController, nextViewController!]
-        } else {
-            let previousViewController = self.modelController.pageViewController(self.pageViewController!, viewControllerBeforeViewController: currentViewController)
-            viewControllers = [previousViewController!, currentViewController]
-        }
-        self.pageViewController!.setViewControllers(viewControllers, direction: .Forward, animated: true, completion: {done in })
-
-        return .Mid
+    func doSubmit() {
+        
+        // We must finish the StepSequencer before submitting the form
+        stepSequencer.finish()
+        
+        // Create a network client instance with which to send the responses
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
+        
+        // Create a new datastore to use for the request
+        var datastore = MDDatastoreFactory.create()
+        let f = datastore.formWithID(self.formID)
+        
+        // The form provided to the client method must have been loaded from the datastore provided
+        client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+            if error != nil {
+                self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
+            } else {
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.showDialog("Success", message: "Your form has been submitted.") {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
+                }
+            }
+            // Keep the datastore alive until after the request is completed
+            datastore = nil
+        })
     }
+    
+    @IBAction func doMoveToNext() {
+        let field = stepSequencer.currentField
+        
+        // Submit the answers if the user was on the review step
+        if stepSequencer.state == MDStepSequencerState.Reviewing {
+            doSubmit()
+            return
+        }
+        
+        // If the field has a valid response and the StepSequencer can move forward, 
+        // show the next available ViewController. Otherwise, show an error alert.
+        if stepSequencer.moveToNext() {
+            let index = modelController.indexOfField(field.objectID)
+            let newViewController = modelController.viewControllerAtIndex(index+1, storyboard: self.storyboard!)
+            
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+        } else {
+            showDialog("Invalid Answer", message: "The answer provided for \(field.label) is not valid", completion: nil)
+        }
+        
+        updateButtonState()
+    }
+    
+    @IBAction func doMoveToPrevious() {
+        // Move the StepSequencer to the previous step and show the appropriate ViewController
+        if stepSequencer.moveToPreviousWithResponseRequired(false) {
+            let index = modelController.indexOfField(stepSequencer.currentField.objectID)
+            let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
+            
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Reverse, animated: true, completion: nil)
+        }
+        
+        updateButtonState()
+    }
+    
+    func updateButtonState() {
+        let reviewing = (stepSequencer.state == MDStepSequencerState.Reviewing)
+        let field = stepSequencer.currentField
 
+        if (reviewing == false) {
+            previousButton.enabled = (modelController.indexOfField((field?.objectID)!) != 0)
+        }
+        nextButton.setTitle(reviewing ? "Submit" : "Next", forState: UIControlState.Normal)
+    }
+    
+    func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+        
+        // Handle the swiping page change to keep the StepSequencer in sync with the PageViewController
+        if let newViewController = pageViewController.viewControllers!.first! as? FieldViewController,
+            let oldViewController = previousViewControllers.first! as? FieldViewController {
+                
+            let newViewControllerIndex = modelController.indexOfViewController(newViewController)
+            let oldViewControllerIndex = modelController.indexOfViewController(oldViewController)
+            
+            if (newViewControllerIndex > oldViewControllerIndex) {
+                stepSequencer.moveToNext()
+            } else {
+                stepSequencer.moveToPreviousWithResponseRequired(false)
+            }
+        }
+        
+        updateButtonState()
+    }
 
 }
 

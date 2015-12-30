@@ -20,38 +20,60 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    var pageData: [String] = []
+    private var fields: [MDField] = []
 
-
-    override init() {
-        super.init()
-        // Create the data model.
-        let dateFormatter = NSDateFormatter()
-        pageData = dateFormatter.monthSymbols
+    var form: MDForm! {
+        didSet {
+            self.fields = form.fields as! [MDField]
+        }
     }
 
-    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> FieldViewController? {
-        // Return the data view controller for the given index.
-        if (self.pageData.count == 0) || (index >= self.pageData.count) {
+    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> UIViewController? {
+        // If there are no fields or the index is greater than the field count,
+        // then there is no ViewController to show
+        guard self.fields.count > 0 || index <= self.fields.count else {
             return nil
         }
+        
+        // Show the ReviewViewController as the last page
+        if index == self.fields.count {
+            let reviewViewController = storyboard.instantiateViewControllerWithIdentifier("ReviewViewController") as! ReviewViewController
+            reviewViewController.form = form
+            return reviewViewController
+        }
+        
+        let field = fields[index]
 
-        // Create a new view controller and pass suitable data.
-        let dataViewController = storyboard.instantiateViewControllerWithIdentifier("DataViewController") as! FieldViewController
-        return dataViewController
+        // Create and return a new FieldViewController
+        let fieldViewController = storyboard.instantiateViewControllerWithIdentifier("FieldViewController") as! FieldViewController
+        fieldViewController.field = field
+        return fieldViewController
     }
 
-    func indexOfViewController(viewController: FieldViewController) -> Int {
-        // Return the index of the given data view controller.
-        // For simplicity, this implementation uses a static array of model objects and the view controller stores the model object; you can therefore use the model object to identify the index.
-        return 0
+    func indexOfViewController(viewController: UIViewController) -> Int {
+        // The ReviewController is the always the last possible page, shown
+        // after all fields
+        if viewController.isMemberOfClass(ReviewViewController) {
+            return fields.count
+        }
+        return indexOfField((viewController as! FieldViewController).field.objectID)
+    }
+    
+    func indexOfField(fieldID: Int64) -> Int {
+        for (index, f) in fields.enumerate() {
+            if f.objectID == fieldID {
+                return index
+            }
+        }
+        return NSNotFound
     }
 
     // MARK: - Page View Controller Data Source
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
-        var index = self.indexOfViewController(viewController as! FieldViewController)
-        if (index == 0) || (index == NSNotFound) {
+        var index = self.indexOfViewController(viewController)
+        
+        guard index != 0 && index != NSNotFound else {
             return nil
         }
         
@@ -60,15 +82,20 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     }
 
     func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
-        var index = self.indexOfViewController(viewController as! FieldViewController)
-        if index == NSNotFound {
+        var index = self.indexOfViewController(viewController)
+        
+        guard index < self.fields.count else {
+            return nil
+        }
+        
+        // Don't allow progression to the next field unless the current
+        // field has been properly answered
+        let field = fields[index]
+        guard field.responseProblem == MDFieldProblem.None else {
             return nil
         }
         
         index++
-        if index == self.pageData.count {
-            return nil
-        }
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 
