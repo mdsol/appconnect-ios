@@ -91,7 +91,10 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         // Don't allow progression to the next field unless the current
         // field has been properly answered
         let field = fields[index]
-        guard field.responseProblem == MDFieldProblem.None else {
+        
+        // We use the rawvalues to make sure the response problem is greater than .None. All
+        // MDFieldProblems above .None are DateTime concerns that do not stop form progression.
+        guard field.responseProblem.rawValue >= MDFieldProblem.None.rawValue else {
             return nil
         }
         
