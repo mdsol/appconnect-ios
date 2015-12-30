@@ -12,15 +12,12 @@ class FormListViewController: UITableViewController {
 
     var objects = [AnyObject]()
     var userID : Int64!
-    var datastore : MDDatastore!
     
     var spinner : UIActivityIndicatorView!
 
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        self.datastore = MDDatastoreFactory.create()
-
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
         spinner.center = CGPointMake(160, 240);
         spinner.hidesWhenStopped = true;
@@ -48,27 +45,41 @@ class FormListViewController: UITableViewController {
     }
     
     func loadForms() {
-        dispatch_async(dispatch_get_global_queue(DISPATCH_QUEUE_PRIORITY_DEFAULT, 0)) { () -> Void in
-            let datastore = MDDatastoreFactory.create()
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Demo);
+            let client = clientFactory.clientOfType(MDClientType.Network);
+            var datastore = MDDatastoreFactory.create()
             let user = datastore.userWithID(Int64(self.userID))
-
-            // TODO: - load the forms sequentially (or ensure that populateForms is called only once all have loaded)
+            
+            // Keep track of loaded subjects so that we know when all have been loaded
+            var loadedSubjectsAndErrors : [AnyObject] = []
+            
             client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                if let error = error {
-                    print("error: \(error.localizedFailureReason), \(error.localizedDescription), \(error.code)")
-                    dispatch_async(dispatch_get_main_queue(), { () -> Void in
-                        self.spinner.stopAnimating()
-                    })
+                guard error == nil else {
+                    loadedSubjectsAndErrors.append(error)
+                    if loadedSubjectsAndErrors.count == subjects.count {
+                        NSOperationQueue.mainQueue().addOperationWithBlock {
+                            self.populateForms()
+                            self.spinner.stopAnimating()
+                            datastore = nil
+                            bgQueue = nil
+                        }
+                    }
                     return
                 }
+
                 for subject in subjects as! [MDSubject]! {
                     client.loadFormsForSubject(subject, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
-                        if subject.isEqualToSubject(subjects.last as! MDSubject) {
-                            dispatch_async(dispatch_get_main_queue()) {
+                        loadedSubjectsAndErrors.append(subject)
+                        
+                        // When all subjects have been loaded, populate the UI and stop the spinner
+                        if loadedSubjectsAndErrors.count == subjects.count {
+                            NSOperationQueue.mainQueue().addOperationWithBlock {
                                 self.populateForms()
                                 self.spinner.stopAnimating()
+                                datastore = nil
+                                bgQueue = nil
                             }
                         }
                     }
@@ -79,11 +90,11 @@ class FormListViewController: UITableViewController {
 
     func populateForms() {
         var forms : [MDForm]
-        
-        if let user = self.datastore.userWithID(Int64(self.userID)) {
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        if let user = datastore.userWithID(Int64(self.userID)) {
             let subjects = user.subjects as! [MDSubject]
             forms = subjects.map({ (subject : MDSubject) -> [MDForm] in
-                self.datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
+                datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
             }).reduce([], combine: +)
             self.objects = forms
         }

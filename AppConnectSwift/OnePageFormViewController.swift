@@ -1,5 +1,5 @@
 //
-//  DataViewController.swift
+//  OnePageFormViewController.swift
 //  AppConnectSample
 //
 //  Created by Steve Roy on 2015-12-16.
@@ -11,11 +11,11 @@ import UIKit
 class OnePageFormViewController: UIViewController {
     var dataObject: String = ""
     
-    var datastore = MDDatastoreFactory.create()
-    
-    var form : MDForm!
-    private(set) var formID : Int64! {
-        didSet { form = self.datastore.formWithID(formID) }
+    private var form : MDForm!
+    var formID : Int64! {
+        didSet {
+            form = UIThreadDatastore().formWithID(formID)
+        }
     }
     
     @IBOutlet var formTitle : UILabel!
@@ -32,23 +32,22 @@ class OnePageFormViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Do any additional setup after loading the view, typically from a nib.
 
         formTitle.text = form.name
         
         for field in form.fields {
             switch field.fieldOID {
-            case "FIELD1":
+            case "TEXTFIELD1":
                 let tf = field as! MDTextField
-                field1Label.text = tf.header
+                field1Label.text = tf.label
                 field1Response.placeholder = "Max Length: \(tf.maximumResponseLength)"
-            case "FIELD2":
+            case "NUMBERS":
                 let nf = field as! MDNumericField
-                field2Label.text = nf.header
+                field2Label.text = nf.label
                 field2Response.placeholder = numericFieldFormat(nf);
-            case "FIELD3":
+            case "NUMERICVALUE":
                 let nf = field as! MDNumericField
-                field3Label.text = nf.header
+                field3Label.text = nf.label
                 field3Response.placeholder = numericFieldFormat(nf);
             default:
                 break
@@ -73,27 +72,41 @@ class OnePageFormViewController: UIViewController {
             return
         }
         
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Demo);
+        // Create a network client instance with which to send the responses
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
-        client.sendResponsesForForm(self.form, inDatastore: self.datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+        // Create a new datastore to use for the request
+        var datastore = MDDatastoreFactory.create()
+        let f = datastore.formWithID(self.formID)
+        
+        // The form provided to the client method must have been loaded from the datastore provided
+        client.sendResponsesForForm(f, inDatastore: datastore, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
             } else {
-                self.showDialog("Success", message: "Your form has been submitted.") {
-                    self.navigationController?.popViewControllerAnimated(true)
+                NSOperationQueue.mainQueue().addOperationWithBlock {
+                    self.showDialog("Success", message: "Your form has been submitted.") {
+                        self.navigationController?.popViewControllerAnimated(true)
+                    }
                 }
             }
+            // Keep the datastore alive until after the request is completed
+            datastore = nil
         })
     }
     
     func validateResponses() -> Bool {
-        let decimalChar = ".".utf16
-        let decimal = decimalChar[decimalChar.startIndex]
-
+        let decimal = ".".utf16.first!
+        
+        // You must use a StepSequencer to fill out the form. This is
+        // hardcoded for the specific case where we know in advance that
+        // FIELD1 is a TextField and the other two are NumericFields. If
+        // you don't know in advance what the fields are going to be,
+        // look at MultiPageFormViewController.
         let sequencer = MDStepSequencer(form: self.form)
         sequencer.start()
         
+        // Fill out the response for FIELD1, which we know is a NumericField
         let field1 = sequencer.currentField as! MDTextField
         field1.subjectResponse = field1Response.text
         if field1.responseProblem != MDFieldProblem.None {
@@ -103,6 +116,7 @@ class OnePageFormViewController: UIViewController {
         
         sequencer.moveToNext()
         
+        // Fill out the response for FIELD2, which we know is a TextField
         let field2 = sequencer.currentField as! MDNumericField
         field2.subjectResponse = field2.responseFromString(field2Response.text, decimalSeparator: decimal)
         if field2.responseProblem != MDFieldProblem.None {
@@ -112,6 +126,7 @@ class OnePageFormViewController: UIViewController {
         
         sequencer.moveToNext()
         
+        // Fill out the response for FIELD3, which we know is a NumericField
         let field3 = sequencer.currentField as! MDNumericField
         field3.subjectResponse = field3.responseFromString(field3Response.text, decimalSeparator: decimal)
         if field3.responseProblem != MDFieldProblem.None {
