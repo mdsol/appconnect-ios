@@ -117,14 +117,14 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
 
     func stringFromResponseProblem(problem : MDFieldProblem) -> String {
         return [
-                "FatalResponseMissing",
-                "FatalResponseOutOfRange",
-                "FatalResponseUnrecognized",
-                "FatalResponseError",
-                "None",
-                "ConcernDateResponseInDistantPast",
-                "ConcernDateResponseInFuture"
-            ][problem.rawValue]
+            MDFieldProblem.FatalResponseMissing             : "FatalResponseMissing",
+            MDFieldProblem.FatalResponseOutOfRange          : "FatalResponseOutOfRange",
+            MDFieldProblem.FatalResponseUnrecognized        : "FatalResponseUnrecognized",
+            MDFieldProblem.FatalResponseError               : "FatalResponseError",
+            MDFieldProblem.None                             : "None",
+            MDFieldProblem.ConcernDateResponseInDistantPast : "ConcernDateResponseInDistantPast",
+            MDFieldProblem.ConcernDateResponseInFuture      : "ConcernDateResponseInFuture"
+        ][problem]!
     }
 
     // MARK: - UISlider handling
