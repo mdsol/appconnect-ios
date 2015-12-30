@@ -29,6 +29,8 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         dateField.hidden = true
         sliderField.hidden = true
         
+        // In this example app, we handle multiple fields in a single UIViewController. In a larger
+        // application, it would make more sense to have a separate UIViewController for each field type.
         switch field {
         case is MDDictionaryField:
             let df = field as! MDDictionaryField

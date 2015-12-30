@@ -29,11 +29,13 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
     }
 
     func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> UIViewController? {
-        // Return the data view controller for the given index.
+        // If there are no fields or the index is greater than the field count,
+        // then there is no ViewController to show
         guard self.fields.count > 0 || index <= self.fields.count else {
             return nil
         }
         
+        // Show the ReviewViewController as the last page
         if index == self.fields.count {
             let reviewViewController = storyboard.instantiateViewControllerWithIdentifier("ReviewViewController") as! ReviewViewController
             reviewViewController.form = form
@@ -42,13 +44,15 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         
         let field = fields[index]
 
-        // Create a new view controller and pass suitable data.
+        // Create and return a new FieldViewController
         let fieldViewController = storyboard.instantiateViewControllerWithIdentifier("FieldViewController") as! FieldViewController
         fieldViewController.field = field
         return fieldViewController
     }
 
     func indexOfViewController(viewController: UIViewController) -> Int {
+        // The ReviewController is the always the last possible page, shown
+        // after all fields
         if viewController.isMemberOfClass(ReviewViewController) {
             return fields.count
         }

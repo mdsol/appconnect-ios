@@ -36,6 +36,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
     override func viewDidLoad() {
         super.viewDidLoad()
+        
         // Configure the page view controller and add it as a child view controller.
         self.pageViewController = UIPageViewController(transitionStyle: .PageCurl, navigationOrientation: .Horizontal, options: nil)
         self.pageViewController!.delegate = self
@@ -49,13 +50,10 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
         // Setup the PageViewController with its initial ViewController
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
-        let viewControllers = [startingViewController]
-        self.pageViewController!.setViewControllers(viewControllers, direction: .Forward, animated: false, completion: {done in })
+        self.pageViewController!.setViewControllers([startingViewController], direction: .Forward, animated: false, completion: {done in })
         self.addChildViewController(self.pageViewController!)
         self.view.addSubview(self.pageViewController!.view)
-        var pageViewRect = self.view.bounds
-        pageViewRect = CGRectInset(pageViewRect, 0, 40.0)
-        self.pageViewController!.view.frame = pageViewRect
+        self.pageViewController!.view.frame = CGRectInset(self.view.bounds, 0, 40.0)
         self.pageViewController!.didMoveToParentViewController(self)
 
         // Set the initial state of our Previous and Next buttons
@@ -63,7 +61,10 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     }
     
     func doSubmit() {
+        
+        // We must finish the StepSequencer before submitting the form
         stepSequencer.finish()
+        
         // Create a network client instance with which to send the responses
         let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
