@@ -110,10 +110,10 @@ class FormListViewController: UITableViewController {
             let form = objects[indexPath.row] as! MDForm
             if form.formOID == "FORM1" {
                 let controller = segue.destinationViewController as! OnePageFormViewController
-                controller.setFormID(form.objectID)
+                controller.formID = form.objectID
             } else if form.formOID == "FORM2" {
                 let controller = segue.destinationViewController as! MultiPageFormViewController
-                controller.setFormID(form.objectID)
+                controller.formID = form.objectID
             }
         }
     }

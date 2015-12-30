@@ -23,6 +23,16 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
             stepSequencer = MDStepSequencer(form: form)
         }
     }
+    
+    var _modelController: ModelController? = nil
+    var modelController: ModelController {
+        // Return the model controller object, creating it if necessary.
+        // In more complex implementations, the model controller may be passed to the view controller.
+        if _modelController == nil {
+            _modelController = ModelController()
+        }
+        return _modelController!
+    }
 
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -37,19 +47,18 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         // Start the step sequencer
         stepSequencer.start()
 
+        // Setup the PageViewController with its initial ViewController
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
         let viewControllers = [startingViewController]
         self.pageViewController!.setViewControllers(viewControllers, direction: .Forward, animated: false, completion: {done in })
-
         self.addChildViewController(self.pageViewController!)
         self.view.addSubview(self.pageViewController!.view)
-        
         var pageViewRect = self.view.bounds
         pageViewRect = CGRectInset(pageViewRect, 0, 40.0)
         self.pageViewController!.view.frame = pageViewRect
-        
         self.pageViewController!.didMoveToParentViewController(self)
 
+        // Set the initial state of our Previous and Next buttons
         updateButtonState()
     }
     
@@ -81,36 +90,33 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     @IBAction func doMoveToNext() {
         let field = stepSequencer.currentField
         
-        guard stepSequencer.state != MDStepSequencerState.Reviewing else {
+        // Submit the answers if the user was on the review step
+        if stepSequencer.state == MDStepSequencerState.Reviewing {
             doSubmit()
             return
         }
-
-        if !stepSequencer.moveToNext() {
-            let alert = UIAlertController(title: "Invalid Answer", message: "The answer provided for \(field.label) is not valid.", preferredStyle: UIAlertControllerStyle.Alert)
-            
-            alert.addAction(
-                UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
-            )
-            self.presentViewController(alert, animated: true, completion: nil)
-        } else {
+        
+        // If the field has a valid response and the StepSequencer can move forward, 
+        // show the next available ViewController. Otherwise, show an error alert.
+        if stepSequencer.moveToNext() {
             let index = modelController.indexOfField(field.objectID)
             let newViewController = modelController.viewControllerAtIndex(index+1, storyboard: self.storyboard!)
             
             pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true, completion: nil)
+        } else {
+            showDialog("Invalid Answer", message: "The answer provided for \(field.label) is not valid", completion: nil)
         }
         
         updateButtonState()
     }
     
     @IBAction func doMoveToPrevious() {
+        // Move the StepSequencer to the previous step and show the appropriate ViewController
         if stepSequencer.moveToPreviousWithResponseRequired(false) {
             let index = modelController.indexOfField(stepSequencer.currentField.objectID)
             let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
             
-            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Reverse, animated: true) { done in
-                self.updateButtonState()
-            }
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Reverse, animated: true, completion: nil)
         }
         
         updateButtonState()
@@ -125,25 +131,10 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         }
         nextButton.setTitle(reviewing ? "Submit" : "Next", forState: UIControlState.Normal)
     }
-
-    var modelController: ModelController {
-        // Return the model controller object, creating it if necessary.
-        // In more complex implementations, the model controller may be passed to the view controller.
-        if _modelController == nil {
-            _modelController = ModelController()
-        }
-        return _modelController!
-    }
-
-    var _modelController: ModelController? = nil
-
-    internal func setFormID(formID: Int64) {
-        self.formID = formID
-    }
     
     func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
-        // Handle the swiping page change to keep the StepSequencer in sync with the PageViewController
         
+        // Handle the swiping page change to keep the StepSequencer in sync with the PageViewController
         if let newViewController = pageViewController.viewControllers!.first! as? FieldViewController,
             let oldViewController = previousViewControllers.first! as? FieldViewController {
                 

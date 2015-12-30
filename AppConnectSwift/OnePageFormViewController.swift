@@ -153,9 +153,5 @@ class OnePageFormViewController: UIViewController {
         
         return true
     }
-
-    internal func setFormID(formID: Int64) {
-        self.formID = formID
-    }
 }
 

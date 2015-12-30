@@ -32,24 +32,40 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         switch field {
         case is MDDictionaryField:
             let df = field as! MDDictionaryField
-            dictionaryField.hidden = false
-            dictionaryResponses = df.possibleResponses.map { (resp) -> String in
-                return resp.userValue
-            }
             dictionaryField.delegate = self
+            dictionaryField.hidden = false
+            dictionaryResponses = df.possibleResponses.map { return $0.userValue }
 
             var index = 0
             if let response = df.subjectResponse {
                 index = dictionaryResponses.indexOf(response.userValue)!
             }
             
+            // Set the initial value in the picker
             dictionaryField.selectRow(index, inComponent: 0, animated: true)
             self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
             dateField.hidden = false
+            
+            var date = NSDate()
+            if let response = df.subjectResponse {
+                date = response
+            }
+            
+            df.subjectResponse = date
+            dateField.date = date
         case is MDScaleField:
             let sf = field as! MDScaleField
+            
+            var value = sliderField.minimumValue
+            if let response = sf.subjectResponse {
+                value = response.floatValue
+            }
+            
+            sf.subjectResponse = value
+            sliderField.value = value
+            
             sliderField.hidden = false
             sliderField.minimumValue = Float(sf.minimumResponse)
             sliderField.maximumValue = Float(sf.maximumResponse)

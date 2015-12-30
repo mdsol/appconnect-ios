@@ -24,6 +24,8 @@ class ReviewViewController: UIViewController {
         // Do any additional setup after loading the view.
         let fields = form.fields
         
+        // In this example app, we know exactly what fields we are expecting
+        // and can cast them appropriately
         let dictionaryField = fields[0] as! MDDictionaryField
         let dateField = fields[1] as! MDDateTimeField
         let scaleField = fields[2] as! MDScaleField

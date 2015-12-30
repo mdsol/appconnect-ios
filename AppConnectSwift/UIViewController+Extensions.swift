@@ -15,6 +15,7 @@ extension UIViewController {
         return (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
     }
     
+    // Helper method for showing an UIAlertController
     func showDialog(title: String, message: String, completion: (() -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(
