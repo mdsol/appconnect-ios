@@ -47,7 +47,7 @@ class LoginViewController: UIViewController {
                     // copy from its own datastore
                     self.userID = user.objectID
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        // Start the ListActivity to show the forms available for the
+                        // Start the FormListViewController to show the forms available for the
                         // user who just logged in
                         self.performSegueWithIdentifier("LoginSuccess", sender: nil)
                         self.loginButton.enabled = true
