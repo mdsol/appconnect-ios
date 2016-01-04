@@ -39,7 +39,7 @@ class LoginViewController: UIViewController {
         bgQueue.addOperationWithBlock {
             // Each secondary thread must create its own datastore instance and
             // dispose of it when done
-            let datastore = MDDatastoreFactory.create()
+            var datastore = MDDatastoreFactory.create()
             client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
                 if (user != nil) {
                     // Babbage objects can't be shared between threads so you must pass
@@ -51,7 +51,9 @@ class LoginViewController: UIViewController {
                         // user who just logged in
                         self.performSegueWithIdentifier("LoginSuccess", sender: nil)
                         self.loginButton.enabled = true
+                        // Keep the datastore and queue alive until after the request is completed
                         bgQueue = nil
+                        datastore = nil
                     }
                 } else if (error != nil) {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -61,7 +63,9 @@ class LoginViewController: UIViewController {
                         )
                         self.presentViewController(alert, animated: true, completion: nil)
                         self.loginButton.enabled = true
+                        // Keep the datastore and queue alive until after the request is completed                        
                         bgQueue = nil
+                        datastore = nil
                     }
                 }
             }
