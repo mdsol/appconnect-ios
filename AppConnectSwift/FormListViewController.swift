@@ -26,27 +26,25 @@ class FormListViewController: UITableViewController {
         
         let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: "doLogout")
         self.navigationItem.setLeftBarButtonItem(backButton, animated: true)
-
+        
+        // Begin loading the forms for the logged-in user
         loadForms()
     }
 
     override func viewWillAppear(animated: Bool) {
         super.viewWillAppear(animated)
+        
+        // Populate the list with forms that are already in the datastore
         populateForms()
-    }
-
-    override func didReceiveMemoryWarning() {
-        super.didReceiveMemoryWarning()
-        // Dispose of any resources that can be recreated.
-    }
-    
-    internal func setUserID(userID: Int64) {
-        self.userID = userID
     }
     
     func loadForms() {
+        // Start an asynchronous task to load the forms
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock() {
+            // *** AppConnect ***
+            // Each secondary thread must create its own datastore instance and
+            // dispose of it when done
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
             var datastore = MDDatastoreFactory.create()
@@ -69,6 +67,10 @@ class FormListViewController: UITableViewController {
                     return
                 }
 
+                // Get the subjects for the current user and then iterate over
+                // the subjects to sync their forms. The objects returned from
+                // these methods are only usable during the lifetime of this
+                // temporary datastore.
                 for subject in subjects as! [MDSubject]! {
                     client.loadFormsForSubject(subject, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
                         loadedSubjectsAndErrors.append(subject)
@@ -89,6 +91,11 @@ class FormListViewController: UITableViewController {
     }
 
     func populateForms() {
+        // *** AppConnect ***
+        // This is how the UI retrieves forms from the datastore for display.
+        // The user could have multiple subjects if they're assigned to multiple
+        // studies. Here we just gather all available forms, but you could also
+        // present them organized by subject if desired.
         var forms : [MDForm]
         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         if let user = datastore.userWithID(Int64(self.userID)) {
@@ -123,6 +130,10 @@ class FormListViewController: UITableViewController {
     // MARK: - Table View
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+        // *** AppConnect ***
+        // Start a view controller to fill out the form. If the form is from the SDK
+        // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
+        // form to demonstrate how to handle both cases.
         let form = objects[indexPath.row] as! MDForm
         let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
         performSegueWithIdentifier(sequeIdentifier!, sender: self)
