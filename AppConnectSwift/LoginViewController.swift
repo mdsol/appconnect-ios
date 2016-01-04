@@ -19,12 +19,11 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        usernameField.text = "sdk@101.com" //"sub02@sqa.com"
-        passwordField.text = "Password90" //"Password1"
-        
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
         
         MDClient.setEnvironment(.Validation);
+        usernameField.text = "sdk@101.com" //"sub02@sqa.com"
+        passwordField.text = "Password90" //"Password1"
     }
     
     @IBAction func doLogin(sender: UIButton) {
@@ -38,14 +37,23 @@ class LoginViewController: UIViewController {
         
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock {
-            let datastore = MDDatastoreFactory.create()
+            // Each secondary thread must create its own datastore instance and
+            // dispose of it when done
+            var datastore = MDDatastoreFactory.create()
             client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
                 if (user != nil) {
+                    // Babbage objects can't be shared between threads so you must pass
+                    // them around by ID instead and the receiving code can get its own
+                    // copy from its own datastore
                     self.userID = user.objectID
                     NSOperationQueue.mainQueue().addOperationWithBlock {
+                        // Start the FormListViewController to show the forms available for the
+                        // user who just logged in
                         self.performSegueWithIdentifier("LoginSuccess", sender: nil)
                         self.loginButton.enabled = true
+                        // Keep the datastore and queue alive until after the request is completed
                         bgQueue = nil
+                        datastore = nil
                     }
                 } else if (error != nil) {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
@@ -55,7 +63,9 @@ class LoginViewController: UIViewController {
                         )
                         self.presentViewController(alert, animated: true, completion: nil)
                         self.loginButton.enabled = true
+                        // Keep the datastore and queue alive until after the request is completed                        
                         bgQueue = nil
+                        datastore = nil
                     }
                 }
             }
@@ -63,10 +73,11 @@ class LoginViewController: UIViewController {
     }
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Pass the userID into the FormList controller
         if segue.identifier == "LoginSuccess" {
             let navigationController = segue.destinationViewController as! UINavigationController
             let formListViewController = navigationController.viewControllers.first as! FormListViewController
-            formListViewController.setUserID(self.userID!)
+            formListViewController.userID = self.userID!
         }
     }
 

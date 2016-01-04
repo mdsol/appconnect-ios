@@ -29,3 +29,4 @@ The application contains the following important view controllers
 - **FormListViewController**: loads and displays the available forms for the authenticated user
 - **OnePageFormViewController**: loads and displays a form on a single screen, providing validation before form submission
 - **MultiPageFormViewController**: loads and displays a form one field at a time, using the FieldViewController to display the individual fields
+- **ReviewController**: allows the user to review answers before submitting

@@ -14,6 +14,7 @@ class OnePageFormViewController: UIViewController {
     private var form : MDForm!
     var formID : Int64! {
         didSet {
+            // Get the corresponding form from the datastore
             form = UIThreadDatastore().formWithID(formID)
         }
     }
@@ -35,6 +36,11 @@ class OnePageFormViewController: UIViewController {
 
         formTitle.text = form.name
         
+        // Find the fields we know exist in the form and populate the view with
+        // their properties. This is hardcoded for the specific case where we
+        // know in advance that TEXTFIELD1 is a TextField and the other two are
+        // NumericFields. If you don't know in advance what the fields are going
+        // to be, look at MultiPageFormViewController instead.
         for field in form.fields {
             switch field.fieldOID {
             case "TEXTFIELD1":
@@ -56,6 +62,9 @@ class OnePageFormViewController: UIViewController {
     }
     
     func numericFieldFormat(field : MDNumericField) -> String {
+        // This shows how to inspect a NumericField to discover the format of
+        // the response it expects. Each field type has specific methods to
+        // discover such properties. See the documentation for more information.
         let components = [
             String(field.maximumResponseIntegerCount),
             field.responseIntegerCountRequired ? "+" : "",
@@ -75,7 +84,9 @@ class OnePageFormViewController: UIViewController {
         // Create a network client instance with which to send the responses
         let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
-        // Create a new datastore to use for the request
+        // Babbage objects can't be shared between threads so you must pass
+        // them around by ID instead and the receiving code can get its own
+        // copy from its own datastore
         var datastore = MDDatastoreFactory.create()
         let f = datastore.formWithID(self.formID)
         
