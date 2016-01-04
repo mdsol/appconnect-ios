@@ -42,7 +42,6 @@ class FormListViewController: UITableViewController {
         // Start an asynchronous task to load the forms
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock() {
-            // *** AppConnect ***
             // Each secondary thread must create its own datastore instance and
             // dispose of it when done
             let clientFactory = MDClientFactory.sharedInstance()
@@ -91,7 +90,6 @@ class FormListViewController: UITableViewController {
     }
 
     func populateForms() {
-        // *** AppConnect ***
         // This is how the UI retrieves forms from the datastore for display.
         // The user could have multiple subjects if they're assigned to multiple
         // studies. Here we just gather all available forms, but you could also
@@ -130,7 +128,6 @@ class FormListViewController: UITableViewController {
     // MARK: - Table View
     
     override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        // *** AppConnect ***
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.

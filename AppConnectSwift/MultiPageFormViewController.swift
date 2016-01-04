@@ -19,6 +19,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     private var stepSequencer : MDStepSequencer!
     var formID : Int64! {
         didSet {
+            // Get the corresponding form from the datastore
             form = UIThreadDatastore().formWithID(formID)
             stepSequencer = MDStepSequencer(form: form)
         }
@@ -38,7 +39,11 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         self.modelController.form = form
         self.pageViewController!.dataSource = self.modelController
         
-        // Start the step sequencer
+        // You must use a StepSequencer to fill out the form. Calling start()
+        // will clear out all the field responses and begin on the first field.
+        // You could also verify whether form.canResume() returns true and call
+        // resume() instead, which would preserve any previously answered field
+        // and begin where the user was last.
         stepSequencer.start()
 
         // Setup the PageViewController with its initial ViewController
@@ -54,8 +59,10 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     }
     
     func doSubmit() {
-        
-        // We must finish the StepSequencer before submitting the form
+        // Once the form is completely filled out, you must call finish() to
+        // stamp the form with the completion date and time. Attempting to
+        // submit will fail if finish() hasn't been called. If the form requires
+        // a signature, form.sign() should also be called before calling finish().
         stepSequencer.finish()
         
         // Create a network client instance with which to send the responses

@@ -37,7 +37,6 @@ class LoginViewController: UIViewController {
         
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock {
-            // *** AppConnect ***
             // Each secondary thread must create its own datastore instance and
             // dispose of it when done
             let datastore = MDDatastoreFactory.create()
