@@ -25,8 +25,8 @@ Once the variables have been set, run `pod install` to install the necessary dep
 
 The application contains the following important view controllers
 
-- **LoginViewController**: handles user authenticated based on a provided username / password
-- **FormListViewController**: loads and displays the available forms for the authenticated user
-- **OnePageFormViewController**: loads and displays a form on a single screen, providing validation before form submission
-- **MultiPageFormViewController**: loads and displays a form one field at a time, using the FieldViewController to display the individual fields
-- **ReviewController**: allows the user to review answers before submitting
+- **LoginViewController**: Handles user authentication based on a provided username / password.
+- **FormListViewController**: Loads and displays the available forms for authenticated users.
+- **OnePageFormViewController**:  Loads and displays a form on a single screen, providing validation before users submit forms.
+- **MultiPageFormViewController**: Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
+- **ReviewController**: Allows user to review their answers before submitting forms.
