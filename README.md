@@ -25,16 +25,18 @@ Once the variables have been set, run `pod install` to install the necessary dep
 
 The application contains the following important view controllers
 
-- **LoginViewController**: Handles user authentication based on a provided username / password.
-- **FormListViewController**: Loads and displays the available forms for authenticated users.
-- **OnePageFormViewController**:  Loads and displays a form on a single screen, providing validation before users submit forms.
-- **MultiPageFormViewController**: Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
-- **ReviewController**: Allows user to review their answers before submitting forms.
+- **LoginViewController** - Handles user authentication based on a provided username / password.
+- **FormListViewController** - Loads and displays the available forms for authenticated users.
+- **OnePageFormViewController** -  Loads and displays a form on a single screen, providing validation before users submit forms.
+- **MultiPageFormViewController** - Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
+- **ReviewController** - Allows user to review their answers before submitting forms.
 
-### Using the Sample CRF
+### Using the Case Report Form (CRF)
 
-This SDK also comes with a sample CRF (SampleCRF.xls) that contains the two forms used in the sample app. To use:
+The AppConnect SDK comes with a sample CRF - SampleCRF.xls - that contains the two forms used in the sample app.
 
-- Import the accompanied CRF into Rave for a subject of your choosing.
-- Log in with the sample app using the credentials of the subject you chose.
-- You should see two forms, Form 1 and Form 2. The former is hardcoded to open as a one-page form. The latter will open as a multi-page form.
+To use this sample form:
+
+1. Import the linked CRF into Rave for a subject of your choosing.
+2. Log in with the sample app using the credentials of the subject you chose.
+    > You should see two forms, Form 1 and Form 2. The former is hardcoded to open as a one-page form. The latter will open as a multi-page form.
