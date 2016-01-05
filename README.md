@@ -40,4 +40,4 @@ To use this sample form:
 1. Import the linked CRF into Rave for a subject of your choosing.
 2. Log in with the sample app using the credentials of the subject you chose.
 
-> You should see two forms, Form 1 and Form 2. The former is hardcoded to open as a one-page form. The latter will open as a multi-page form.
+> You should see two forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
