@@ -30,3 +30,11 @@ The application contains the following important view controllers
 - **OnePageFormViewController**:  Loads and displays a form on a single screen, providing validation before users submit forms.
 - **MultiPageFormViewController**: Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
 - **ReviewController**: Allows user to review their answers before submitting forms.
+
+### Using the Sample CRF
+
+This SDK also comes with a sample CRF (SampleCRF.xls) that contains the two forms used in the sample app. To use:
+
+- Import the accompanied CRF into Rave for a subject of your choosing.
+- Log in with the sample app using the credentials of the subject you chose.
+- You should see two forms, Form 1 and Form 2. The former is hardcoded to open as a one-page form. The latter will open as a multi-page form.
