@@ -110,7 +110,6 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             "Problem: \(stringFromResponseProblem(field.responseProblem))"
         ]
         
-        print("prob: \(field.responseProblem)")
         fieldDescription.text = fieldInfo.joinWithSeparator("\n")
     }
     
