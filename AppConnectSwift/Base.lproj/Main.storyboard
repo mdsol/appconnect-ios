@@ -143,9 +143,11 @@
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="g58-uL-Wvm" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="2YW-8X-Phn"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="Gc9-Q9-4tc" secondAttribute="trailing" constant="20" id="7xX-VY-CKo"/>
                             <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="95O-T4-3aH"/>
                             <constraint firstItem="8Ni-W6-SKr" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="e7l-lF-dnA"/>
                             <constraint firstItem="C4X-Io-Zg9" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="fDc-do-jsr"/>
+                            <constraint firstItem="Gc9-Q9-4tc" firstAttribute="leading" secondItem="4b0-58-sRT" secondAttribute="leadingMargin" constant="20" id="nec-9s-gQS"/>
                             <constraint firstItem="2hn-W8-Gk7" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="uYk-Jv-66A"/>
                             <constraint firstItem="Gc9-Q9-4tc" firstAttribute="centerX" secondItem="4b0-58-sRT" secondAttribute="centerX" id="x1R-GD-6fD"/>
                         </constraints>
