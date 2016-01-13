@@ -121,7 +121,7 @@ class OnePageFormViewController: UIViewController {
         let field1 = sequencer.currentField as! MDTextField
         field1.subjectResponse = field1Response.text
         if field1.responseProblem != MDFieldProblem.None {
-            showDialog("Wrong Format", message: "Field 1 is not the correct format.", completion:nil)
+            showDialog("Wrong Format", message: "The \"Text Field 1\" field is not the correct format.", completion:nil)
             return false
         }
         
@@ -131,7 +131,7 @@ class OnePageFormViewController: UIViewController {
         let field2 = sequencer.currentField as! MDNumericField
         field2.subjectResponse = field2.responseFromString(field2Response.text, decimalSeparator: decimal)
         if field2.responseProblem != MDFieldProblem.None {
-            showDialog("Wrong Format", message: "Field 2 is not the correct format.", completion:nil)
+            showDialog("Wrong Format", message: "The \"Numbers\" field is not the correct format.", completion:nil)
             return false
         }
         
@@ -141,7 +141,7 @@ class OnePageFormViewController: UIViewController {
         let field3 = sequencer.currentField as! MDNumericField
         field3.subjectResponse = field3.responseFromString(field3Response.text, decimalSeparator: decimal)
         if field3.responseProblem != MDFieldProblem.None {
-            showDialog("Wrong Format", message: "Field 3 is not the correct format.", completion:nil)
+            showDialog("Wrong Format", message: "The \"Numeric Value\" field is not the correct format.", completion:nil)
             return false
         }
         
