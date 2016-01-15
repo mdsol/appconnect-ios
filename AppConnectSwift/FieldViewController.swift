@@ -34,18 +34,6 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         // application, it would make more sense to have a separate UIViewController for each field type.
         switch field {
         case is MDDictionaryField:
-            let df = field as! MDDictionaryField
-
-            dictionaryResponses = df.possibleResponses.map { return $0.userValue }
-
-            var index = 0
-            if let response = df.subjectResponse {
-                index = dictionaryResponses.indexOf(response.userValue)!
-            }
-            
-            self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
-            
-            dictionaryField.selectRow(index, inComponent: 0, animated: true)
             dictionaryField.delegate = self
             dictionaryField.hidden = false
         case is MDDateTimeField:
@@ -57,7 +45,8 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             }
             
             df.subjectResponse = date
-            
+
+            dateField.datePickerMode = UIDatePickerMode.Date
             dateField.date = date
             dateField.hidden = false
         case is MDScaleField:
@@ -70,15 +59,31 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             
             sf.subjectResponse = value
             
-            sliderField.value = value
             sliderField.hidden = false
             sliderField.minimumValue = Float(sf.minimumResponse)
             sliderField.maximumValue = Float(sf.maximumResponse)
+            sliderField.value = value
         default:
             break
         }
         
         updateFieldInformation()
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        // The UIPicker is not fully loaded in viewDidLoad, so we must
+        // set its value in viewWillAppear
+        if let df = field as? MDDictionaryField {
+            dictionaryResponses = df.possibleResponses.map { return $0.userValue }
+            
+            var index = 0
+            if let response = df.subjectResponse {
+                index = dictionaryResponses.indexOf(response.userValue)!
+            }
+            
+            self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
+            dictionaryField.selectRow(index, inComponent: 0, animated: false)
+        }
     }
     
     func updateFieldInformation() {

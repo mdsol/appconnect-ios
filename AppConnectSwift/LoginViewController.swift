@@ -57,7 +57,12 @@ class LoginViewController: UIViewController {
                     }
                 } else if (error != nil) {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        let alert = UIAlertController(title: "Error", message: error.localizedDescription, preferredStyle: UIAlertControllerStyle.Alert)
+                        var message = error.localizedDescription
+                        if (MDClientErrorCause(rawValue: error.code) == MDClientErrorCause.AuthenticationFailure) {
+                            message = "The provided credentials are incorrect."
+                        }
+                        
+                        let alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.Alert)
                         alert.addAction(
                             UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
                         )
