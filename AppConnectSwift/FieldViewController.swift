@@ -108,7 +108,6 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         let fieldInfo = [
             "FieldOID: \(field.fieldOID)",
             "Type: \(field.fieldType)",
-            "Header: \(field.header)",
             "Number: \(field.fieldNumber)",
             "Label: \(field.label)",
             "Format: \(fieldFormat)",
