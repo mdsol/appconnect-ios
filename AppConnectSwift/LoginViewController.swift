@@ -1,11 +1,3 @@
-//
-//  LoginViewController.swift
-//  AppConnectSwift
-//
-//  Created by Nolan Carroll on 12/18/15.
-//  Copyright © 2015 Medidata Solutions. All rights reserved.
-//
-
 import UIKit
 
 class LoginViewController: UIViewController {
