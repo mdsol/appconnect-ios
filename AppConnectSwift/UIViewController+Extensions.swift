@@ -1,11 +1,3 @@
-//
-//  UIViewController+UIThreadDatastore.swift
-//  AppConnectSwift
-//
-//  Created by Nolan Carroll on 12/28/15.
-//  Copyright © 2015 Medidata Solutions. All rights reserved.
-//
-
 import Foundation
 import UIKit
 

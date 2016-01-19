@@ -1,11 +1,3 @@
-//
-//  Babbage-Bridging-Header.h
-//  AppConnectSample
-//
-//  Created by Steve Roy on 2015-12-16.
-//  Copyright © 2015 Medidata Solutions. All rights reserved.
-//
-
 #ifndef Babbage_Bridging_Header_h
 #define Babbage_Bridging_Header_h
 

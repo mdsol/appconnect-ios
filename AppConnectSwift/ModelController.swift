@@ -1,11 +1,3 @@
-//
-//  ModelController.swift
-//  AppConnectSample
-//
-//  Created by Steve Roy on 2015-12-16.
-//  Copyright © 2015 Medidata Solutions. All rights reserved.
-//
-
 import UIKit
 
 /*
