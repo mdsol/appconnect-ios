@@ -20,7 +20,7 @@ PODS:
   - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Babbage (1.1-pre.129):
+  - Babbage (1.1-pre.136):
     - AFNetworking (= 2.5.3)
     - HTMLReader (~> 0.7.1)
     - OpenSSL-Universal (~> 1.0.1j)
@@ -38,7 +38,7 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
-  Babbage: ba588afb5f4a5cec3b1303fa5647834bf936e6e2
+  Babbage: f7ce3e9f9f58ca48d3e43098f9eb35c098689ddb
   HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
   OpenSSL-Universal: 85ef63bf81d0741b03c8719cd29685c37c59518d
   UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
