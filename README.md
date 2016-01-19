@@ -56,7 +56,7 @@ ARTIFACTORY_USERNAME=myusername ARTIFACTORY_PASSWORD=mypassword pod install
 ```
 
 ## Initialization
-In Swift / Objective-C, Babbage must be initialized with two arguments. The first is a directory in which to store data. The second is a 32-byte key used to encrypt sensitive information. This key must be the same for all builds of the app.
+In Swift / Objective-C, Babbage must be initialized with two arguments. The first is a directory in which to store data. The second is a 32-byte key used to encrypt sensitive information. This key must be the same for all launches of your app.
 
 ```swift
 // In AppDelegate.swift
