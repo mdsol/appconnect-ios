@@ -41,3 +41,9 @@ To use this sample form:
 2. Log in with the sample app using the credentials of the subject you chose.
 
 > You should see two forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
+
+### Documentation ###
+
+Please refer to the documentation for detailed instruction on how to use the various APIs.
+
+There is a [Getting Started](./docs/getting_started.md) document detailing the basics of the AppConnect API.
