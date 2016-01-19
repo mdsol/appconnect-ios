@@ -106,5 +106,3 @@ client.logIn(username, inDatastore: datastore, password: password) { (user: MDUs
 ### Documentation ###
 
 Please refer to the documentation for detailed instruction on how to use the various APIs.
-
-There is a [Getting Started](./docs/getting_started.md) document detailing the basics of the AppConnect API.
