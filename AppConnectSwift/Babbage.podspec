@@ -3,13 +3,13 @@ password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory pas
 
 Pod::Spec.new do |s|
     s.name               = "Babbage"
-    s.version            = "1.1-pre.136"
+    s.version            = "1.1-pre.141"
     s.summary            = "The Medidata Patient Cloud SDK"
     s.homepage           = "https://github.com/mdsol/babbage"
     s.license            = { type: "Proprietary", text: "TBD" }
     s.author             = "Medidata Solutions, Inc."
 
-    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-snapshots/com/mdsol/babbage/ios/1.1-pre.129/babbage-1.1-pre.129.zip" }
+    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-snapshots/com/mdsol/babbage/ios/1.1-pre.141/babbage-1.1-pre.141.zip" }
     s.source_files       = "artifacts/include/babbage/*.h"
     s.vendored_libraries = "artifacts/libBabbage.a"
 
