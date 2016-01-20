@@ -3,7 +3,7 @@ password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory pas
 
 Pod::Spec.new do |s|
     s.name               = "Babbage"
-    s.version            = "1.1-pre.129"
+    s.version            = "1.1-pre.136"
     s.summary            = "The Medidata Patient Cloud SDK"
     s.homepage           = "https://github.com/mdsol/babbage"
     s.license            = { type: "Proprietary", text: "TBD" }
