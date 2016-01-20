@@ -27,6 +27,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         UIDatastore = MDDatastoreFactory.create()
         
         IQKeyboardManager.sharedManager().enable = true
+        IQKeyboardManager.sharedManager().toolbarManageBehaviour = IQAutoToolbarManageBehaviour.ByPosition
         
         return true
     }
