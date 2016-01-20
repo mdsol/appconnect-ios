@@ -44,7 +44,7 @@ class FormListViewController: UITableViewController {
             // Keep track of loaded subjects so that we know when all have been loaded
             var loadedSubjectsAndErrors : [AnyObject] = []
             
-            client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
                 if error != nil {
                     loadedSubjectsAndErrors.append(error)
                     if loadedSubjectsAndErrors.count == subjects.count {
@@ -63,7 +63,7 @@ class FormListViewController: UITableViewController {
                 // these methods are only usable during the lifetime of this
                 // temporary datastore.
                 for subject in subjects as! [MDSubject]! {
-                    client.loadFormsForSubject(subject, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
+                    client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
                         loadedSubjectsAndErrors.append(subject)
                         
                         // When all subjects have been loaded, populate the UI and stop the spinner
