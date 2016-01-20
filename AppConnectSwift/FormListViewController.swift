@@ -11,7 +11,7 @@ class FormListViewController: UITableViewController {
         super.viewDidLoad()
         
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
-        spinner.center = CGPointMake(160, 240);
+        spinner.center = CGPointMake(self.view.frame.size.width/2.0, 22);
         spinner.hidesWhenStopped = true;
         self.view.addSubview(spinner)
         spinner.startAnimating()
