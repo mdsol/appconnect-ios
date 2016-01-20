@@ -89,8 +89,8 @@ Babbage talks to back-end services to retrieve all information, such as users, s
 The following code replicates this process:
 ```swift
 client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
-  client.loadSubjectsForUser(user, inDatastore: datastore) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-    client.loadFormsForSubject(subjects.first!, inDatastore: datastore) { (forms: [AnyObject]!, error: NSError!) -> Void in
+  client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+    client.loadFormsForSubject(subjects.first!) { (forms: [AnyObject]!, error: NSError!) -> Void in
       ...
     }
   }
