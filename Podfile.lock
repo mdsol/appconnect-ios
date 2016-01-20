@@ -26,11 +26,13 @@ PODS:
     - OpenSSL-Universal (~> 1.0.1j)
     - UICKeyChainStore (= 2.0.6)
   - HTMLReader (0.7.1)
+  - IQKeyboardManagerSwift (3.3.6)
   - OpenSSL-Universal (1.0.1.16)
   - UICKeyChainStore (2.0.6)
 
 DEPENDENCIES:
   - Babbage (from `AppConnectSwift/Babbage.podspec`)
+  - IQKeyboardManagerSwift
 
 EXTERNAL SOURCES:
   Babbage:
@@ -40,6 +42,7 @@ SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   Babbage: 90311d1e037999c425b90218b4d4bde00d32491e
   HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
+  IQKeyboardManagerSwift: 111f01f029d9cda0647a2156d3b6efc24ad1e7f1
   OpenSSL-Universal: 85ef63bf81d0741b03c8719cd29685c37c59518d
   UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
 

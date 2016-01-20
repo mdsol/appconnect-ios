@@ -1,4 +1,5 @@
 import UIKit
+import IQKeyboardManagerSwift
 
 @UIApplicationMain
 class AppDelegate: UIResponder, UIApplicationDelegate {
@@ -24,6 +25,9 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // All UI code must get objects from the same datastore, so it's a good
         // idea to create it once and make it available to the rest of the app
         UIDatastore = MDDatastoreFactory.create()
+        
+        IQKeyboardManager.sharedManager().enable = true
+        IQKeyboardManager.sharedManager().toolbarManageBehaviour = IQAutoToolbarManageBehaviour.ByPosition
         
         return true
     }
