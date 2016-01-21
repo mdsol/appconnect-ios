@@ -12,10 +12,6 @@ class LoginViewController: UIViewController {
         super.viewDidLoad()
         
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
-        
-        MDClient.setEnvironment(.Validation);
-        usernameField.text = "sdk@101.com" //"sub02@sqa.com"
-        passwordField.text = "Password90" //"Password1"
     }
     
     @IBAction func doLogin(sender: UIButton) {
