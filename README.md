@@ -2,6 +2,8 @@
 
 AppConnectSwift is an example iOS app, written in Swift, that showcases proper usage of the AppConnect SDK. The functionality of AppConnect is contained within a library called Babbage, an homage to the [father of the computer](https://en.wikipedia.org/wiki/Charles_Babbage).
 
+>See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/Medidata+AppConnect+Home) for more information. 
+
 ### Prerequisites
 
 If you are running this application, it is assumed that:
