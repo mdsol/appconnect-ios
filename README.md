@@ -20,6 +20,8 @@ The Babbage library is packaged as a [CocoaPod](https://cocoapods.org/) to ease 
 
 Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
 
+See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/Medidata+AppConnect+Home) for more information. 
+
 ### Architecture
 
 The application contains the following important view controllers
