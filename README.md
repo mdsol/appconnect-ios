@@ -8,7 +8,6 @@ If you are running this application, it is assumed that:
 
 - You were provided Artifactory credentials by a Medidata representative
 - You have a valid Rave installation with Patient Cloud functionality enabled
-- You were provided a CRF to recreate the form used in this example app
 
 ### Setup
 
