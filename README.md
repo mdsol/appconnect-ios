@@ -2,6 +2,8 @@
 
 AppConnectSwift is an example iOS app, written in Swift, that showcases proper usage of the AppConnect SDK. The functionality of AppConnect is contained within a library called Babbage, an homage to the [father of the computer](https://en.wikipedia.org/wiki/Charles_Babbage).
 
+>See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/Medidata+AppConnect+Home) for more information. 
+
 ### Prerequisites
 
 If you are running this application, it is assumed that:
@@ -19,8 +21,6 @@ The Babbage library is packaged as a [CocoaPod](https://cocoapods.org/) to ease 
 
 
 Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
-
-See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/Medidata+AppConnect+Home) for more information. 
 
 ### Architecture
 
