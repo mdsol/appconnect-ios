@@ -8,8 +8,10 @@ AppConnectSwift is an example iOS app, written in Swift, that showcases proper u
 
 If you are running this application, it is assumed that:
 
-- You were provided Artifactory credentials by a Medidata representative
-- You have a valid Rave installation with Patient Cloud functionality enabled
+- You were provided Artifactory credentials by a Medidata representative.
+- You have a valid Rave installation with Patient Cloud functionality enabled.
+
+   >Not only do you need RAVE installed, you also you need permission to access Rave studies and sites. Contact your Medidata Professional Services representative for more information.
 
 ### Setup
 
