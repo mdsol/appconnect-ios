@@ -11,15 +11,16 @@ If you are running this application, it is assumed that:
 - You were provided Artifactory credentials by a Medidata representative.
 - You have a valid Rave installation with Patient Cloud functionality enabled.
 
-  >You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information.
+>You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information.
 
 ### Setup
 
 The Babbage library is packaged as a [CocoaPod](https://guides.cocoapods.org/using/getting-started.html) to ease installation and usage. To properly access the Babbage pod, you must have credentials for the Artifactory repository where the library is hosted. Set the following environment variables based on the credentials you were provided:
 
-
+```bash
     export ARTIFACTORY_USERNAME=providedusername
     export ARTIFACTORY_PASSWORD=providedpassword
+```
 
 
 Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
