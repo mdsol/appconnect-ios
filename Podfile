@@ -6,5 +6,5 @@ pod 'IQKeyboardManagerSwift'
 pod 'Babbage', podspec: 'AppConnectSwift/Babbage.podspec'
 
 target 'AppConnectSwift' do
-  pod 'Babbage', podspec: 'AppConnectSwift/Babbage.podspec'
+  # Inherits global pods
 end
