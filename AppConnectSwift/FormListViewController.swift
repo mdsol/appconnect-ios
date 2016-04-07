@@ -19,6 +19,9 @@ class FormListViewController: UITableViewController {
         let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: "doLogout")
         self.navigationItem.setLeftBarButtonItem(backButton, animated: true)
         
+        let cameraButton = UIBarButtonItem(barButtonSystemItem: .Camera, target: self, action: "captureImage:")
+        self.navigationItem.setRightBarButtonItem(cameraButton, animated: true)
+        
         // Begin loading the forms for the logged-in user
         loadForms()
     }
@@ -28,6 +31,10 @@ class FormListViewController: UITableViewController {
         
         // Populate the list with forms that are already in the datastore
         populateForms()
+    }
+    
+    func captureImage(sender: AnyObject){
+        self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("CaptureImage") as UIViewController, animated: true)
     }
     
     func loadForms() {
