@@ -19,9 +19,6 @@ class FormListViewController: UITableViewController {
         let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: "doLogout")
         self.navigationItem.setLeftBarButtonItem(backButton, animated: true)
         
-        let cameraButton = UIBarButtonItem(barButtonSystemItem: .Camera, target: self, action: "captureImage:")
-        self.navigationItem.setRightBarButtonItem(cameraButton, animated: true)
-        
         // Begin loading the forms for the logged-in user
         loadForms()
     }
@@ -34,6 +31,7 @@ class FormListViewController: UITableViewController {
     }
     
     func captureImage(sender: AnyObject){
+        self.navigationItem.title = "All Forms"
         self.navigationController!.pushViewController(self.storyboard!.instantiateViewControllerWithIdentifier("CaptureImage") as UIViewController, animated: true)
     }
     
@@ -130,9 +128,14 @@ class FormListViewController: UITableViewController {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
-        let form = objects[indexPath.row] as! MDForm
-        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
-        performSegueWithIdentifier(sequeIdentifier!, sender: self)
+        if(indexPath.row == 2){
+            captureImage(self)
+        }
+        else{
+            let form = objects[indexPath.row] as! MDForm
+            let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
+            performSegueWithIdentifier(sequeIdentifier!, sender: self)
+        }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -140,12 +143,15 @@ class FormListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+        return objects.count + 1
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
+        if(indexPath.row == 2){
+            cell.textLabel!.text = "CAPTURE IMAGE"
+            return cell
+        }
         let object = objects[indexPath.row] as! MDForm
         
         cell.textLabel!.text = object.name

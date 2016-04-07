@@ -20,6 +20,7 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
+        self.navigationItem.title = "Capture Image"
     }
     
     // MARK: Image picker delegate functions
@@ -49,6 +50,10 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
             let data = compressFile() as? NSData
             var subject: MDSubject
             //subject.co
+            
+            
+            // Empty the view once data successfully saved
+            imageView.image = nil
         }
         else{
             postAlert("No image", message: "Image selected has no path")
