@@ -1,8 +1,8 @@
 if File.exist?('local.yaml')
     require 'yaml'
     content = YAML.load(File.open('local.yaml'))
-    username = content['ARTIFACTORY_USERNAME']
-    password = content['ARTIFACTORY_PASSWORD']
+    username = content['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the variable ARTIFACTORY_USERNAME.")
+    password = content['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the variable ARTIFACTORY_PASSWORD.")
 else
     username = ENV['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the environment variable ARTIFACTORY_USERNAME.")
     password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the environment variable ARTIFACTORY_PASSWORD.")
