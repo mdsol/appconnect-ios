@@ -16,13 +16,12 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // long and must be the same between runs.
         let dir = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last
         let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncoding)
-        MDBabbage.startWithDatastoreAtURL(dir, encryptionKey: key)
+        // TODO: Cleanup needed
+        MDBabbage.startWithEnvironment(MDClientEnvironment.Validation, apiToken: "Random String", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
         
         // The client that will be used to make requests to the backend can be
         // created once and reused as needed throughout the app
         client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network)
-        // TODO: Remove for release
-        MDClient.setEnvironment(MDClientEnvironment.Validation)
         
         // All UI code must get objects from the same datastore, so it's a good
         // idea to create it once and make it available to the rest of the app
