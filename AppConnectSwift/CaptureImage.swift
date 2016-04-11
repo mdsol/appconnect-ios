@@ -13,6 +13,7 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     @IBOutlet weak var imageView: UIImageView!
     var imagePicker = UIImagePickerController()
     var image = UIImage()
+    
     override func viewDidLoad() {
         super.viewDidLoad()
         photoUpload(true)
@@ -48,10 +49,15 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     @IBAction func saveTapped(sender: AnyObject) {
         if(image.CGImage != nil){
             let data = compressFile() as? NSData
-            var subject: MDSubject
-            //subject.co
-            
-            
+            var subject: MDSubject!
+            subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelop: MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                if(err != nil){
+                    print(err?.description);
+                }
+                else{
+                    print("Data Saved");
+                }
+            })
             // Empty the view once data successfully saved
             imageView.image = nil
         }
@@ -63,6 +69,7 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     func photoUpload(fromCamera: Bool) {
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
+        // Looks for camera
         if(fromCamera){
             if (UIImagePickerController.isSourceTypeAvailable(.Camera)) {
                 imagePicker.sourceType = .Camera
@@ -71,6 +78,7 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
                 postAlert("Camera not accessable", message: "AppConnect cannot access the camera.")
             }
         }
+        // Looks for images in photo library
         else {
             imagePicker.sourceType = .PhotoLibrary
             presentViewController(imagePicker, animated: true, completion: {})
