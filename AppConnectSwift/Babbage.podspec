@@ -13,7 +13,7 @@ Pod::Spec.new do |s|
     s.source_files       = "artifacts/include/babbage/*.h"
     s.vendored_libraries = "artifacts/libBabbage.a"
 
-    s.library            = "c++", 'z'
+    s.library            = 'c++', 'z'
     s.platform           = :ios
     s.requires_arc       = true
     s.ios.deployment_target = '7.0'
