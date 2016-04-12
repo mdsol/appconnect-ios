@@ -33,6 +33,7 @@ The application contains the following important view controllers
 - **FormListViewController** - Loads and displays the available forms for authenticated users.
 - **OnePageFormViewController** -  Loads and displays a form on a single screen, providing validation before users submit forms.
 - **MultiPageFormViewController** - Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
+- **CaptureImageViewController** - Loads a form for taking pictures with device camera, upload an image from photo library and save it to S3.
 - **ReviewController** - Allows user to review their answers before submitting forms.
 
 ### Using the Case Report Form (CRF)

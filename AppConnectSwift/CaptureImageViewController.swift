@@ -8,7 +8,7 @@
 
 import UIKit
 
-class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
+class CaptureImageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
     var imagePicker = UIImagePickerController()
