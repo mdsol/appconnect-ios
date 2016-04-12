@@ -44,6 +44,9 @@
                                     <rect key="frame" x="0.0" y="0.0" width="600" height="44"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
+                                <connections>
+                                    <segue destination="0WK-4M-tV2" kind="show" identifier="CaptureImage" id="Dey-6P-SSK"/>
+                                </connections>
                             </tableViewCell>
                         </prototypes>
                     </tableView>
@@ -53,10 +56,10 @@
             </objects>
             <point key="canvasLocation" x="635" y="-229"/>
         </scene>
-        <!--Capture Image-->
+        <!--Capture Image View Controller-->
         <scene sceneID="Bvg-Me-XRd">
             <objects>
-                <viewController storyboardIdentifier="CaptureImage" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0WK-4M-tV2" customClass="CaptureImage" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController storyboardIdentifier="CaptureImage" useStoryboardIdentifierAsRestorationIdentifier="YES" id="0WK-4M-tV2" customClass="CaptureImageViewController" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="6eo-fh-E1k"/>
                         <viewControllerLayoutGuide type="bottom" id="7s6-jo-df1"/>
