@@ -16,7 +16,9 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        photoUpload(true)
+        takeOrSelectPicture(true)
+        imagePicker.allowsEditing = false
+        imagePicker.delegate = self
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -27,10 +29,8 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     // MARK: Image picker delegate functions
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         self.dismissViewControllerAnimated(true, completion: nil)
-        print(info)
-        let image = info[UIImagePickerControllerOriginalImage] as? UIImage
-        imageView.image = image
-        self.image = image!
+        self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
+        imageView.image = self.image
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -39,11 +39,11 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
     
     // MARK: View Controller Toolbar Items
     @IBAction func searchTapped(sender: AnyObject) {
-        photoUpload(false)
+        takeOrSelectPicture(false)
     }
     
     @IBAction func cameraTapped(sender: AnyObject) {
-        photoUpload(true)
+        takeOrSelectPicture(true)
     }
     
     @IBAction func saveTapped(sender: AnyObject) {
@@ -51,7 +51,7 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
             let data = compressFile() as? NSData
             var subject: MDSubject!
             subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelop: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                if(err != nil){
+                if (err != nil) {
                     print(err?.description);
                 }
                 else{
@@ -66,11 +66,9 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
         }
     }
     
-    func photoUpload(fromCamera: Bool) {
-        imagePicker.allowsEditing = false
-        imagePicker.delegate = self
+    func takeOrSelectPicture(fromCamera: Bool) {
         // Looks for camera
-        if(fromCamera){
+        if (fromCamera) {
             if (UIImagePickerController.isSourceTypeAvailable(.Camera)) {
                 imagePicker.sourceType = .Camera
                 presentViewController(imagePicker, animated: true, completion: {})
@@ -102,19 +100,19 @@ class CaptureImage: UIViewController, UIImagePickerControllerDelegate, UINavigat
         var compressionQuality : CGFloat = 0.5 // Quality of compression
         
         // Resize
-        if (adjustedHeight < imgHeight || adjustedWidth < imgWidth){
+        if (adjustedHeight < imgHeight || adjustedWidth < imgWidth) {
             // Adjusting larger width
-            if(imgAspectRatio < adjustedAspectRatio){
+            if (imgAspectRatio < adjustedAspectRatio) {
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
                 imgHeight = adjustedHeight;
             }
             // Adjusting larger height
-            else if (imgAspectRatio > adjustedAspectRatio){
+            else if (imgAspectRatio > adjustedAspectRatio) {
                 imgHeight = adjustedWidth / imgWidth * imgHeight
                 imgWidth = adjustedWidth
             }
             // No compression
-            else{
+            else {
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;
                 compressionQuality = 1;
