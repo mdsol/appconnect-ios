@@ -22,5 +22,6 @@
 #import <Babbage/MDTextField.h>
 #import <Babbage/MDTimestampField.h>
 #import <Babbage/MDUser.h>
+#import <Babbage/MDSubjectDataEnvelope.h>
 
 #endif /* Babbage_Bridging_Header_h */
