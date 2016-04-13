@@ -10,9 +10,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //TODO: remove these when done debugging
-        usernameField.text = "sub001@sqa.com"
-        passwordField.text = "Password1"
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
     }
     

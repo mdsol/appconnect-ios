@@ -50,19 +50,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         if(image.CGImage != nil){
             let data = compressFile() as? NSData
             var subject: MDSubject!
-            subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelop: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                if (err != nil) {
-                    print(err?.description);
-                }
-                else{
-                    print("Data Saved");
-                }
+            subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                print(err == nil ? "Data Saved" : err?.description);
+                self.imageView.image = nil
             })
-            // Empty the view once data successfully saved
-            imageView.image = nil
         }
         else{
-            postAlert("No image", message: "Image selected has no path")
+            showAlert("No image", message: "Image selected has no path")
         }
     }
     
@@ -73,24 +67,23 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 imagePicker.sourceType = .Camera
                 presentViewController(imagePicker, animated: true, completion: {})
             } else {
-                postAlert("Camera not accessable", message: "AppConnect cannot access the camera.")
+                showAlert("Camera not accessible", message: "AppConnect cannot access the camera.")
             }
         }
-        // Looks for images in photo library
         else {
+            // Looks for images in photo library
             imagePicker.sourceType = .PhotoLibrary
             presentViewController(imagePicker, animated: true, completion: {})
         }
     }
 
-    func postAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message,
-        preferredStyle: UIAlertControllerStyle.Alert)
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func compressFile() -> NSData{
+    func compressFile() -> NSData {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
@@ -101,18 +94,18 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         // Resize
         if (adjustedHeight < imgHeight || adjustedWidth < imgWidth) {
-            // Adjusting larger width
             if (imgAspectRatio < adjustedAspectRatio) {
+                // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
                 imgHeight = adjustedHeight;
             }
-            // Adjusting larger height
             else if (imgAspectRatio > adjustedAspectRatio) {
+                // Adjusting larger height
                 imgHeight = adjustedWidth / imgWidth * imgHeight
                 imgWidth = adjustedWidth
             }
-            // No compression
             else {
+                // No compression
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;
                 compressionQuality = 1;
