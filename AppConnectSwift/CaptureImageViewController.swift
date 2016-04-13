@@ -47,7 +47,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @IBAction func saveTapped(sender: AnyObject) {
-        if(image.CGImage != nil){
+        if image.CGImage != nil {
             let data = compressFile() as? NSData
             var subject: MDSubject!
             subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
@@ -55,18 +55,19 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 self.imageView.image = nil
             })
         }
-        else{
+        else {
             showAlert("No image", message: "Image selected has no path")
         }
     }
     
     func takeOrSelectPicture(fromCamera: Bool) {
         // Looks for camera
-        if (fromCamera) {
-            if (UIImagePickerController.isSourceTypeAvailable(.Camera)) {
+        if fromCamera {
+            if UIImagePickerController.isSourceTypeAvailable(.Camera) {
                 imagePicker.sourceType = .Camera
                 presentViewController(imagePicker, animated: true, completion: {})
-            } else {
+            }
+            else {
                 showAlert("Camera not accessible", message: "AppConnect cannot access the camera.")
             }
         }
@@ -93,13 +94,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         var compressionQuality : CGFloat = 0.5 // Quality of compression
         
         // Resize
-        if (adjustedHeight < imgHeight || adjustedWidth < imgWidth) {
-            if (imgAspectRatio < adjustedAspectRatio) {
+        if adjustedHeight < imgHeight || adjustedWidth < imgWidth {
+            if imgAspectRatio < adjustedAspectRatio {
                 // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
                 imgHeight = adjustedHeight;
             }
-            else if (imgAspectRatio > adjustedAspectRatio) {
+            else if imgAspectRatio > adjustedAspectRatio {
                 // Adjusting larger height
                 imgHeight = adjustedWidth / imgWidth * imgHeight
                 imgWidth = adjustedWidth
