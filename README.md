@@ -86,7 +86,7 @@ let user = datastore.userWithID(Int64(self.userID))
 ## Upload Data to S3
 You can store different formats of file to the S3 storage.
  - Sample App contains an example where by user can take a picture and upload to S3 storage
-``swift
+```swift
     TODO : Code for data upload to S3
 ```
 
