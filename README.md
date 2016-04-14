@@ -33,6 +33,7 @@ The application contains the following important view controllers
 - **FormListViewController** - Loads and displays the available forms for authenticated users.
 - **OnePageFormViewController** -  Loads and displays a form on a single screen, providing validation before users submit forms.
 - **MultiPageFormViewController** - Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
+- **CaptureImageViewController** - Allows the user to take a picture or select one from the gallery, and uploads the image to AWS S3.
 - **ReviewController** - Allows user to review their answers before submitting forms.
 
 ### Using the Case Report Form (CRF)
@@ -82,6 +83,12 @@ let user = datastore.userWithID(Int64(self.userID))
   - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
   - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
+## Upload Data to S3
+You can store different formats of file to the S3 storage.
+ - Sample App contains an example where by user can take a picture and upload to S3 storage
+```swift
+    TODO : Code for data upload to S3
+```
 
 ## Network Requests
 Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like this:

@@ -10,7 +10,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
     }
     
