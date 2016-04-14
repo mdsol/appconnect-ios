@@ -5,12 +5,20 @@ class LoginViewController: UIViewController {
     @IBOutlet var usernameField : UITextField!;
     @IBOutlet var passwordField : UITextField!;
     @IBOutlet var loginButton   : UIButton!;
-    
+    @IBOutlet weak var signUpButton: UIButton!
+
     var userID : Int64?
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        usernameField.text = "sub001@sqa.com"
+        passwordField.text = "Password1"
+        self.navigationController?.navigationBarHidden = true
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
+    }
+    
+    override func viewWillAppear(animated: Bool) {
+        self.navigationController?.navigationBarHidden = true
     }
     
     @IBAction func doLogin(sender: UIButton) {
@@ -63,7 +71,10 @@ class LoginViewController: UIViewController {
             }
         }
     }
-
+    @IBAction func doSignUp(sender: AnyObject) {
+        self.navigationController?.navigationBarHidden = false
+    }
+    
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         // Pass the userID into the FormList controller
         if segue.identifier == "LoginSuccess" {
