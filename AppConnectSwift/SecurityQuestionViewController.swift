@@ -15,6 +15,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         "What is your mothers middle name?"
     ]
     var securityQuestion = "What year were you born?"
+    var createAccountViewController = CreateAccountViewController()
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -44,14 +45,14 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
          self.performSegueWithIdentifier(
             "SecuritySuccess", sender: nil)
+        var s = tableDataSource[indexPath.row]
         self.securityQuestion = tableDataSource[indexPath.row]
-        
+        createAccountViewController.securityQuestion = self.securityQuestion
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if(segue.identifier == "SecuritySuccess"){
-            let createAccountViewController = segue.destinationViewController as! CreateAccountViewController
-            createAccountViewController.securityQuestionL = self.securityQuestion
+            createAccountViewController = segue.destinationViewController as! CreateAccountViewController
         }
     }
     
