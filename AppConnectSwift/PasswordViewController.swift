@@ -2,6 +2,9 @@ import UIKit
 
 class PasswordViewController: UIViewController {
     
+    @IBOutlet weak var passwordField: UITextField!
+    @IBOutlet weak var passwordConfirmField: UITextField!
+    
     override func viewDidLoad() {
         super.viewDidLoad()
     }

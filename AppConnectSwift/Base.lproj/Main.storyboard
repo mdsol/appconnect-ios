@@ -530,11 +530,10 @@
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="KSA-jz-7fH">
-                                <rect key="frame" x="30" y="224.5" width="540" height="33"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <rect key="frame" x="30" y="224" width="540" height="33"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Submit">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -545,6 +544,12 @@
                                     <action selector="doSubmit:" destination="BQn-57-ORP" eventType="touchUpInside" id="pFx-lA-EK8"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Fields are not matching" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="AmL-7B-L1L">
+                                <rect key="frame" x="30" y="277.5" width="540" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                             <textField opaque="NO" clipsSubviews="YES" contentMode="scaleToFill" contentHorizontalAlignment="left" contentVerticalAlignment="center" borderStyle="roundedRect" placeholder="Email confirmation" textAlignment="natural" minimumFontSize="17" clearButtonMode="whileEditing" translatesAutoresizingMaskIntoConstraints="NO" id="qxZ-rL-4YY">
                                 <rect key="frame" x="30" y="174" width="540" height="30"/>
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
@@ -556,13 +561,16 @@
                             <constraint firstItem="XY2-zn-Dca" firstAttribute="top" secondItem="mKR-fB-M1x" secondAttribute="bottom" constant="20" id="0Ag-D3-6xf"/>
                             <constraint firstItem="KSA-jz-7fH" firstAttribute="top" secondItem="qxZ-rL-4YY" secondAttribute="bottom" constant="20" id="1MQ-8O-mps"/>
                             <constraint firstItem="qxZ-rL-4YY" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="5e6-4e-1FJ"/>
+                            <constraint firstItem="AmL-7B-L1L" firstAttribute="top" secondItem="KSA-jz-7fH" secondAttribute="bottom" constant="20" id="6KN-4L-f6Y"/>
                             <constraint firstItem="KSA-jz-7fH" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="BbJ-Yx-Ubc"/>
                             <constraint firstAttribute="trailingMargin" secondItem="qxZ-rL-4YY" secondAttribute="trailing" constant="10" id="BbP-sn-f03"/>
+                            <constraint firstItem="AmL-7B-L1L" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="IsF-ZE-9be"/>
                             <constraint firstItem="Mf4-Jj-R1I" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="JHo-BF-7QD"/>
                             <constraint firstItem="KSA-jz-7fH" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="Mxu-LI-zI3"/>
                             <constraint firstItem="qxZ-rL-4YY" firstAttribute="top" secondItem="Mf4-Jj-R1I" secondAttribute="bottom" constant="20" id="PLt-Us-xOE"/>
                             <constraint firstItem="XY2-zn-Dca" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="Uf2-OH-Vmg"/>
                             <constraint firstAttribute="trailingMargin" secondItem="Mf4-Jj-R1I" secondAttribute="trailing" constant="10" id="UwY-zB-6yt"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="AmL-7B-L1L" secondAttribute="trailing" constant="10" id="VX5-Px-sr0"/>
                             <constraint firstItem="Mf4-Jj-R1I" firstAttribute="top" secondItem="XY2-zn-Dca" secondAttribute="bottom" constant="20" id="b6x-h4-Dse"/>
                             <constraint firstItem="KSA-jz-7fH" firstAttribute="leading" secondItem="ZRE-Sl-GM6" secondAttribute="leadingMargin" constant="10" id="iU7-BK-VDI"/>
                             <constraint firstAttribute="trailingMargin" secondItem="KSA-jz-7fH" secondAttribute="trailing" constant="10" id="l59-ko-Cxh"/>
@@ -575,6 +583,8 @@
                         <barButtonItem key="backBarButtonItem" title="Back" id="di3-RC-Hqy"/>
                     </navigationItem>
                     <connections>
+                        <outlet property="confirmLabelsMatching" destination="AmL-7B-L1L" id="mrw-p7-PFF"/>
+                        <outlet property="emailConfirmTextField" destination="qxZ-rL-4YY" id="9LC-WP-9ef"/>
                         <outlet property="emailTextField" destination="Mf4-Jj-R1I" id="n1w-IB-Qbr"/>
                         <outlet property="submitButton" destination="KSA-jz-7fH" id="7ez-zg-mqs"/>
                         <segue destination="Dlg-ad-G68" kind="show" identifier="EmailSuccess" id="38A-7T-Xf9"/>
@@ -625,10 +635,9 @@
                             </label>
                             <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="TFN-ZY-Wgj">
                                 <rect key="frame" x="30" y="346" width="540" height="33"/>
-                                <color key="backgroundColor" white="0.66666666666666663" alpha="1" colorSpace="calibratedWhite"/>
-                                <fontDescription key="fontDescription" type="boldSystem" pointSize="17"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Submit">
-                                    <color key="titleColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                                    <color key="titleColor" red="0.0" green="0.47843137250000001" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                                 </state>
                                 <userDefinedRuntimeAttributes>
                                     <userDefinedRuntimeAttribute type="number" keyPath="layer.cornerRadius">
@@ -640,27 +649,38 @@
                                     <action selector="doSubmit:" destination="Dlg-ad-G68" eventType="touchUpInside" id="qF3-To-wlO"/>
                                 </connections>
                             </button>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Password not matching" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="y8l-ig-pax">
+                                <rect key="frame" x="30" y="399" width="540" height="20.5"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <color key="textColor" cocoaTouchSystemColor="darkTextColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                         <constraints>
                             <constraint firstItem="vnl-qS-n4b" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="27N-me-ofU"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vnl-qS-n4b" secondAttribute="trailing" constant="10" id="4Pr-DZ-PM1"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="y8l-ig-pax" secondAttribute="trailing" constant="10" id="A4r-4S-tsj"/>
                             <constraint firstAttribute="trailingMargin" secondItem="gIn-ID-oeG" secondAttribute="trailing" constant="10" id="AAX-xA-e8l"/>
                             <constraint firstItem="gIn-ID-oeG" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="Foq-d9-Mnv"/>
                             <constraint firstItem="3pI-ng-Kzn" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="Hpv-OE-3NM"/>
                             <constraint firstItem="TFN-ZY-Wgj" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="PDr-s8-9Uf"/>
                             <constraint firstAttribute="trailingMargin" secondItem="TFN-ZY-Wgj" secondAttribute="trailing" constant="10" id="UCp-xt-uO9"/>
+                            <constraint firstItem="y8l-ig-pax" firstAttribute="top" secondItem="TFN-ZY-Wgj" secondAttribute="bottom" constant="20" id="ifS-7o-I71"/>
                             <constraint firstItem="3pI-ng-Kzn" firstAttribute="top" secondItem="kqx-e7-K0B" secondAttribute="bottom" constant="20" id="jRL-Dx-juB"/>
                             <constraint firstItem="vGh-WK-TjO" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="mwN-S2-qrS"/>
                             <constraint firstAttribute="trailingMargin" secondItem="vGh-WK-TjO" secondAttribute="trailing" constant="10" id="nbT-fP-9Dg"/>
                             <constraint firstItem="TFN-ZY-Wgj" firstAttribute="top" secondItem="vnl-qS-n4b" secondAttribute="bottom" constant="20" id="oxV-yy-Gwt"/>
                             <constraint firstItem="gIn-ID-oeG" firstAttribute="top" secondItem="3pI-ng-Kzn" secondAttribute="bottom" constant="20" id="phn-8E-LrJ"/>
+                            <constraint firstItem="y8l-ig-pax" firstAttribute="leading" secondItem="geJ-3l-Lmf" secondAttribute="leadingMargin" constant="10" id="rvH-H4-HTp"/>
                             <constraint firstItem="vGh-WK-TjO" firstAttribute="top" secondItem="gIn-ID-oeG" secondAttribute="bottom" constant="20" id="vZs-ja-kI7"/>
                             <constraint firstItem="vnl-qS-n4b" firstAttribute="top" secondItem="vGh-WK-TjO" secondAttribute="bottom" constant="20" id="wBh-Zx-UVM"/>
                             <constraint firstAttribute="trailingMargin" secondItem="3pI-ng-Kzn" secondAttribute="trailing" constant="10" id="zwW-KM-hZ0"/>
                         </constraints>
                     </view>
                     <connections>
+                        <outlet property="passwordConfirmField" destination="vGh-WK-TjO" id="QKg-YQ-koC"/>
+                        <outlet property="passwordField" destination="gIn-ID-oeG" id="XZ9-rb-0Xi"/>
                         <segue destination="d3y-yc-TLR" kind="show" identifier="PasswordSuccess" id="pCK-yu-O8i"/>
                     </connections>
                 </viewController>
@@ -730,8 +750,9 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
-                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ji9-Pd-eX8">
+                            <button opaque="NO" contentMode="scaleToFill" misplaced="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="ji9-Pd-eX8">
                                 <rect key="frame" x="30" y="174.5" width="540" height="30"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
                                 <state key="normal" title="Create Account"/>
                             </button>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="What year were you born?" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="3ve-gm-FrT">
