@@ -15,7 +15,10 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         "What is your mothers middle name?"
     ]
     var securityQuestion = "What year were you born?"
+    var securityQuestionID = 1
     var createAccountViewController = CreateAccountViewController()
+    var userEmail : String!
+    var userPassword : String!
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -45,14 +48,19 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
          self.performSegueWithIdentifier(
             "SecuritySuccess", sender: nil)
-        var s = tableDataSource[indexPath.row]
+        // Row path starts from 0 and indexs used starts from 1
+        self.securityQuestionID = indexPath.row + 1
         self.securityQuestion = tableDataSource[indexPath.row]
         createAccountViewController.securityQuestion = self.securityQuestion
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Pass the userEmail, userPassword, securityQuestionID for creating account 
         if(segue.identifier == "SecuritySuccess"){
             createAccountViewController = segue.destinationViewController as! CreateAccountViewController
+            createAccountViewController.userEmail = userEmail
+            createAccountViewController.userPassword = userPassword
+            createAccountViewController.userSecuirtyQuestionID = securityQuestionID
         }
     }
     

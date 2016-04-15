@@ -2,6 +2,8 @@ import UIKit
 
 class PasswordViewController: UIViewController {
     
+    var userEmail : String!
+    
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var passwordConfirmField: UITextField!
     @IBOutlet weak var confirmPasswordsMatching: UILabel!
@@ -45,9 +47,11 @@ class PasswordViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Pass the userID into the FormList controller
         if segue.identifier == "PasswordSuccess" {
             let securityQuestionViewController = segue.destinationViewController as! SecurityQuestionViewController
+            // Pass the userEmail, userPassword for creating account
+            securityQuestionViewController.userEmail = userEmail
+            securityQuestionViewController.userPassword = passwordField.text
         }
     }
     

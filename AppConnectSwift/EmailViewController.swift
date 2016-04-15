@@ -44,9 +44,10 @@ class EmailViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Pass the userID into the FormList controller
         if segue.identifier == "EmailSuccess" {
             let passwordViewController = segue.destinationViewController as! PasswordViewController
+            // Pass the userEmail for creating account
+            passwordViewController.userEmail = emailTextField.text
         }
     }
     
