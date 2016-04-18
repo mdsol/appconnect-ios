@@ -9,6 +9,7 @@ class EmailViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
+        // Keep the confirm label hidden till email text fields submitted are satisfying criteria
         confirmLabelsMatching.hidden = true;
         emailTextField.addTarget(self, action: "textFieldDidBeginEditing:", forControlEvents: UIControlEvents.EditingChanged)
         emailConfirmTextField.addTarget(self, action: "textFieldDidBeginEditing:", forControlEvents: UIControlEvents.EditingChanged)
@@ -17,11 +18,13 @@ class EmailViewController: UIViewController {
     @IBAction func doSubmit(sender: AnyObject) {
         if emailTextField.text == emailConfirmTextField.text  {
             do {
+                // Valid email condition
                 let emailRegEx = try NSRegularExpression(pattern: "[A-Z0-9a-z._%+-]+@[A-Za-z0-9.-]+\\.[A-Za-z]{1,64}", options: .CaseInsensitive)
                 if emailTextField.text != "" && emailRegEx.firstMatchInString(emailTextField.text!, options: NSMatchingOptions(rawValue: 0), range: NSMakeRange(0, emailTextField.text!.characters.count)) != nil {
                         self.performSegueWithIdentifier("EmailSuccess", sender: nil)
                 }
                 else{
+                    // Color the border of text field red
                     confirmLabelsMatching.hidden = false
                     confirmLabelsMatching.text = "Invalid Email"
                     emailTextField.layer.borderWidth = 2.0
@@ -36,6 +39,7 @@ class EmailViewController: UIViewController {
             
         }
         else {
+            // Color the border of text field red
             confirmLabelsMatching.hidden = false
             emailConfirmTextField.layer.borderWidth = 2.0
             emailConfirmTextField.layer.cornerRadius = 5.0
@@ -52,6 +56,7 @@ class EmailViewController: UIViewController {
     }
     
     func textFieldDidBeginEditing(textField: UITextField) {
+        // Once textfield is in focus remove the error label and borders from the fields
         confirmLabelsMatching.hidden = true
         textField.layer.borderWidth = 0.0
         textField.layer.cornerRadius = 0.0

@@ -9,9 +9,9 @@ AppConnectSwift is an example iOS app, written in Swift, that showcases proper u
 If you are running this application, it is assumed that:
 
 - You were provided Artifactory credentials by a Medidata representative.
-- You have a valid Rave installation with Patient Cloud functionality enabled.
+- You have a valid Rave installation with Patient Cloud functionality enabled.[For pushing data to Rave]
 
->You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information.
+>You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information. [When using a Rave based Study]
 
 ### Setup
 
@@ -30,6 +30,10 @@ Once the variables have been set, run `pod install` to install the necessary dep
 The application contains the following important view controllers
 
 - **LoginViewController** - Handles user authentication based on a provided username / password.
+- **EmailViewController** - First step of user registration to use AWS S3 storage, enter a valid email address and confirm the same.
+- **PasswordViewController** - If user email is valid, create password and confirm the same based on criteria noted in screen. 
+- **SecurityQuestionViewController** - Successfully setting password asks user to set security question for password retrieval.
+- **CreateAccountViewController** - Enter the answer to security question and create the account.
 - **FormListViewController** - Loads and displays the available forms for authenticated users.
 - **OnePageFormViewController** -  Loads and displays a form on a single screen, providing validation before users submit forms.
 - **MultiPageFormViewController** - Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
@@ -45,7 +49,7 @@ To use this sample form:
 1. Import the linked CRF into Rave for a subject of your choosing.
 2. Log in with the sample app using the credentials of the subject you chose.
 
-> You should see two forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
+> As general user sees an Image Capture form that opens a form for user to take a picture or load an image from library. As Rave registered user, addition to ImageCapture form you should see two more forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
 
 # Using the API in your own application #
 
@@ -68,6 +72,14 @@ In Swift / Objective-C, Babbage must be initialized with two arguments. The firs
 let dir = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last
 let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncoding)
 MDBabbage.startWithDatastoreAtURL(dir, encryptionKey: key)
+```
+
+## Self Registering the user
+You can create an account for storing data to AWS S3 buckets.
+
+```swift
+// In CreateAccountViewController.swift
+client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityAnswer completion:(void (^)(NSError *error))completion
 ```
 
 ## Loading Data from the Datastore

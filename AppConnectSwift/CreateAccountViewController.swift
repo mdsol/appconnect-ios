@@ -24,6 +24,7 @@ class CreateAccountViewController: UIViewController {
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+        // Account created successfully takes user back to login screen
         if segue.identifier == "CreateAccountSuccess" {
             let loginViewController = segue.destinationViewController as! LoginViewController
         }
