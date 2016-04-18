@@ -1,8 +1,10 @@
 source 'https://github.com/CocoaPods/Specs.git'
 
-pod 'IQKeyboardManagerSwift','~>3.3.6' 
 use_frameworks!
 
+pod 'IQKeyboardManagerSwift'
+pod 'Babbage', podspec: 'AppConnectSwift/Babbage.podspec'
+
 target 'AppConnectSwift' do
-  pod 'Babbage', podspec: 'AppConnectSwift/Babbage.podspec'
+    # Inherits global pods
 end
