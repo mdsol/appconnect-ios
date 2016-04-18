@@ -60,7 +60,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
             createAccountViewController = segue.destinationViewController as! CreateAccountViewController
             createAccountViewController.userEmail = userEmail
             createAccountViewController.userPassword = userPassword
-            createAccountViewController.userSecuirtyQuestionID = securityQuestionID
+            createAccountViewController.userSecurityQuestionID = securityQuestionID
         }
     }
     

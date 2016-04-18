@@ -5,25 +5,23 @@ class CreateAccountViewController: UIViewController {
     var securityQuestion = "What year were you born?"
     var userEmail : String!
     var userPassword : String!
-    var userSecuirtyQuestionID : Int!
+    var userSecurityQuestionID : Int!
     
     @IBOutlet weak var userSecurityQuestionAnswer: UITextField!
     @IBOutlet weak var securityQuestionLabel: UILabel!
-    
-    @IBAction func createAccount(sender: AnyObject) {
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Network);
-        client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecuirtyQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) -> Void in
-            print(err!=nil ? self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil): err?.description)
-        }
-    }
     
     override func viewDidLoad() {
         super.viewDidLoad()
         securityQuestionLabel.text = securityQuestion
     }
     
-    
+    @IBAction func createAccount(sender: AnyObject) {
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Network);
+        client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
+            err != nil ? self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil) : print(err?.description)
+        }
+    }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if segue.identifier == "CreateAccountSuccess" {
