@@ -123,7 +123,6 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         return imageData!;
     }
-
 }
 
 

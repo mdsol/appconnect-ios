@@ -36,12 +36,10 @@ class PasswordViewController: UIViewController {
                     passwordField.layer.cornerRadius = 5.0
                     passwordField.layer.borderColor = UIColor.redColor().CGColor
                 }
-                
             }
             catch {
                 print("Errored")
             }
-            
         }
         else {
             // Color the border of text field red
@@ -51,7 +49,6 @@ class PasswordViewController: UIViewController {
             passwordConfirmField.layer.cornerRadius = 5.0
             passwordConfirmField.layer.borderColor = UIColor.redColor().CGColor
         }
-        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {

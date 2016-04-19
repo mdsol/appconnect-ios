@@ -35,8 +35,6 @@ class EmailViewController: UIViewController {
             catch {
                 print("Errored")
             }
-            
-            
         }
         else {
             // Color the border of text field red
