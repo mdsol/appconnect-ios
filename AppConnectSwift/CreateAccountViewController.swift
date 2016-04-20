@@ -19,7 +19,12 @@ class CreateAccountViewController: UIViewController {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
         client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
-            err != nil ? self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil) : print(err?.description)
+            if err == nil {
+                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+            }
+            else {
+                print(err?.description)
+            }
         }
     }
     
