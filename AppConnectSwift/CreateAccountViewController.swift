@@ -20,7 +20,9 @@ class CreateAccountViewController: UIViewController {
         let client = clientFactory.clientOfType(MDClientType.Network);
         client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
             if err == nil {
-                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+                NSOperationQueue.mainQueue().addOperationWithBlock({ 
+                    self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+                })
             }
             else {
                 print(err?.description)

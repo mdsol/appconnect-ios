@@ -47,13 +47,18 @@ class FormListViewController: UITableViewController {
             client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
                 if error != nil {
                     loadedSubjectsAndErrors.append(error)
-                    if loadedSubjectsAndErrors.count == subjects.count {
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
-                            self.populateForms()
-                            self.spinner.stopAnimating()
-                            datastore = nil
-                            bgQueue = nil
+                    if subjects != nil {
+                        if loadedSubjectsAndErrors.count == subjects.count {
+                            NSOperationQueue.mainQueue().addOperationWithBlock {
+                                self.populateForms()
+                                self.spinner.stopAnimating()
+                                datastore = nil
+                                bgQueue = nil
+                            }
                         }
+                    }
+                    else {
+                        self.spinner.stopAnimating()
                     }
                     return
                 }

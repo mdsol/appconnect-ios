@@ -11,8 +11,6 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        usernameField.text = "sub001@sqa.com"
-        passwordField.text = "Password1"
         self.navigationController?.navigationBarHidden = true
         loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
     }
