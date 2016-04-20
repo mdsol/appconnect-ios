@@ -106,13 +106,19 @@ class FormListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            let form = objects[indexPath.row] as! MDForm
-            if form.formOID == "FORM1" {
-                let controller = segue.destinationViewController as! OnePageFormViewController
-                controller.formID = form.objectID
-            } else if form.formOID == "FORM2" {
-                let controller = segue.destinationViewController as! MultiPageFormViewController
-                controller.formID = form.objectID
+            if indexPath.row == objects.count {
+                self.navigationItem.title = "All Forms"
+                let controller = segue.destinationViewController as! CaptureImageViewController
+            }
+            else{
+                let form = objects[indexPath.row] as! MDForm
+                if form.formOID == "FORM1" {
+                    let controller = segue.destinationViewController as! OnePageFormViewController
+                    controller.formID = form.objectID
+                } else if form.formOID == "FORM2" {
+                    let controller = segue.destinationViewController as! MultiPageFormViewController
+                    controller.formID = form.objectID
+                }
             }
         }
     }
@@ -123,9 +129,14 @@ class FormListViewController: UITableViewController {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
-        let form = objects[indexPath.row] as! MDForm
-        let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
-        performSegueWithIdentifier(sequeIdentifier!, sender: self)
+        if indexPath.row == objects.count {
+            performSegueWithIdentifier("CaptureImage", sender: self)
+        }
+        else {
+            let form = objects[indexPath.row] as! MDForm
+            let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
+            performSegueWithIdentifier(sequeIdentifier!, sender: self)
+        }
     }
 
     override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -133,12 +144,15 @@ class FormListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count
+        return objects.count + 1
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-
+        if indexPath.row == objects.count {
+            cell.textLabel!.text = "CAPTURE IMAGE"
+            return cell
+        }
         let object = objects[indexPath.row] as! MDForm
         
         cell.textLabel!.text = object.name
