@@ -13,6 +13,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     @IBOutlet weak var imageView: UIImageView!
     var imagePicker = UIImagePickerController()
     var image = UIImage()
+    var userID : Int64!
+    var data : NSData!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -31,6 +33,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.dismissViewControllerAnimated(true, completion: nil)
         self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = self.image
+        self.data = self.compressFile() as? NSData
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -48,12 +51,34 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            let data = compressFile() as? NSData
-            var subject: MDSubject!
-            subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                print(err == nil ? "Data Saved" : err?.description);
-                self.imageView.image = nil
-            })
+            let clientFactory = MDClientFactory.sharedInstance()
+            let client = clientFactory.clientOfType(MDClientType.Network);
+            var datastore = MDDatastoreFactory.create()
+            let user = datastore.userWithID(Int64(self.userID))
+            var loadedSubjectsAndErrors : [AnyObject] = []
+            
+            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+                // Check all subjects loaded
+                if error != nil {
+                    loadedSubjectsAndErrors.append(error)
+                    if subjects != nil {
+                        if loadedSubjectsAndErrors.count == subjects.count {
+                            NSOperationQueue.mainQueue().addOperationWithBlock {
+                                datastore = nil
+                            }
+                        }
+                    }
+                    return
+                }
+                
+                for subject in subjects as! [MDSubject]! {
+                    subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                        print(err == nil ? "Data Saved" : err?.description);
+                        self.imageView.image = nil
+                    })
+                }
+            }
+            
         }
         else {
             showAlert("No image", message: "Image selected has no path")
