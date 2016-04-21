@@ -15,12 +15,37 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     var image = UIImage()
     var userID : Int64!
     var data : NSData!
+    var collectedSubjects: [AnyObject]!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
+        
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Network);
+        var datastore = MDDatastoreFactory.create()
+        let user = datastore.userWithID(Int64(self.userID))
+        var loadedSubjectsAndErrors : [AnyObject] = []
+        
+        client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+            // Check all subjects loaded
+            if error != nil {
+                loadedSubjectsAndErrors.append(error)
+                if subjects != nil {
+                    if loadedSubjectsAndErrors.count == subjects.count {
+                        NSOperationQueue.mainQueue().addOperationWithBlock {
+                            datastore = nil
+                        }
+                    }
+                }
+                return
+            }
+            else {
+                self.collectedSubjects = subjects
+            }
+        }
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -51,32 +76,11 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            var datastore = MDDatastoreFactory.create()
-            let user = datastore.userWithID(Int64(self.userID))
-            var loadedSubjectsAndErrors : [AnyObject] = []
-            
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                // Check all subjects loaded
-                if error != nil {
-                    loadedSubjectsAndErrors.append(error)
-                    if subjects != nil {
-                        if loadedSubjectsAndErrors.count == subjects.count {
-                            NSOperationQueue.mainQueue().addOperationWithBlock {
-                                datastore = nil
-                            }
-                        }
-                    }
-                    return
-                }
-                
-                for subject in subjects as! [MDSubject]! {
-                    subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                        print(err == nil ? "Data Saved" : err?.description);
-                        self.imageView.image = nil
-                    })
-                }
+            for subject in self.collectedSubjects as! [MDSubject]! {
+                subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                    print(err == nil ? "Data Saved" : err?.description);
+                    self.imageView.image = nil
+                })
             }
             
         }
