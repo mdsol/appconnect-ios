@@ -46,12 +46,11 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-         self.performSegueWithIdentifier(
-            "SecuritySuccess", sender: nil)
         // Row path starts from 0 and indexs used starts from 1
         self.securityQuestionID = indexPath.row + 1
         self.securityQuestion = tableDataSource[indexPath.row]
         createAccountViewController.securityQuestion = self.securityQuestion
+        self.performSegueWithIdentifier("SecuritySuccess", sender: nil)
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
