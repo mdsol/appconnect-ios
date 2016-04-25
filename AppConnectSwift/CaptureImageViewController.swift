@@ -11,46 +11,53 @@ import UIKit
 class CaptureImageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var saveImage: UIBarButtonItem!
+    
     var imagePicker = UIImagePickerController()
     var image = UIImage()
     var userID : Int64!
     var data : NSData!
-    var collectedSubjects: [AnyObject]!
+    var collectedSubjects: [MDSubject]!
+    var datastore = MDDatastoreFactory.create()
     
     override func viewDidLoad() {
         super.viewDidLoad()
         takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
-        
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Network);
-        var datastore = MDDatastoreFactory.create()
-        let user = datastore.userWithID(Int64(self.userID))
-        var loadedSubjectsAndErrors : [AnyObject] = []
-        
-        client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-            // Check all subjects loaded
-            if error != nil {
-                loadedSubjectsAndErrors.append(error)
-                if subjects != nil {
-                    if loadedSubjectsAndErrors.count == subjects.count {
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
-                            datastore = nil
-                        }
-                    }
-                }
-                return
-            }
-            else {
-                self.collectedSubjects = subjects
-            }
-        }
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationItem.title = "Capture Image"
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
+            let clientFactory = MDClientFactory.sharedInstance()
+            let client = clientFactory.clientOfType(MDClientType.Network);
+            let user = self.datastore.userWithID(Int64(self.userID))
+            var loadedSubjectsAndErrors : [AnyObject] = []
+            
+            // Start an asynchronous task to load the subjects for the user logged in
+            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+                // Check all subjects loaded
+                if error != nil {
+                    loadedSubjectsAndErrors.append(error)
+                    if subjects != nil {
+                        if loadedSubjectsAndErrors.count == subjects.count {
+                            NSOperationQueue.mainQueue().addOperationWithBlock {
+                                bgQueue = nil
+                            }
+                        }
+                    }
+                    return
+                }
+                else {
+                    // Enable image saving button once loaded
+                    self.collectedSubjects = subjects as! [MDSubject]
+                    self.saveImage.enabled = true
+                }
+            }
+        }
     }
     
     // MARK: Image picker delegate functions
@@ -76,13 +83,17 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            for subject in self.collectedSubjects as! [MDSubject]! {
+            for subject in self.collectedSubjects {
                 subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                    print(err == nil ? "Data Saved" : err?.description);
-                    self.imageView.image = nil
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        if err == nil {
+                            print(err == nil ? "Data Saved" : err?.description)
+                        }
+                        self.imageView.image = nil
+                        self.showAlert("Save Image", message: "Data Saved successfully")
+                    }
                 })
             }
-            
         }
         else {
             showAlert("No image", message: "Image selected has no path")
