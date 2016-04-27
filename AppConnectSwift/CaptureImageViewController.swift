@@ -25,11 +25,16 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
+        self.saveImage.enabled = false
+        self.loadSubjects()
     }
     
     override func viewDidAppear(animated: Bool) {
         super.viewDidAppear(animated)
         self.navigationItem.title = "Capture Image"
+    }
+    
+    func loadSubjects() {
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
@@ -54,7 +59,9 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 else {
                     // Enable image saving button once loaded
                     self.collectedSubjects = subjects as! [MDSubject]
-                    self.saveImage.enabled = true
+                    dispatch_async(dispatch_get_main_queue(), { 
+                        self.saveImage.enabled = true
+                    })
                 }
             }
         }
