@@ -34,39 +34,6 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.navigationItem.title = "Capture Image"
     }
     
-    func loadSubjects() {
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock() {
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            let user = self.datastore.userWithID(Int64(self.userID))
-            var loadedSubjectsAndErrors : [AnyObject] = []
-            
-            // Start an asynchronous task to load the subjects for the user logged in
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                // Check all subjects loaded
-                if error != nil {
-                    loadedSubjectsAndErrors.append(error)
-                    if subjects != nil {
-                        if loadedSubjectsAndErrors.count == subjects.count {
-                            NSOperationQueue.mainQueue().addOperationWithBlock {
-                                bgQueue = nil
-                            }
-                        }
-                    }
-                    return
-                }
-                else {
-                    // Enable image saving button once loaded
-                    self.collectedSubjects = subjects as! [MDSubject]
-                    dispatch_async(dispatch_get_main_queue(), { 
-                        self.saveImage.enabled = true
-                    })
-                }
-            }
-        }
-    }
-    
     // MARK: Image picker delegate functions
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         self.dismissViewControllerAnimated(true, completion: nil)
@@ -94,7 +61,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         if err == nil {
-                            print(err == nil ? "Data Saved" : err?.description)
+                            print(err?.description)
+                            self.showAlert("Failed to save image", message:(err?.description)!)
                         }
                         self.imageView.image = nil
                         self.showAlert("Save Image", message: "Data Saved successfully")
@@ -122,6 +90,33 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             // Looks for images in photo library
             imagePicker.sourceType = .PhotoLibrary
             presentViewController(imagePicker, animated: true, completion: {})
+        }
+    }
+    
+    func loadSubjects() {
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
+            let clientFactory = MDClientFactory.sharedInstance()
+            let client = clientFactory.clientOfType(MDClientType.Network);
+            let user = self.datastore.userWithID(Int64(self.userID))
+            
+            // Start an asynchronous task to load the subjects for the user logged in
+            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+                // Check all subjects loaded
+                if error != nil {
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        bgQueue = nil
+                    }
+                    return
+                }
+                else {
+                    // Enable image saving button once loaded
+                    self.collectedSubjects = subjects as! [MDSubject]
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.saveImage.enabled = true
+                    }
+                }
+            }
         }
     }
 
