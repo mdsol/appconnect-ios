@@ -98,7 +98,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
-            let user = self.datastore.userWithID(Int64(self.userID))
+            let user = self.datastore.userWithID(self.userID)
             
             // Start an asynchronous task to load the subjects for the user logged in
             client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
