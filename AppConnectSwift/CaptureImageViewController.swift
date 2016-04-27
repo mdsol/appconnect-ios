@@ -18,7 +18,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     var userID : Int64!
     var data : NSData!
     var collectedSubjects: [MDSubject]!
-    var datastore = MDDatastoreFactory.create()
+    var subjectID: Int64!
     
     override func viewDidLoad() {
         super.viewDidLoad()
@@ -57,15 +57,28 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            for subject in self.collectedSubjects {
-                subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
+            var bgQueue : NSOperationQueue! = NSOperationQueue()
+            bgQueue.addOperationWithBlock() {
+                let clientFactory = MDClientFactory.sharedInstance()
+                let client = clientFactory.clientOfType(MDClientType.Network);
+                var datastore = MDDatastoreFactory.create()
+                let subject = datastore.subjectWithID(self.subjectID)
+                datastore.collectedDataForSubjectWithID(self.subjectID)
+                subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        if err == nil {
+                        if err != nil {
                             print(err?.description)
-                            self.showAlert("Failed to save image", message:(err?.description)!)
+                            datastore = nil
+                        }
+                        else{
+                            client.sendEnvelope(dataEnvelope, completion: { (err) in
+                                if err == nil {
+                                    self.showAlert("Save Image", message: "Data saved successfully")
+                                    datastore = nil
+                                }
+                            })
                         }
                         self.imageView.image = nil
-                        self.showAlert("Save Image", message: "Data Saved successfully")
                     }
                 })
             }
@@ -98,7 +111,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
             let client = clientFactory.clientOfType(MDClientType.Network);
-            let user = self.datastore.userWithID(self.userID)
+            var datastore = MDDatastoreFactory.create()
+            let user = datastore.userWithID(self.userID)
             
             // Start an asynchronous task to load the subjects for the user logged in
             client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
@@ -106,14 +120,17 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 if error != nil {
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         bgQueue = nil
+                        datastore = nil
                     }
                     return
                 }
                 else {
                     // Enable image saving button once loaded
                     self.collectedSubjects = subjects as! [MDSubject]
+                    self.subjectID = self.collectedSubjects[0].objectID;
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.saveImage.enabled = true
+                        datastore = nil
                     }
                 }
             }
