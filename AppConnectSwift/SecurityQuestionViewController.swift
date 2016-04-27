@@ -49,7 +49,6 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         // Row path starts from 0 and indexs used starts from 1
         self.securityQuestionID = indexPath.row + 1
         self.securityQuestion = tableDataSource[indexPath.row]
-        createAccountViewController.securityQuestion = self.securityQuestion
         self.performSegueWithIdentifier("SecuritySuccess", sender: nil)
     }
     
@@ -60,6 +59,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
             createAccountViewController.userEmail = userEmail
             createAccountViewController.userPassword = userPassword
             createAccountViewController.userSecurityQuestionID = securityQuestionID
+            createAccountViewController.securityQuestion = self.securityQuestion
         }
     }
     
