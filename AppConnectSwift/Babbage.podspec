@@ -22,5 +22,5 @@ Pod::Spec.new do |s|
     s.dependency         'HTMLReader', '~> 0.7.1'
     s.dependency         'UICKeyChainStore', '2.0.6' # 2.0.7 does not build with XCode 6.4
     s.dependency         'OpenSSL-Universal', '~> 1.0.1j'
-    s.dependency         'AWSS3', '~> 2.3'
+    s.dependency         'AWSS3', '~> 2.3.5'
 end

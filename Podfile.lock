@@ -20,19 +20,23 @@ PODS:
   - AFNetworking/UIKit (2.5.3):
     - AFNetworking/NSURLConnection
     - AFNetworking/NSURLSession
-  - Babbage (2016.1.0.18):
+  - AWSCore (2.3.6)
+  - AWSS3 (2.3.6):
+    - AWSCore (= 2.3.6)
+  - Babbage (2016.2.0.78):
     - AFNetworking (= 2.5.3)
+    - AWSS3 (~> 2.3.5)
     - HTMLReader (~> 0.7.1)
     - OpenSSL-Universal (~> 1.0.1j)
     - UICKeyChainStore (= 2.0.6)
   - HTMLReader (0.7.1)
-  - IQKeyboardManagerSwift (3.3.6)
-  - OpenSSL-Universal (1.0.1.16)
+  - IQKeyboardManagerSwift (3.3.7)
+  - OpenSSL-Universal (1.0.1.18)
   - UICKeyChainStore (2.0.6)
 
 DEPENDENCIES:
   - Babbage (from `AppConnectSwift/Babbage.podspec`)
-  - IQKeyboardManagerSwift
+  - IQKeyboardManagerSwift (~> 3.3.7)
 
 EXTERNAL SOURCES:
   Babbage:
@@ -40,10 +44,12 @@ EXTERNAL SOURCES:
 
 SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
-  Babbage: 4c14a3d9dad2b330083ba65adfbb0c68beed5d8f
+  AWSCore: 917d84b32974136194a905b98c0ae25c9f3350b8
+  AWSS3: 1caaf6b45100503fecf3d418c394519a89409a74
+  Babbage: 9984b908ea833b8f57c8888e20c033aea341d79c
   HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
-  IQKeyboardManagerSwift: 111f01f029d9cda0647a2156d3b6efc24ad1e7f1
-  OpenSSL-Universal: 85ef63bf81d0741b03c8719cd29685c37c59518d
+  IQKeyboardManagerSwift: 7d06186460470f3f7e767630861a1303980ee5cf
+  OpenSSL-Universal: 79fd751a7b4db41f5b430e767c9bbf681b5c8330
   UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
 
 COCOAPODS: 0.39.0
