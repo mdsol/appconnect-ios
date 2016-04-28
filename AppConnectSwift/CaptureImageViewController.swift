@@ -58,11 +58,11 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
             var bgQueue : NSOperationQueue! = NSOperationQueue()
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            var datastore = MDDatastoreFactory.create()
-            var subject = datastore.subjectWithID(self.subjectID)
             bgQueue.addOperationWithBlock() {
+                let clientFactory = MDClientFactory.sharedInstance()
+                let client = clientFactory.clientOfType(MDClientType.Network);
+                var datastore = MDDatastoreFactory.create()
+                var subject = datastore.subjectWithID(self.subjectID)
                 subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
                         if err == nil {
                             client.sendEnvelope(dataEnvelope, completion: { (err) in
