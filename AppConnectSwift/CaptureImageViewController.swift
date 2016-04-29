@@ -63,24 +63,26 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 let client = clientFactory.clientOfType(MDClientType.Network);
                 var datastore = MDDatastoreFactory.create()
                 var subject = datastore.subjectWithID(self.subjectID)
-                subject.collectData(self.data, withMetadata: "Random String", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                        if err == nil {
-                            client.sendEnvelope(dataEnvelope, completion: { (err) in
-                                if err == nil {
-                                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                                        self.showAlert("Save Image", message: "Data saved successfully")
-                                    }
-                                    datastore = nil
-                                    subject = nil
+                subject.collectData(self.data, withMetadata: "Random String", withContentType: "", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                    if err == nil {
+                        client.sendEnvelope(dataEnvelope, completion: { (err) in
+                            if err == nil {
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    self.showAlert("Save Image", message: "Data saved successfully")
                                 }
-                            })
-                        }
-                        else{
-                            print(err?.description)
-                            datastore = nil
-                            subject = nil
-                        }
+                                datastore = nil
+                                subject = nil
+                            }
+                        })
+                    }
+                    else{
+                        print(err?.description)
+                        datastore = nil
+                        subject = nil
+                    }
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.imageView.image = nil
+                    }
                 })
             }
         }
