@@ -39,7 +39,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.dismissViewControllerAnimated(true, completion: nil)
         self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = self.image
-        self.data = self.compressFile() as? NSData
+        self.data = self.scaleDownAndConvertImageToNSData() as? NSData
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -145,7 +145,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func compressFile() -> NSData {
+    func scaleDownAndConvertImageToNSData() -> NSData {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
