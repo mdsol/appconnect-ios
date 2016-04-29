@@ -62,5 +62,4 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
             createAccountViewController.securityQuestion = self.securityQuestion
         }
     }
-    
 }

@@ -11,7 +11,7 @@ import UIKit
 class CaptureImageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
-    @IBOutlet weak var saveImage: UIBarButtonItem!
+    @IBOutlet weak var saveImageButton: UIBarButtonItem!
     
     var imagePicker = UIImagePickerController()
     var image = UIImage()
@@ -25,7 +25,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
-        self.saveImage.enabled = false
+        self.saveImageButton.enabled = false
         self.loadSubjects()
     }
     
@@ -123,7 +123,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                     self.collectedSubjects = subjects as! [MDSubject]
                     self.subjectID = self.collectedSubjects[0].objectID;
                     NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.saveImage.enabled = true
+                        self.saveImageButton.enabled = true
                         datastore = nil
                     }
                 }
@@ -183,5 +183,3 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         return imageData!;
     }
 }
-
-
