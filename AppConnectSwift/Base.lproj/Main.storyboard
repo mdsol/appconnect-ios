@@ -693,7 +693,7 @@
         <!--Security Question View Controller-->
         <scene sceneID="pSB-B8-dL5">
             <objects>
-                <viewController id="d3y-yc-TLR" customClass="SecurityQuestionViewController" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
+                <viewController automaticallyAdjustsScrollViewInsets="NO" id="d3y-yc-TLR" customClass="SecurityQuestionViewController" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
                     <layoutGuides>
                         <viewControllerLayoutGuide type="top" id="wcj-pN-afI"/>
                         <viewControllerLayoutGuide type="bottom" id="o6o-Nl-Fe6"/>
