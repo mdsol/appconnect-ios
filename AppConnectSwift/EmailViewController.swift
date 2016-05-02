@@ -26,7 +26,7 @@ class EmailViewController: UIViewController {
                 else{
                     // Color the border of text field red
                     confirmLabelsMatching.hidden = false
-                    confirmLabelsMatching.text = "Invalid Email"
+                    confirmLabelsMatching.text = "Enter a valid email"
                     confirmLabelsMatching.textColor = UIColor.redColor()
                     emailTextField.layer.borderWidth = 2.0
                     emailTextField.layer.cornerRadius = 5.0
