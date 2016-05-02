@@ -57,7 +57,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            var bgQueue : NSOperationQueue! = NSOperationQueue()
+          var bgQueue : NSOperationQueue! = NSOperationQueue()
             bgQueue.addOperationWithBlock() {
                 let clientFactory = MDClientFactory.sharedInstance()
                 let client = clientFactory.clientOfType(MDClientType.Network);
@@ -69,9 +69,15 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                             if err == nil {
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
                                     self.showAlert("Save Image", message: "Data saved successfully")
+                                    self.imageView.image = nil
                                 }
                                 datastore = nil
                                 subject = nil
+                            }
+                            else if err.description.containsString("The Internet connection appears to be offline"){
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    self.showAlert("Not connected to the Internet", message: "Please restore Internet connection and try again")
+                                }
                             }
                         })
                     }
@@ -79,9 +85,6 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                         print(err?.description)
                         datastore = nil
                         subject = nil
-                    }
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.imageView.image = nil
                     }
                 })
             }
