@@ -32,6 +32,7 @@ class PasswordViewController: UIViewController {
                     // Color the border of text field red
                     confirmPasswordsMatching.hidden = false
                     confirmPasswordsMatching.text = "Password criteria not met"
+                    confirmPasswordsMatching.textColor = UIColor.redColor()
                     passwordField.layer.borderWidth = 2.0
                     passwordField.layer.cornerRadius = 5.0
                     passwordField.layer.borderColor = UIColor.redColor().CGColor
@@ -45,6 +46,7 @@ class PasswordViewController: UIViewController {
             // Color the border of text field red
             confirmPasswordsMatching.hidden = false
             confirmPasswordsMatching.text = "Passwords not matching"
+            confirmPasswordsMatching.textColor = UIColor.redColor()
             passwordConfirmField.layer.borderWidth = 2.0
             passwordConfirmField.layer.cornerRadius = 5.0
             passwordConfirmField.layer.borderColor = UIColor.redColor().CGColor
