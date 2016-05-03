@@ -23,7 +23,7 @@ PODS:
   - AWSCore (2.3.6)
   - AWSS3 (2.3.6):
     - AWSCore (= 2.3.6)
-  - Babbage (2016.2.0.80):
+  - Babbage (2016.2.0.81):
     - AFNetworking (= 2.5.3)
     - AWSS3 (~> 2.3.5)
     - HTMLReader (~> 0.7.1)
