@@ -9,9 +9,9 @@ AppConnectSwift is an example iOS app, written in Swift, that showcases proper u
 If you are running this application, it is assumed that:
 
 - You were provided Artifactory credentials by a Medidata representative.
-- You have a valid Rave installation with Patient Cloud functionality enabled.
+- You have a valid Rave installation with Patient Cloud functionality enabled.[if you are using Rave-enabled forms]
 
->You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information.
+>You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information. [When using a Rave based Study]
 
 ### Setup
 
@@ -36,9 +36,14 @@ Once the variables have been set, run `pod install` to install the necessary dep
 The application contains the following important view controllers
 
 - **LoginViewController** - Handles user authentication based on a provided username / password.
+- **EmailViewController** - Handles user entry of the email address used to create a new account.
+- **PasswordViewController** - Handles user entry of the password used to create a new account. 
+- **SecurityQuestionViewController** - Handles user selection of the security question used to create a new account.
+- **CreateAccountViewController** - Handles user entry of the security answer used to create a new account.
 - **FormListViewController** - Loads and displays the available forms for authenticated users.
 - **OnePageFormViewController** -  Loads and displays a form on a single screen, providing validation before users submit forms.
 - **MultiPageFormViewController** - Loads and displays a form one field at a time. Uses the FieldViewController to display the fields.
+- **CaptureImageViewController** - Allows the user to take a picture or select one from the gallery, and uploads the image to AWS S3.
 - **ReviewController** - Allows user to review their answers before submitting forms.
 
 ### Using the Case Report Form (CRF)
@@ -49,8 +54,13 @@ To use this sample form:
 
 1. Import the linked CRF into Rave for a subject of your choosing.
 2. Log in with the sample app using the credentials of the subject you chose.
-
 > You should see two forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
+
+### Using self-registration and data capture functionality
+
+1. Uses the in-app registartion to enroll a new user.
+2. Login with the user created above.
+3. Demo app shows an Image Capture form to take a picture or load an image, which will be uploaded to AWS S3 
 
 # Using the API in your own application #
 
@@ -72,22 +82,65 @@ In Swift / Objective-C, Babbage must be initialized with two arguments. The firs
 // In AppDelegate.swift
 let dir = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last
 let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncoding)
-MDBabbage.startWithDatastoreAtURL(dir, encryptionKey: key)
+MDBabbage.startWithEnvironment(MDClientEnvironment.Sandbox, apiToken: "Your provided API token", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
 ```
 
-## Loading Data from the Datastore
-You can store and retrieve persistent data using the Datastore class.
+## Self Registering the user
+You can create an account for storing data to AWS S3 buckets.
 
+```swift
+// In CreateAccountViewController.swift
+let userEmail = "newuser@mdsol.com"
+let userPassword = "Password1"  
+let userSecurityQuestionID = 1 // ID of the security question
+let userSecurityAnswer = "1990" // Answer to the security question
+
+client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
+	if err == nil {
+		print("Successfully account created")
+	}
+}
+```
+#### Requirements:
+Email to have the following:
+•  Any valid and unique email
+
+Password to have the following
+•  At least 8 characters long
+•  At least one upper-case letter
+•  At least one lower-case letter
+•  At least one numeric digit
+
+## Upload Data to S3
+You can store and retrieve persistent data using the Datastore class.
 ```swift
 let datastore = MDDatastoreFactory.create()
 let user = datastore.userWithID(Int64(self.userID))
 ```
-
 >**Important Considerations:** 
   - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
   - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
   - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
+```swift
+// In CaptureImageViewController.swift
+let img = UIGraphicsGetImageFromCurrentImageContext()
+let imageData = UIImageJPEGRepresentation(img, 0.5)
+
+// Collecting the data from the image view
+subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+	if err == nil {
+    	print("Successfully collected")
+	}
+}
+
+// Sending the dataEnvelop collected
+client.sendEnvelope(dataEnvelope, completion: { (err) in
+	if err == nil {
+        print("Successfully uploaded to S3")
+    }
+}                        	
+```
 
 ## Network Requests
 Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like this:

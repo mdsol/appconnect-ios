@@ -16,7 +16,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // long and must be the same between runs.
         let dir = NSFileManager.defaultManager().URLsForDirectory(NSSearchPathDirectory.DocumentDirectory, inDomains: NSSearchPathDomainMask.UserDomainMask).last
         let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncoding)
-        MDBabbage.startWithDatastoreAtURL(dir, encryptionKey: key)
+        // TODO: Substitute the apiToken value with proper token
+        MDBabbage.startWithEnvironment(MDClientEnvironment.Production, apiToken: "Your API token", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
         
         // The client that will be used to make requests to the backend can be
         // created once and reused as needed throughout the app

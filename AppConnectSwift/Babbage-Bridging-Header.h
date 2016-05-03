@@ -19,6 +19,7 @@
 #import <Babbage/MDStepSequencer.h>
 #import <Babbage/MDStudy.h>
 #import <Babbage/MDSubject.h>
+#import <Babbage/MDSubjectDataEnvelope.h>
 #import <Babbage/MDTextField.h>
 #import <Babbage/MDTimestampField.h>
 #import <Babbage/MDUser.h>
