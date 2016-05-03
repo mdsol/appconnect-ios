@@ -11,14 +11,22 @@ import UIKit
 class CaptureImageViewController: UIViewController, UIImagePickerControllerDelegate, UINavigationControllerDelegate {
     
     @IBOutlet weak var imageView: UIImageView!
+    @IBOutlet weak var saveImageButton: UIBarButtonItem!
+    
     var imagePicker = UIImagePickerController()
     var image = UIImage()
+    var userID : Int64!
+    var data : NSData!
+    var collectedSubjects: [MDSubject]!
+    var subjectID: Int64!
     
     override func viewDidLoad() {
         super.viewDidLoad()
         takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
+        self.saveImageButton.enabled = false
+        self.loadSubjects()
     }
     
     override func viewDidAppear(animated: Bool) {
@@ -31,6 +39,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.dismissViewControllerAnimated(true, completion: nil)
         self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
         imageView.image = self.image
+        self.data = self.scaleDownAndConvertImageToNSData() as? NSData
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -48,12 +57,41 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     @IBAction func saveTapped(sender: AnyObject) {
         if image.CGImage != nil {
-            let data = compressFile() as? NSData
-            var subject: MDSubject!
-            subject.collectData(data, withMetadata: "Random String", completion: { (dataEnvelope: MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                print(err == nil ? "Data Saved" : err?.description);
-                self.imageView.image = nil
-            })
+          var bgQueue : NSOperationQueue! = NSOperationQueue()
+            bgQueue.addOperationWithBlock() {
+                let clientFactory = MDClientFactory.sharedInstance()
+                let client = clientFactory.clientOfType(MDClientType.Network);
+                var datastore = MDDatastoreFactory.create()
+                var subject = datastore.subjectWithID(self.subjectID)
+                subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                    if err == nil {
+                        client.sendEnvelope(dataEnvelope, completion: { (err) in
+                            if err == nil {
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    self.showAlert("Save Image", message: "Data saved successfully")
+                                    self.imageView.image = nil
+                                    subject = nil
+                                    bgQueue = nil
+                                    datastore = nil
+                                }
+                            }
+                            else if err.description.containsString("The Internet connection appears to be offline"){
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    self.showAlert("Not connected to the Internet", message: "Please restore Internet connection and try again")
+                                    bgQueue = nil
+                                    datastore = nil
+                                }
+                            }
+                        })
+                    }
+                    else{
+                        print(err?.description)
+                        bgQueue = nil
+                        datastore = nil
+                        subject = nil
+                    }
+                })
+            }
         }
         else {
             showAlert("No image", message: "Image selected has no path")
@@ -77,6 +115,31 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             presentViewController(imagePicker, animated: true, completion: {})
         }
     }
+    
+    func loadSubjects() {
+        var bgQueue : NSOperationQueue! = NSOperationQueue()
+        bgQueue.addOperationWithBlock() {
+            let clientFactory = MDClientFactory.sharedInstance()
+            let client = clientFactory.clientOfType(MDClientType.Network);
+            var datastore = MDDatastoreFactory.create()
+            let user = datastore.userWithID(self.userID)
+            
+            // Start an asynchronous task to load the subjects for the user logged in
+            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+                // Check all subjects loaded
+                if error == nil {
+                    // Enable image saving button once loaded
+                    self.collectedSubjects = subjects as! [MDSubject]
+                    self.subjectID = self.collectedSubjects[0].objectID;
+                    NSOperationQueue.mainQueue().addOperationWithBlock {
+                        self.saveImageButton.enabled = true
+                        bgQueue = nil
+                        datastore = nil
+                    }
+                }
+            }
+        }
+    }
 
     func showAlert(title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
@@ -84,7 +147,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func compressFile() -> NSData {
+    func scaleDownAndConvertImageToNSData() -> NSData {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
@@ -98,7 +161,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             if imgAspectRatio < adjustedAspectRatio {
                 // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
-                imgHeight = adjustedHeight;
+                imgHeight = adjustedHeight
             }
             else if imgAspectRatio > adjustedAspectRatio {
                 // Adjusting larger height
@@ -109,21 +172,18 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 // No compression
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;
-                compressionQuality = 1;
+                compressionQuality = 1
             }
         }
         
         let rect = CGRectMake(0.0, 0.0, imgWidth, imgHeight)
         
-        UIGraphicsBeginImageContext(rect.size);
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0);
         image.drawInRect(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext();
-        let imageData = UIImageJPEGRepresentation(img, compressionQuality);
-        UIGraphicsEndImageContext();
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        let imageData = UIImageJPEGRepresentation(img, compressionQuality)
+        UIGraphicsEndImageContext()
         
         return imageData!;
     }
-
 }
-
-
