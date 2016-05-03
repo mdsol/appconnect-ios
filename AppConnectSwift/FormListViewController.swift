@@ -106,9 +106,10 @@ class FormListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            if indexPath.row == objects.count {
-                self.navigationItem.title = "All Forms"
+            if objects.count == 0 {
+                self.navigationItem.title = "Back"
                 let controller = segue.destinationViewController as! CaptureImageViewController
+                controller.userID = self.userID!
             }
             else{
                 let form = objects[indexPath.row] as! MDForm
@@ -129,7 +130,7 @@ class FormListViewController: UITableViewController {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
-        if indexPath.row == objects.count {
+        if objects.count == 0 {
             performSegueWithIdentifier("CaptureImage", sender: self)
         }
         else {
@@ -144,13 +145,13 @@ class FormListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count + 1
+        return objects.count == 0 ? 1 : objects.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        if indexPath.row == objects.count {
-            cell.textLabel!.text = "CAPTURE IMAGE"
+        if objects.count == 0 {
+            cell.textLabel!.text = "Capture Image"
             return cell
         }
         let object = objects[indexPath.row] as! MDForm
