@@ -137,12 +137,6 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                         datastore = nil
                     }
                 }
-                else {
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        bgQueue = nil
-                        datastore = nil
-                    }
-                }
             }
         }
     }
