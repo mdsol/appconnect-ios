@@ -39,7 +39,7 @@ class PasswordViewController: UIViewController {
                 }
             }
             catch {
-                print("Errored")
+                print("Issue in regular expression")
             }
         }
         else {

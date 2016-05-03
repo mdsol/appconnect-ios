@@ -63,26 +63,30 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 let client = clientFactory.clientOfType(MDClientType.Network);
                 var datastore = MDDatastoreFactory.create()
                 var subject = datastore.subjectWithID(self.subjectID)
-                subject.collectData(self.data, withMetadata: "Random String", withContentType: "", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/png", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
                     if err == nil {
                         client.sendEnvelope(dataEnvelope, completion: { (err) in
                             if err == nil {
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
                                     self.showAlert("Save Image", message: "Data saved successfully")
                                     self.imageView.image = nil
+                                    subject = nil
+                                    bgQueue = nil
+                                    datastore = nil
                                 }
-                                datastore = nil
-                                subject = nil
                             }
                             else if err.description.containsString("The Internet connection appears to be offline"){
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
                                     self.showAlert("Not connected to the Internet", message: "Please restore Internet connection and try again")
+                                    bgQueue = nil
+                                    datastore = nil
                                 }
                             }
                         })
                     }
                     else{
                         print(err?.description)
+                        bgQueue = nil
                         datastore = nil
                         subject = nil
                     }
@@ -129,6 +133,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                     self.subjectID = self.collectedSubjects[0].objectID;
                     NSOperationQueue.mainQueue().addOperationWithBlock {
                         self.saveImageButton.enabled = true
+                        bgQueue = nil
                         datastore = nil
                     }
                 }
