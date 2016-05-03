@@ -24,7 +24,7 @@ Pod::Spec.new do |s|
     s.library            = 'c++', 'z'
     s.platform           = :ios
     s.requires_arc       = true
-    s.ios.deployment_target = '7.0'
+    s.ios.deployment_target = '8.0'
 
     s.dependency         'AFNetworking', '2.5.3'
     s.dependency         'HTMLReader', '~> 0.7.1'
