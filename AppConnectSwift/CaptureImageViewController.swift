@@ -184,7 +184,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         let rect = CGRectMake(0.0, 0.0, imgWidth, imgHeight)
         
-        UIGraphicsBeginImageContext(rect.size);
+        UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0);
         image.drawInRect(rect)
         let img = UIGraphicsGetImageFromCurrentImageContext()
         let imageData = UIImageJPEGRepresentation(img, compressionQuality)
