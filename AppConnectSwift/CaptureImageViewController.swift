@@ -63,7 +63,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 let client = clientFactory.clientOfType(MDClientType.Network);
                 var datastore = MDDatastoreFactory.create()
                 var subject = datastore.subjectWithID(self.subjectID)
-                subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/png", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
                     if err == nil {
                         client.sendEnvelope(dataEnvelope, completion: { (err) in
                             if err == nil {
@@ -167,7 +167,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             if imgAspectRatio < adjustedAspectRatio {
                 // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
-                imgHeight = adjustedHeight;
+                imgHeight = adjustedHeight
             }
             else if imgAspectRatio > adjustedAspectRatio {
                 // Adjusting larger height
@@ -178,7 +178,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 // No compression
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;
-                compressionQuality = 1;
+                compressionQuality = 1
             }
         }
         
@@ -186,9 +186,9 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         UIGraphicsBeginImageContext(rect.size);
         image.drawInRect(rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext();
-        let imageData = UIImageJPEGRepresentation(img, compressionQuality);
-        UIGraphicsEndImageContext();
+        let img = UIGraphicsGetImageFromCurrentImageContext()
+        let imageData = UIImageJPEGRepresentation(img, compressionQuality)
+        UIGraphicsEndImageContext()
         
         return imageData!;
     }

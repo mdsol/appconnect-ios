@@ -52,10 +52,9 @@ To use this sample form:
 
 ### Using self-registration and data capture functionality
 
-1. User with valid api token, you can register a user.
-2. After registration user can upload different type of files.
-
-> Demo app shows an Image Capture form that let the user take a picture or load an image  from library and save it to AWS S3. 
+1. Uses the in-app registartion to enroll a new user.
+2. Login with the user created above.
+3. Demo app shows an Image Capture form to take a picture or load an image, which will be uploaded to AWS S3 
 
 # Using the API in your own application #
 
@@ -85,43 +84,54 @@ You can create an account for storing data to AWS S3 buckets.
 
 ```swift
 // In CreateAccountViewController.swift
-let userEmail = "unique email address"
-let userPassword = "password complying to have  
+let userEmail = "newuser@mdsol.com"
+let userPassword = "Password1"  
+let userSecurityQuestionID = 1 // ID of the security question
+let userSecurityAnswer = "1990" // Answer to the security question
+
+client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
+	if err == nil {
+		print("Successfully account created")
+	}
+}
+```
+#### Requirements:
+Email to have the following:
+•  Any valid and unique email
+
+Password to have the following
 •  At least 8 characters long
 •  At least one upper-case letter
 •  At least one lower-case letter
-•  At least one numeric digit"
-let userSecurityQuestionID = "id of the array element from list of questions"
-let userSecurityAnswer = "answer to the security question"
+•  At least one numeric digit
 
-client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityAnswer completion:(void (^)(NSError *error))completion
-```
-
-## Loading Data to the Datastore
+## Upload Data to S3
 You can store and retrieve persistent data using the Datastore class.
 
 ```swift
+// In CaptureImageViewController.swift
 let img = UIGraphicsGetImageFromCurrentImageContext()
 let imageData = UIImageJPEGRepresentation(img, 0.5)
 
 // Collecting the data from the image view
-subject.collectData(imageData, withMetadata: "Random String", withContentType: "image/png", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!)}
+subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+	if err == nil {
+    	print("Successfully collected")
+	}
+}
 
 // Sending the dataEnvelop collected
-client.sendEnvelope(dataEnvelope, completion: {(err)}
+client.sendEnvelope(dataEnvelope, completion: { (err) in
+	if err == nil {
+        print("Successfully uploaded to S3")
+    }
+}                        	
 ```
-
 >**Important Considerations:** 
   - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
   - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
   - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
-## Upload Data to S3
-You can store different formats of file to the S3 storage.
- - Sample App contains an example where by user can take a picture and upload to S3 storage
-```swift
-    TODO : Code for data upload to S3
-```
 
 ## Network Requests
 Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like this:
