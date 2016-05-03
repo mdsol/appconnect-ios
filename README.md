@@ -107,6 +107,14 @@ Password to have the following
 
 ## Upload Data to S3
 You can store and retrieve persistent data using the Datastore class.
+```swift
+let datastore = MDDatastoreFactory.create()
+let user = datastore.userWithID(Int64(self.userID))
+```
+>**Important Considerations:** 
+  - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
+  - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
+  - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
 ```swift
 // In CaptureImageViewController.swift
@@ -127,11 +135,6 @@ client.sendEnvelope(dataEnvelope, completion: { (err) in
     }
 }                        	
 ```
->**Important Considerations:** 
-  - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
-  - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
-  - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
-
 
 ## Network Requests
 Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like this:
