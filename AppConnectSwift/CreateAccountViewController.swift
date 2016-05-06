@@ -33,7 +33,7 @@ class CreateAccountViewController: UIViewController {
             }
         }
         else {
-            
+           self.showAlert("Account Creation Failure", message: "Security answer to be at least 2 characters long." ) 
         }
         
     }
