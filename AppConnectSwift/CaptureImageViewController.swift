@@ -56,7 +56,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @IBAction func saveTapped(sender: AnyObject) {
-        if image.CGImage != nil {
+        if image.CGImage != nil && self.imageView.image != nil {
           var bgQueue : NSOperationQueue! = NSOperationQueue()
             bgQueue.addOperationWithBlock() {
                 let clientFactory = MDClientFactory.sharedInstance()
@@ -68,7 +68,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                         client.sendEnvelope(dataEnvelope, completion: { (err) in
                             if err == nil {
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Save Image", message: "Data saved successfully")
+                                    self.showAlert("Data saved successfully", message: "")
                                     self.imageView.image = nil
                                     subject = nil
                                     bgQueue = nil
@@ -82,10 +82,17 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                                     datastore = nil
                                 }
                             }
+                            else {
+                                NSOperationQueue.mainQueue().addOperationWithBlock {
+                                    self.showAlert("Unable to save data", message: err.description)
+                                    bgQueue = nil
+                                    datastore = nil
+                                }
+                            }
                         })
                     }
                     else{
-                        print(err?.description)
+                        self.showAlert("", message: err.description)
                         bgQueue = nil
                         datastore = nil
                         subject = nil
@@ -94,7 +101,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             }
         }
         else {
-            showAlert("No image", message: "Image selected has no path")
+            showAlert("No image selected", message: "")
         }
     }
     
@@ -106,7 +113,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 presentViewController(imagePicker, animated: true, completion: {})
             }
             else {
-                showAlert("Camera not accessible", message: "AppConnect cannot access the camera.")
+                showAlert("Camera not accessible", message: "")
             }
         }
         else {

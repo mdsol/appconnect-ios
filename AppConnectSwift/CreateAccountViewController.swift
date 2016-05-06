@@ -18,16 +18,23 @@ class CreateAccountViewController: UIViewController {
     @IBAction func createAccount(sender: AnyObject) {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
-        client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
-            if err == nil {
-                NSOperationQueue.mainQueue().addOperationWithBlock({ 
-                    self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
-                })
-            }
-            else {
-                print(err?.description)
+        if userSecurityQuestionAnswer.text?.characters.count >= 2 {
+            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+                if err == nil {
+                    NSOperationQueue.mainQueue().addOperationWithBlock({
+                        self.showAlert("Account Creation Success", message: "")
+                        self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+                    })
+                }
+                else {
+                    self.showAlert("Account Creation Failure", message: err.description)
+                }
             }
         }
+        else {
+           self.showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.")
+        }
+        
     }
     
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
@@ -35,5 +42,11 @@ class CreateAccountViewController: UIViewController {
         if segue.identifier == "CreateAccountSuccess" {
             let loginViewController = segue.destinationViewController as! LoginViewController
         }
+    }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
     }
 }
