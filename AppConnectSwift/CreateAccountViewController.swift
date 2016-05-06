@@ -27,7 +27,7 @@ class CreateAccountViewController: UIViewController {
                     })
                 }
                 else {
-                    self.showAlert("Account Creation Failure", message: "\(err!)" )
+                    self.showAlert("Account Creation Failure", message: err.description)
                 }
             }
         }

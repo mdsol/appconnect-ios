@@ -84,7 +84,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                             }
                             else {
                                 NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Unable to save data", message: "\(err)")
+                                    self.showAlert("Unable to save data", message: err.description)
                                     bgQueue = nil
                                     datastore = nil
                                 }
@@ -92,7 +92,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                         })
                     }
                     else{
-                        print(err?.description)
+                        self.showAlert("", message: err.description)
                         bgQueue = nil
                         datastore = nil
                         subject = nil
