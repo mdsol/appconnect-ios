@@ -22,18 +22,18 @@ class CreateAccountViewController: UIViewController {
             client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
                 if err == nil {
                     NSOperationQueue.mainQueue().addOperationWithBlock({
-                        self.showAlert("Account Creation Success", message: "Created account successfully" )
+                        self.showAlert("Account Creation Success", message: "Created account successfully")
                         self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
                     })
                 }
                 else {
                     print(err?.description)
-                    self.showAlert("Account Creation Failure", message: "Unable to create account as \(err!)" )
+                    self.showAlert("Account Creation Failure", message: "\(err!)" )
                 }
             }
         }
         else {
-           self.showAlert("Account Creation Failure", message: "Security answer to be at least 2 characters long." ) 
+           self.showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.")
         }
         
     }
