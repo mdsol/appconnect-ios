@@ -46,15 +46,19 @@ class CreateAccountViewController: UIViewController {
     }
     
     func showAlert(title: String, message: String) {
-        var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
-            UIAlertAction in
-            NSOperationQueue.mainQueue().addOperationWithBlock({
-                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
-            })
-        }
-        
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(okAction)
+        if title.containsString("Account Creation Success"){
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: successfulAccountCreationHandler))
+        }
+        else {
+            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        }
         self.presentViewController(alert, animated: true, completion: nil)
+    }
+    
+    func successfulAccountCreationHandler(alert: UIAlertAction!) {
+        NSOperationQueue.mainQueue().addOperationWithBlock({
+                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+        })
     }
 }
