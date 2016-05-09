@@ -19,7 +19,7 @@ class CreateAccountViewController: UIViewController {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
         if userSecurityQuestionAnswer.text?.characters.count >= 2 {
-            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
+            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
                 if err == nil {
                     NSOperationQueue.mainQueue().addOperationWithBlock({
                         self.showAlert("Account Creation Success", message: "")
