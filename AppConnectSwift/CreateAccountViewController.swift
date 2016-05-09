@@ -19,15 +19,16 @@ class CreateAccountViewController: UIViewController {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.clientOfType(MDClientType.Network);
         if userSecurityQuestionAnswer.text?.characters.count >= 2 {
-            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
                 if err == nil {
                     NSOperationQueue.mainQueue().addOperationWithBlock({
                         self.showAlert("Account Creation Success", message: "")
-                        self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
                     })
                 }
                 else {
-                    self.showAlert("Account Creation Failure", message: err.description)
+                    NSOperationQueue.mainQueue().addOperationWithBlock({
+                        self.showAlert("Account Creation Failure", message: err.description)
+                    })
                 }
             }
         }
@@ -45,8 +46,15 @@ class CreateAccountViewController: UIViewController {
     }
     
     func showAlert(title: String, message: String) {
+        var okAction = UIAlertAction(title: "OK", style: UIAlertActionStyle.Default) {
+            UIAlertAction in
+            NSOperationQueue.mainQueue().addOperationWithBlock({
+                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+            })
+        }
+        
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        alert.addAction(okAction)
         self.presentViewController(alert, animated: true, completion: nil)
     }
 }
