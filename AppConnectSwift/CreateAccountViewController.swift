@@ -22,18 +22,18 @@ class CreateAccountViewController: UIViewController {
             client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
                 if err == nil {
                     NSOperationQueue.mainQueue().addOperationWithBlock({
-                        self.showAlert("Account Creation Success", message: "")
+                        self.showAlert("Account Creation Success", message: "", okHandler:self.successfulAccountCreationHandler)
                     })
                 }
                 else {
                     NSOperationQueue.mainQueue().addOperationWithBlock({
-                        self.showAlert("Account Creation Failure", message: err.description)
+                        self.showAlert("Account Creation Failure", message: err.description, okHandler: nil)
                     })
                 }
             }
         }
         else {
-           self.showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.")
+           self.showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
         }
         
     }
@@ -45,14 +45,9 @@ class CreateAccountViewController: UIViewController {
         }
     }
     
-    func showAlert(title: String, message: String) {
+    func showAlert(title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        if title.containsString("Account Creation Success"){
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: successfulAccountCreationHandler))
-        }
-        else {
-            alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        }
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: okHandler))
         self.presentViewController(alert, animated: true, completion: nil)
     }
     
