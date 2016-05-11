@@ -63,7 +63,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 let client = clientFactory.clientOfType(MDClientType.Network);
                 var datastore = MDDatastoreFactory.create()
                 var subject = datastore.subjectWithID(self.subjectID)
-                subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                
+                subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
                     if err == nil {
                         client.sendEnvelope(dataEnvelope, completion: { (err) in
                             if err == nil {
