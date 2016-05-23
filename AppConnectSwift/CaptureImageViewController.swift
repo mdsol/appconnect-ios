@@ -14,7 +14,6 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     @IBOutlet weak var saveImageButton: UIBarButtonItem!
     
     var imagePicker = UIImagePickerController()
-    var image = UIImage()
     var userID : Int64!
     var data : NSData!
     var collectedSubjects: [MDSubject]!
@@ -37,9 +36,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     // MARK: Image picker delegate functions
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         self.dismissViewControllerAnimated(true, completion: nil)
-        self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        imageView.image = self.image
-        self.data = self.scaleDownAndConvertImageToNSData() as? NSData
+        let img = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.data = self.scaleDownAndConvertImageToNSData(img)
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -56,54 +54,21 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @IBAction func saveTapped(sender: AnyObject) {
-        if image.CGImage != nil && self.imageView.image != nil {
-          var bgQueue : NSOperationQueue! = NSOperationQueue()
-            bgQueue.addOperationWithBlock() {
-                let clientFactory = MDClientFactory.sharedInstance()
-                let client = clientFactory.clientOfType(MDClientType.Network);
-                var datastore = MDDatastoreFactory.create()
-                var subject = datastore.subjectWithID(self.subjectID)
-                
-                subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
-                    if err == nil {
-                        client.sendEnvelope(dataEnvelope, completion: { (err) in
-                            if err == nil {
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Data saved successfully", message: "")
-                                    self.imageView.image = nil
-                                    subject = nil
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
-                            else if err.description.containsString("The Internet connection appears to be offline"){
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Not connected to the Internet", message: "Please restore Internet connection and try again")
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
-                            else {
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Unable to save data", message: err.description)
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
-                        })
-                    }
-                    else{
-                        self.showAlert("", message: err.description)
-                        bgQueue = nil
-                        datastore = nil
-                        subject = nil
-                    }
-                })
-            }
-        }
-        else {
+        
+        if self.data == nil {
             showAlert("No image selected", message: "")
+            return
         }
+        
+        let datastore = MDDatastoreFactory.create()
+        let subject = datastore.subjectWithID(self.subjectID)
+        
+        subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+            if err == nil {
+                // data is collected, will be uploaded in the background.
+                // show an alert?
+            }
+        })
     }
     
     func takeOrSelectPicture(fromCamera: Bool) {
@@ -155,7 +120,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func scaleDownAndConvertImageToNSData() -> NSData {
+    func scaleDownAndConvertImageToNSData(image: UIImage) -> NSData {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
