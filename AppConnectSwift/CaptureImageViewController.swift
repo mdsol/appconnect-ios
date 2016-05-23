@@ -38,6 +38,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.dismissViewControllerAnimated(true, completion: nil)
         let img = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.data = self.scaleDownAndConvertImageToNSData(img)
+        
+        self.imageView.image = img;
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -60,16 +62,21 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             return
         }
         
-        let datastore = MDDatastoreFactory.create()
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subjectWithID(self.subjectID)
         
         subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
             if err == nil {
-                // data is collected, will be uploaded in the background.
-                // show an alert?
+                
+                // update the UI.
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.showAlert("Data saved successfully", message: "Will be uploaded automatically!")
+                    self.imageView.image = nil
+                }
             }
         })
     }
+
     
     func takeOrSelectPicture(fromCamera: Bool) {
         // Looks for camera
