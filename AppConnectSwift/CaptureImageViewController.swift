@@ -39,7 +39,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         let img = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.data = self.scaleDownAndConvertImageToNSData(img)
         
-        self.imageView.image = img;
+        self.imageView.image = img
+        self.saveImageButton.enabled = true
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -72,6 +73,8 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 dispatch_async(dispatch_get_main_queue()) {
                     self.showAlert("Data saved successfully", message: "Will be uploaded automatically!")
                     self.imageView.image = nil
+                    self.data = nil
+                    self.saveImageButton.enabled = false;
                 }
             }
         })
