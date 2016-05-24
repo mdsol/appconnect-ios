@@ -66,7 +66,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subjectWithID(self.subjectID)
         
-        subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+        subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
             if err == nil {
                 
                 // update the UI.

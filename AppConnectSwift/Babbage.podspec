@@ -11,13 +11,13 @@ end
 
 Pod::Spec.new do |s|
     s.name               = "Babbage"
-    s.version            = "2016.2.0.89"
+    s.version            = "2016.2.0.92"
     s.summary            = "The Medidata Patient Cloud SDK"
     s.homepage           = "https://github.com/mdsol/babbage"
     s.license            = { type: "Proprietary", text: "TBD" }
     s.author             = "Medidata Solutions, Inc."
 
-    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-release/com/mdsol/babbage/ios/2016.2.0/babbage-2016.2.0.89.zip" }
+    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-release/com/mdsol/babbage/ios/2016.2.0/babbage-2016.2.0.92.zip" }
     s.source_files       = "artifacts/include/babbage/*.h"
     s.vendored_libraries = "artifacts/libBabbage.a"
 
