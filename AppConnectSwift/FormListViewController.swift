@@ -31,56 +31,37 @@ class FormListViewController: UITableViewController {
     }
     
     func loadForms() {
-        // Start an asynchronous task to load the forms
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock() {
-            // Each secondary thread must create its own datastore instance and
-            // dispose of it when done
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            var datastore = MDDatastoreFactory.create()
-            let user = datastore.userWithID(Int64(self.userID))
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
+        
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        
+        let user = datastore.userWithID(Int64(self.userID))
+        
+        client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
             
-            // Keep track of loaded subjects so that we know when all have been loaded
-            var loadedSubjectsAndErrors : [AnyObject] = []
+            if error != nil {
+                // no new forms from server
+                self.spinner.stopAnimating()
+                return;
+            }
             
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                if error != nil {
-                    loadedSubjectsAndErrors.append(error)
-                    if loadedSubjectsAndErrors.count == subjects.count {
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
-                            self.populateForms()
-                            self.spinner.stopAnimating()
-                            datastore = nil
-                            bgQueue = nil
-                        }
-                    }
-                    return
-                }
-
-                // Get the subjects for the current user and then iterate over
-                // the subjects to sync their forms. The objects returned from
-                // these methods are only usable during the lifetime of this
-                // temporary datastore.
-                for subject in subjects as! [MDSubject]! {
-                    client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
-                        loadedSubjectsAndErrors.append(subject)
-                        
-                        // When all subjects have been loaded, populate the UI and stop the spinner
-                        if loadedSubjectsAndErrors.count == subjects.count {
-                            NSOperationQueue.mainQueue().addOperationWithBlock {
-                                self.populateForms()
-                                self.spinner.stopAnimating()
-                                datastore = nil
-                                bgQueue = nil
-                            }
-                        }
+            var subjectCount = 0
+            
+            for subject in subjects as! [MDSubject]! {
+                client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
+                    
+                    subjectCount += 1
+                    
+                    // When all subjects have been loaded, populate the UI and stop the spinner
+                    if subjectCount == subjects.count {
+                        self.populateForms()
+                        self.spinner.stopAnimating()
                     }
                 }
             }
         }
     }
-
+    
     func populateForms() {
         // This is how the UI retrieves forms from the datastore for display.
         // The user could have multiple subjects if they're assigned to multiple
@@ -95,6 +76,7 @@ class FormListViewController: UITableViewController {
             }).reduce([], combine: +)
             self.objects = forms
         }
+        
         self.tableView.reloadData()
     }
     
