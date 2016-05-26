@@ -38,13 +38,6 @@ class CreateAccountViewController: UIViewController {
         
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
-        // Account created successfully takes user back to login screen
-        if segue.identifier == "CreateAccountSuccess" {
-            let loginViewController = segue.destinationViewController as! LoginViewController
-        }
-    }
-    
     func showAlert(title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: okHandler))

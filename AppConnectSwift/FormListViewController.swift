@@ -16,7 +16,7 @@ class FormListViewController: UITableViewController {
         self.view.addSubview(spinner)
         spinner.startAnimating()
         
-        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: "doLogout")
+        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: #selector(FormListViewController.doLogout))
         self.navigationItem.setLeftBarButtonItem(backButton, animated: true)
         
         // Begin loading the forms for the logged-in user
