@@ -34,9 +34,12 @@ class FormListViewController: UITableViewController {
         client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
             
             if error != nil {
-                // no new forms from server
-                self.populateForms()
-                self.spinner.stopAnimating()
+                
+                dispatch_async(dispatch_get_main_queue()) {
+                    // no new forms from server
+                    self.populateForms()
+                    self.spinner.stopAnimating()
+                }
                 return;
             }
             
@@ -49,8 +52,10 @@ class FormListViewController: UITableViewController {
                     
                     // When all subjects have been loaded, populate the UI and stop the spinner
                     if subjectCount == subjects.count {
-                        self.populateForms()
-                        self.spinner.stopAnimating()
+                        dispatch_async(dispatch_get_main_queue()) {
+                            self.populateForms()
+                            self.spinner.stopAnimating()
+                        }
                     }
                 }
             }

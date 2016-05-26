@@ -35,15 +35,21 @@ class LoginViewController: UIViewController {
                     alertMessage = "The provided credentials are incorrect."
                 }
                 
-                self.showAlert("Error", message: alertMessage)
-
+                dispatch_async(dispatch_get_main_queue()) {
+                    self.showAlert("Error", message: alertMessage)
+                    sender.enabled = true
+                }
+                
                 return
             }
             
             // no error implies we have a user.
             self.userID = user.objectID
-            self.performSegueWithIdentifier("LoginSuccess", sender: nil)
-            sender.enabled = true
+
+            dispatch_async(dispatch_get_main_queue()) {
+                self.performSegueWithIdentifier("LoginSuccess", sender: nil)
+                sender.enabled = true
+            }
         }
     }
     

@@ -22,7 +22,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        //takeOrSelectPicture(true)
+       
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
         self.saveImageButton.enabled = false
