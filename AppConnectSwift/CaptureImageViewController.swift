@@ -15,21 +15,18 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     var imagePicker = UIImagePickerController()
     var userID : Int64!
+    
     var data : NSData!
-    var collectedSubjects: [MDSubject]!
+    
     var subjectID: Int64!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        takeOrSelectPicture(true)
+        //takeOrSelectPicture(true)
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
         self.saveImageButton.enabled = false
-        self.loadSubjects()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+        
         self.navigationItem.title = "Capture Image"
     }
     
@@ -67,7 +64,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         let subject = datastore.subjectWithID(self.subjectID)
         
         subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
-            if err == nil {
+            if (err == nil) {
                 
                 // update the UI.
                 dispatch_async(dispatch_get_main_queue()) {
@@ -91,37 +88,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             else {
                 showAlert("Camera not accessible", message: "")
             }
-        }
-        else {
-            // Looks for images in photo library
-            imagePicker.sourceType = .PhotoLibrary
-            presentViewController(imagePicker, animated: true, completion: {})
-        }
-    }
-    
-    func loadSubjects() {
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock() {
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            var datastore = MDDatastoreFactory.create()
-            let user = datastore.userWithID(self.userID)
             
-            // Start an asynchronous task to load the subjects for the user logged in
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                // Check all subjects loaded
-                if error == nil {
-                    // Enable image saving button once loaded
-                    self.collectedSubjects = subjects as! [MDSubject]
-                    self.subjectID = self.collectedSubjects[0].objectID;
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.saveImageButton.enabled = true
-                        bgQueue = nil
-                        datastore = nil
-                    }
-                }
-            }
+            return
         }
+        
+        // Looks for images in photo library
+        imagePicker.sourceType = .PhotoLibrary
+        presentViewController(imagePicker, animated: true, completion: {})
     }
 
     func showAlert(title: String, message: String) {

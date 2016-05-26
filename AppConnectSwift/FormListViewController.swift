@@ -2,8 +2,9 @@ import UIKit
 
 class FormListViewController: UITableViewController {
 
-    var objects = [AnyObject]()
+    var loadedForms = [MDForm]()
     var userID : Int64!
+    var primarySubjectId : Int64!
     
     var spinner : UIActivityIndicatorView!
 
@@ -23,13 +24,6 @@ class FormListViewController: UITableViewController {
         loadForms()
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Populate the list with forms that are already in the datastore
-        populateForms()
-    }
-    
     func loadForms() {
         let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
@@ -41,6 +35,7 @@ class FormListViewController: UITableViewController {
             
             if error != nil {
                 // no new forms from server
+                self.populateForms()
                 self.spinner.stopAnimating()
                 return;
             }
@@ -59,6 +54,10 @@ class FormListViewController: UITableViewController {
                     }
                 }
             }
+            
+            if (subjects.count > 0 ) {
+                self.primarySubjectId = subjects[0].objectID
+            }
         }
     }
     
@@ -74,7 +73,8 @@ class FormListViewController: UITableViewController {
             forms = subjects.map({ (subject : MDSubject) -> [MDForm] in
                 datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
             }).reduce([], combine: +)
-            self.objects = forms
+            
+            self.loadedForms = forms
         }
         
         self.tableView.reloadData()
@@ -88,13 +88,14 @@ class FormListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            if objects.count == 0 {
+            if loadedForms.count == 0 {
                 self.navigationItem.title = "Back"
                 let controller = segue.destinationViewController as! CaptureImageViewController
                 controller.userID = self.userID!
+                controller.subjectID = self.primarySubjectId!
             }
             else{
-                let form = objects[indexPath.row] as! MDForm
+                let form = loadedForms[indexPath.row]
                 if form.formOID == "FORM1" {
                     let controller = segue.destinationViewController as! OnePageFormViewController
                     controller.formID = form.objectID
@@ -112,11 +113,11 @@ class FormListViewController: UITableViewController {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
-        if objects.count == 0 {
+        if loadedForms.count == 0 {
             performSegueWithIdentifier("CaptureImage", sender: self)
         }
         else {
-            let form = objects[indexPath.row] as! MDForm
+            let form = loadedForms[indexPath.row]
             let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
             performSegueWithIdentifier(sequeIdentifier!, sender: self)
         }
@@ -127,18 +128,18 @@ class FormListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count == 0 ? 1 : objects.count
+        return loadedForms.count == 0 ? 1 : loadedForms.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        if objects.count == 0 {
+        if loadedForms.count == 0 {
             cell.textLabel!.text = "Capture Image"
             return cell
         }
-        let object = objects[indexPath.row] as! MDForm
+        let form = loadedForms[indexPath.row]
         
-        cell.textLabel!.text = object.name
+        cell.textLabel!.text = form.name
         return cell
     }
 
