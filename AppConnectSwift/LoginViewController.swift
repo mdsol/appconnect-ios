@@ -20,56 +20,35 @@ class LoginViewController: UIViewController {
     }
     
     @IBAction func doLogin(sender: UIButton) {
-        loginButton.enabled = false
+        sender.enabled = false;
         
-        let username = usernameField.text
-        let password = passwordField.text
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Network);
+         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock {
-            // Each secondary thread must create its own datastore instance and
-            // dispose of it when done
-            var datastore = MDDatastoreFactory.create()
-            client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
-                if (user != nil) {
-                    // Babbage objects can't be shared between threads so you must pass
-                    // them around by ID instead and the receiving code can get its own
-                    // copy from its own datastore
-                    self.userID = user.objectID
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        // Start the FormListViewController to show the forms available for the
-                        // user who just logged in
-                        self.performSegueWithIdentifier("LoginSuccess", sender: nil)
-                        self.loginButton.enabled = true
-                        // Keep the datastore and queue alive until after the request is completed
-                        bgQueue = nil
-                        datastore = nil
-                    }
-                } else if (error != nil) {
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        var message = error.localizedDescription
-                        if (MDClientErrorCause(rawValue: error.code) == MDClientErrorCause.AuthenticationFailure) {
-                            message = "The provided credentials are incorrect."
-                        }
-                        
-                        let alert = UIAlertController(title: "Error", message: message, preferredStyle: UIAlertControllerStyle.Alert)
-                        alert.addAction(
-                            UIAlertAction(title: "Error", style: UIAlertActionStyle.Default) { (alert: UIAlertAction) in }
-                        )
-                        self.presentViewController(alert, animated: true, completion: nil)
-                        self.loginButton.enabled = true
-                        // Keep the datastore and queue alive until after the request is completed                        
-                        bgQueue = nil
-                        datastore = nil
-                    }
+        client.logIn(usernameField.text, inDatastore: datastore, password: passwordField.text) { (user: MDUser!, error: NSError!) -> Void in
+            
+            if(error != nil) {
+                var alertMessage = error.localizedDescription;
+                
+                if(MDClientErrorCause(rawValue: error.code) == MDClientErrorCause.AuthenticationFailure) {
+                    alertMessage = "The provided credentials are incorrect."
                 }
+                
+                self.showAlert("Error", message: alertMessage)
+
+                return
             }
+            
+            // no error implies we have a user.
+            self.userID = user.objectID
+            self.performSegueWithIdentifier("LoginSuccess", sender: nil)
+            sender.enabled = true
         }
     }
+    
     @IBAction func doSignUp(sender: AnyObject) {
+        // segue'ing to sign up viewcontroller, reveal back button
         self.navigationController?.navigationBarHidden = false
     }
     
@@ -81,5 +60,12 @@ class LoginViewController: UIViewController {
             formListViewController.userID = self.userID!
         }
     }
+    
+    func showAlert(title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
+        self.presentViewController(alert, animated: true, completion: nil)
+    }
+
 
 }
