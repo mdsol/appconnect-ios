@@ -1,4 +1,3 @@
-
 if File.exist?('local.yaml')
     require 'yaml'
     content = YAML.load_file('local.yaml')
@@ -11,13 +10,13 @@ end
 
 Pod::Spec.new do |s|
     s.name               = "Babbage"
-    s.version            = "2016.2.0.99"
+    s.version            = "2016.2.0.100"
     s.summary            = "The Medidata Patient Cloud SDK"
     s.homepage           = "https://github.com/mdsol/babbage"
     s.license            = { type: "Proprietary", text: "TBD" }
     s.author             = "Medidata Solutions, Inc."
 
-    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-release/com/mdsol/babbage/ios/2016.2.0/babbage-2016.2.0.99.zip" }
+    s.source             = { http: "https://#{username}:#{password}@etlhydra-artifactory-sandbox.imedidata.net/artifactory/p-cloud-release/com/mdsol/babbage/ios/2016.2.0/babbage-2016.2.0.100.zip" }
     s.source_files       = "artifacts/include/babbage/*.h"
     s.vendored_libraries = "artifacts/libBabbage.a"
 
@@ -26,9 +25,7 @@ Pod::Spec.new do |s|
     s.requires_arc       = true
     s.ios.deployment_target = '8.0'
 
-    s.dependency         'AFNetworking', '2.5.3'
-    s.dependency         'HTMLReader', '~> 0.7.1'
-    s.dependency         'UICKeyChainStore', '2.0.6' # 2.0.7 does not build with XCode 6.4
-    s.dependency         'OpenSSL-Universal', '~> 1.0.1j'
+    s.dependency         'HTMLReader', '~> 0.7'
+    s.dependency         'UICKeyChainStore', '~> 2.0'
     s.dependency         'AWSS3', '~> 2.3.5'
 end

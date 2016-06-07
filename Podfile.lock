@@ -1,38 +1,14 @@
 PODS:
-  - AFNetworking (2.5.3):
-    - AFNetworking/NSURLConnection (= 2.5.3)
-    - AFNetworking/NSURLSession (= 2.5.3)
-    - AFNetworking/Reachability (= 2.5.3)
-    - AFNetworking/Security (= 2.5.3)
-    - AFNetworking/Serialization (= 2.5.3)
-    - AFNetworking/UIKit (= 2.5.3)
-  - AFNetworking/NSURLConnection (2.5.3):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/NSURLSession (2.5.3):
-    - AFNetworking/Reachability
-    - AFNetworking/Security
-    - AFNetworking/Serialization
-  - AFNetworking/Reachability (2.5.3)
-  - AFNetworking/Security (2.5.3)
-  - AFNetworking/Serialization (2.5.3)
-  - AFNetworking/UIKit (2.5.3):
-    - AFNetworking/NSURLConnection
-    - AFNetworking/NSURLSession
   - AWSCore (2.3.6)
   - AWSS3 (2.3.6):
     - AWSCore (= 2.3.6)
-  - Babbage (2016.2.0.99):
-    - AFNetworking (= 2.5.3)
+  - Babbage (2016.2.0.100):
     - AWSS3 (~> 2.3.5)
-    - HTMLReader (~> 0.7.1)
-    - OpenSSL-Universal (~> 1.0.1j)
-    - UICKeyChainStore (= 2.0.6)
-  - HTMLReader (0.7.1)
+    - HTMLReader (~> 0.7)
+    - UICKeyChainStore (~> 2.0)
+  - HTMLReader (0.9.6)
   - IQKeyboardManagerSwift (3.3.7)
-  - OpenSSL-Universal (1.0.1.19)
-  - UICKeyChainStore (2.0.6)
+  - UICKeyChainStore (2.1.0)
 
 DEPENDENCIES:
   - Babbage (from `AppConnectSwift/Babbage.podspec`)
@@ -43,13 +19,11 @@ EXTERNAL SOURCES:
     :podspec: AppConnectSwift/Babbage.podspec
 
 SPEC CHECKSUMS:
-  AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   AWSCore: 917d84b32974136194a905b98c0ae25c9f3350b8
   AWSS3: 1caaf6b45100503fecf3d418c394519a89409a74
-  Babbage: 50f91a0fb509c205b92798511c1080b9287ff739
-  HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
+  Babbage: dfa291b60ad701b965bfb729e83691da57009829
+  HTMLReader: 7e21488ee378afc56ccade8af35840c4e03e434c
   IQKeyboardManagerSwift: 7d06186460470f3f7e767630861a1303980ee5cf
-  OpenSSL-Universal: 07489b0316f0f4f53c928e402e2ecbbedf96d93b
-  UICKeyChainStore: c5719c814e8bd69e74e4a0fc09daf8f4d6257a59
+  UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
 
 COCOAPODS: 0.39.0
