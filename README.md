@@ -121,7 +121,7 @@ let user = datastore.userWithID(Int64(self.userID))
 
 Because all MDObject instances (MDSubject, MDForm, etc..) are tied to a specific datastore, you must be careful to keep a datastore instance alive when using objects returned from its queries. Consider the following pseudocode:
 
-```
+```swift
 func uploadData() {
   let myDatastore = MDDatastoreFactory.create()
   let subject = myDatastore.subjectWithID(1)
@@ -134,7 +134,7 @@ func uploadData() {
 
 Because collectData is asynchronous, it is possible that the datastore will be released before `doSomething()` is called. To avoid this, set the datastore to nil at the end of the block in which the object is used. This will keep a reference around until it is no longer needed. Here's the revised `uploadData()` function:
 
-```
+```swift
 func uploadData() {
   var myDatastore = MDDatastoreFactory.create()
   let subject = myDatastore.subjectWithID(1)
