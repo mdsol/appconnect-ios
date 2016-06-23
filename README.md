@@ -111,16 +111,50 @@ Password to have the following
 •  At least one lower-case letter
 •  At least one numeric digit
 
-## Upload Data to S3
+## Using the Datastore
+
 You can store and retrieve persistent data using the Datastore class.
 ```swift
 let datastore = MDDatastoreFactory.create()
 let user = datastore.userWithID(Int64(self.userID))
 ```
+
+Because all MDObject instances (MDSubject, MDForm, etc..) are tied to a specific datastore, you must be careful to keep a datastore instance alive when using objects returned from its queries. Consider the following pseudocode:
+
+```swift
+func uploadData() {
+  let myDatastore = MDDatastoreFactory.create()
+  let subject = myDatastore.subjectWithID(1)
+
+  subject.collectData(...) {
+    subject.doSomething()
+  }
+}
+```
+
+Because collectData is asynchronous, it is possible that the datastore will be released before `doSomething()` is called. To avoid this, set the datastore to nil at the end of the block in which the object is used. This will keep a reference around until it is no longer needed. Here's the revised `uploadData()` function:
+
+```swift
+func uploadData() {
+  var myDatastore = MDDatastoreFactory.create()
+  let subject = myDatastore.subjectWithID(1)
+
+  subject.collectData(...) {
+    subject.doSomething()
+    myDatastore = nil
+  }
+}
+```
+
 >**Important Considerations:** 
   - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
   - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
   - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
+
+
+## Collecting and Uploading Arbitrary Data
+
+You can collect arbitrary data (images, videos, accelerometer data, etc..) and have the results uploaded to AWS S3. This data will be automatically uploaded when the device has an internet connection.
 
 ```swift
 // In CaptureImageViewController.swift
@@ -132,14 +166,7 @@ subject.collectData(self.data, withMetadata: "Random String", withContentType: "
 	if err == nil {
     	print("Successfully collected")
 	}
-}
-
-// Sending the dataEnvelop collected
-client.sendEnvelope(dataEnvelope, completion: { (err) in
-	if err == nil {
-        print("Successfully uploaded to S3")
-    }
-}                        	
+}                   	
 ```
 
 ## Network Requests
