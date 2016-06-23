@@ -111,7 +111,7 @@ Password to have the following
 •  At least one lower-case letter
 •  At least one numeric digit
 
-## Loading Data from the Datastore
+## Using the Datastore
 
 You can store and retrieve persistent data using the Datastore class.
 ```swift
@@ -152,7 +152,7 @@ func uploadData() {
   - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
 
-## Upload Data to S3
+## Collecting and Uploading Arbitrary Data
 
 You can collect arbitrary data (images, videos, accelerometer data, etc..) and have the results uploaded to AWS S3. This data will be automatically uploaded when the device has an internet connection.
 
