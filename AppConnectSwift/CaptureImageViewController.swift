@@ -59,45 +59,23 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         if image.CGImage != nil && self.imageView.image != nil {
           var bgQueue : NSOperationQueue! = NSOperationQueue()
             bgQueue.addOperationWithBlock() {
-                let clientFactory = MDClientFactory.sharedInstance()
-                let client = clientFactory.clientOfType(MDClientType.Network);
                 var datastore = MDDatastoreFactory.create()
                 var subject = datastore.subjectWithID(self.subjectID)
                 
-                subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+                subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
                     if err == nil {
-                        client.sendEnvelope(dataEnvelope, completion: { (err) in
-                            if err == nil {
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Data saved successfully", message: "")
-                                    self.imageView.image = nil
-                                    subject = nil
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
-                            else if err.description.containsString("The Internet connection appears to be offline"){
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Not connected to the Internet", message: "Please restore Internet connection and try again")
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
-                            else {
-                                NSOperationQueue.mainQueue().addOperationWithBlock {
-                                    self.showAlert("Unable to save data", message: err.description)
-                                    bgQueue = nil
-                                    datastore = nil
-                                }
-                            }
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                            self.imageView.image = nil
+                            self.showAlert("Data Saved", message: "Upload will happen automatically.")
+                        });
+                    } else {
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                            self.showAlert("", message: err.description)
                         })
                     }
-                    else{
-                        self.showAlert("", message: err.description)
-                        bgQueue = nil
-                        datastore = nil
-                        subject = nil
-                    }
+                    bgQueue = nil
+                    datastore = nil
+                    subject = nil
                 })
             }
         }
@@ -112,12 +90,10 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             if UIImagePickerController.isSourceTypeAvailable(.Camera) {
                 imagePicker.sourceType = .Camera
                 presentViewController(imagePicker, animated: true, completion: {})
-            }
-            else {
+            } else {
                 showAlert("Camera not accessible", message: "")
             }
-        }
-        else {
+        } else {
             // Looks for images in photo library
             imagePicker.sourceType = .PhotoLibrary
             presentViewController(imagePicker, animated: true, completion: {})
@@ -128,7 +104,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock() {
             let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
+            let client = clientFactory.clientOfType(MDClientType.Hybrid);
             var datastore = MDDatastoreFactory.create()
             let user = datastore.userWithID(self.userID)
             
@@ -170,13 +146,11 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
                 imgHeight = adjustedHeight
-            }
-            else if imgAspectRatio > adjustedAspectRatio {
+            } else if imgAspectRatio > adjustedAspectRatio {
                 // Adjusting larger height
                 imgHeight = adjustedWidth / imgWidth * imgHeight
                 imgWidth = adjustedWidth
-            }
-            else {
+            } else {
                 // No compression
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;

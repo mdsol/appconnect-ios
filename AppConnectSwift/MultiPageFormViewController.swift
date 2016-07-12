@@ -57,8 +57,8 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         // a signature, form.sign() should also be called before calling finish().
         stepSequencer.finish()
         
-        // Create a network client instance with which to send the responses
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
+        // Create a hybrid client instance with which to send the responses
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Hybrid);
         
         // Create a new datastore to use for the request
         var datastore = MDDatastoreFactory.create()
