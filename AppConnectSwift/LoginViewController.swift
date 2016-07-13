@@ -26,7 +26,7 @@ class LoginViewController: UIViewController {
         let password = passwordField.text
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Network);
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
         
         var bgQueue : NSOperationQueue! = NSOperationQueue()
         bgQueue.addOperationWithBlock {

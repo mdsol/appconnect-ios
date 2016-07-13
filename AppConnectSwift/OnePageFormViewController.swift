@@ -74,7 +74,7 @@ class OnePageFormViewController: UIViewController {
         }
         
         // Create a network client instance with which to send the responses
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
+        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Hybrid);
         
         // Babbage objects can't be shared between threads so you must pass
         // them around by ID instead and the receiving code can get its own

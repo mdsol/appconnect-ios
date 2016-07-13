@@ -17,7 +17,7 @@ class CreateAccountViewController: UIViewController {
     
     @IBAction func createAccount(sender: AnyObject) {
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Network);
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
         if userSecurityQuestionAnswer.text?.characters.count >= 2 {
             client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
                 if err == nil {

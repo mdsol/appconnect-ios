@@ -37,7 +37,7 @@ class FormListViewController: UITableViewController {
             // Each secondary thread must create its own datastore instance and
             // dispose of it when done
             let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
+            let client = clientFactory.clientOfType(MDClientType.Hybrid);
             var datastore = MDDatastoreFactory.create()
             let user = datastore.userWithID(Int64(self.userID))
             
