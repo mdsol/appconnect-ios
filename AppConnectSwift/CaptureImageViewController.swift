@@ -65,18 +65,20 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
             if (err == nil) {
-                
                 // update the UI.
-                dispatch_async(dispatch_get_main_queue()) {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
                     self.showAlert("Data saved successfully", message: "Will be uploaded automatically!")
                     self.imageView.image = nil
                     self.data = nil
-                    self.saveImageButton.enabled = false;
-                }
+                    self.saveImageButton.enabled = false
+                });
+            } else {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showAlert("", message: err.description)
+                });
             }
         })
     }
-
     
     func takeOrSelectPicture(fromCamera: Bool) {
         // Looks for camera
@@ -84,8 +86,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             if UIImagePickerController.isSourceTypeAvailable(.Camera) {
                 imagePicker.sourceType = .Camera
                 presentViewController(imagePicker, animated: true, completion: {})
-            }
-            else {
+            } else {
                 showAlert("Camera not accessible", message: "")
             }
             
@@ -118,13 +119,11 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
                 // Adjusting larger width
                 imgWidth = adjustedHeight / imgHeight * imgWidth;
                 imgHeight = adjustedHeight
-            }
-            else if imgAspectRatio > adjustedAspectRatio {
+            } else if imgAspectRatio > adjustedAspectRatio {
                 // Adjusting larger height
                 imgHeight = adjustedWidth / imgWidth * imgHeight
                 imgWidth = adjustedWidth
-            }
-            else {
+            } else {
                 // No compression
                 imgWidth = adjustedWidth;
                 imgHeight = adjustedHeight;

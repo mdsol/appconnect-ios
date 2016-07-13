@@ -25,8 +25,9 @@ class FormListViewController: UITableViewController {
     }
 
     func loadForms() {
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
-        
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+
         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         
         let user = datastore.userWithID(Int64(self.userID))
@@ -34,12 +35,11 @@ class FormListViewController: UITableViewController {
         client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
             
             if error != nil {
-                
-                dispatch_async(dispatch_get_main_queue()) {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
                     // no new forms from server
                     self.populateForms()
                     self.spinner.stopAnimating()
-                }
+                });
                 return;
             }
             
@@ -52,10 +52,10 @@ class FormListViewController: UITableViewController {
                     
                     // When all subjects have been loaded, populate the UI and stop the spinner
                     if subjectCount == subjects.count {
-                        dispatch_async(dispatch_get_main_queue()) {
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
                             self.populateForms()
                             self.spinner.stopAnimating()
-                        }
+                        });
                     }
                 }
             }

@@ -22,9 +22,10 @@ class LoginViewController: UIViewController {
     @IBAction func doLogin(sender: UIButton) {
         sender.enabled = false;
         
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         
-         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
         
         client.logIn(usernameField.text, inDatastore: datastore, password: passwordField.text) { (user: MDUser!, error: NSError!) -> Void in
             
@@ -35,21 +36,21 @@ class LoginViewController: UIViewController {
                     alertMessage = "The provided credentials are incorrect."
                 }
                 
-                dispatch_async(dispatch_get_main_queue()) {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
                     self.showAlert("Error", message: alertMessage)
                     sender.enabled = true
-                }
+                });
                 
                 return
             }
             
             // no error implies we have a user.
             self.userID = user.objectID
-
-            dispatch_async(dispatch_get_main_queue()) {
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock({
                 self.performSegueWithIdentifier("LoginSuccess", sender: nil)
                 sender.enabled = true
-            }
+            });
         }
     }
     
@@ -72,6 +73,4 @@ class LoginViewController: UIViewController {
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
         self.presentViewController(alert, animated: true, completion: nil)
     }
-
-
 }

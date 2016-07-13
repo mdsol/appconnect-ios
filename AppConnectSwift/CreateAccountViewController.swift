@@ -16,26 +16,27 @@ class CreateAccountViewController: UIViewController {
     }
     
     @IBAction func createAccount(sender: AnyObject) {
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network);
         
-        if userSecurityQuestionAnswer.text?.characters.count >= 2 {
-            client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
-                if err == nil {
-                    NSOperationQueue.mainQueue().addOperationWithBlock({
-                        self.showAlert("Account Creation Success", message: "", okHandler:self.successfulAccountCreationHandler)
-                    })
-                }
-                else {
-                    NSOperationQueue.mainQueue().addOperationWithBlock({
-                        self.showAlert("Account Creation Failure", message: err.description, okHandler: nil)
-                    })
-                }
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+        
+        if userSecurityQuestionAnswer.text?.characters.count < 2 {
+            showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
+            return
+        }
+        
+        client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+            if err == nil {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showAlert("Account Creation Success", message: "", okHandler:self.successfulAccountCreationHandler)
+                })
+            }
+            else {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showAlert("Account Creation Failure", message: err.description, okHandler: nil)
+                })
             }
         }
-        else {
-           self.showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
-        }
-        
     }
     
     func showAlert(title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
