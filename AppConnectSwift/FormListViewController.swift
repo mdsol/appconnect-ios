@@ -30,7 +30,7 @@ class FormListViewController: UITableViewController {
 
         let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
         
-        let user = datastore.userWithID(Int64(self.userID))
+        let user = datastore.userWithID(self.userID)
         
         client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
             
