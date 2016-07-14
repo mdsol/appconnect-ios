@@ -69,7 +69,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
             return nil
         }
         
-        index--
+        index -= 1
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 
@@ -90,7 +90,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
             return nil
         }
         
-        index++
+        index += 1
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 

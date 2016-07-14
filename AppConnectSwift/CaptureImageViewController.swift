@@ -14,32 +14,30 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     @IBOutlet weak var saveImageButton: UIBarButtonItem!
     
     var imagePicker = UIImagePickerController()
-    var image = UIImage()
     var userID : Int64!
+    
     var data : NSData!
-    var collectedSubjects: [MDSubject]!
+    
     var subjectID: Int64!
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        takeOrSelectPicture(true)
+       
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
         self.saveImageButton.enabled = false
-        self.loadSubjects()
-    }
-    
-    override func viewDidAppear(animated: Bool) {
-        super.viewDidAppear(animated)
+        
         self.navigationItem.title = "Capture Image"
     }
     
     // MARK: Image picker delegate functions
     func imagePickerController(picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : AnyObject]) {
         self.dismissViewControllerAnimated(true, completion: nil)
-        self.image = info[UIImagePickerControllerOriginalImage] as! UIImage
-        imageView.image = self.image
-        self.data = self.scaleDownAndConvertImageToNSData() as? NSData
+        let img = info[UIImagePickerControllerOriginalImage] as! UIImage
+        self.data = self.scaleDownAndConvertImageToNSData(img)
+        
+        self.imageView.image = img
+        self.saveImageButton.enabled = true
     }
     
     func imagePickerControllerDidCancel(picker: UIImagePickerController) {
@@ -56,32 +54,30 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     @IBAction func saveTapped(sender: AnyObject) {
-        if image.CGImage != nil && self.imageView.image != nil {
-          var bgQueue : NSOperationQueue! = NSOperationQueue()
-            bgQueue.addOperationWithBlock() {
-                var datastore = MDDatastoreFactory.create()
-                var subject = datastore.subjectWithID(self.subjectID)
-                
-                subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
-                    if err == nil {
-                        NSOperationQueue.mainQueue().addOperationWithBlock({
-                            self.imageView.image = nil
-                            self.showAlert("Data Saved", message: "Upload will happen automatically.")
-                        });
-                    } else {
-                        NSOperationQueue.mainQueue().addOperationWithBlock({
-                            self.showAlert("", message: err.description)
-                        })
-                    }
-                    bgQueue = nil
-                    datastore = nil
-                    subject = nil
-                })
-            }
-        }
-        else {
+        
+        if self.data == nil {
             showAlert("No image selected", message: "")
+            return
         }
+        
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        let subject = datastore.subjectWithID(self.subjectID)
+        
+        subject.collectData(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: NSError!) -> Void in
+            if (err == nil) {
+                // update the UI.
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showAlert("Data saved successfully", message: "Will be uploaded automatically!")
+                    self.imageView.image = nil
+                    self.data = nil
+                    self.saveImageButton.enabled = false
+                });
+            } else {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showAlert("", message: err.description)
+                });
+            }
+        })
     }
     
     func takeOrSelectPicture(fromCamera: Bool) {
@@ -93,36 +89,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
             } else {
                 showAlert("Camera not accessible", message: "")
             }
-        } else {
-            // Looks for images in photo library
-            imagePicker.sourceType = .PhotoLibrary
-            presentViewController(imagePicker, animated: true, completion: {})
-        }
-    }
-    
-    func loadSubjects() {
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock() {
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Hybrid);
-            var datastore = MDDatastoreFactory.create()
-            let user = datastore.userWithID(self.userID)
             
-            // Start an asynchronous task to load the subjects for the user logged in
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                // Check all subjects loaded
-                if error == nil {
-                    // Enable image saving button once loaded
-                    self.collectedSubjects = subjects as! [MDSubject]
-                    self.subjectID = self.collectedSubjects[0].objectID;
-                    NSOperationQueue.mainQueue().addOperationWithBlock {
-                        self.saveImageButton.enabled = true
-                        bgQueue = nil
-                        datastore = nil
-                    }
-                }
-            }
+            return
         }
+        
+        // Looks for images in photo library
+        imagePicker.sourceType = .PhotoLibrary
+        presentViewController(imagePicker, animated: true, completion: {})
     }
 
     func showAlert(title: String, message: String) {
@@ -131,7 +104,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         self.presentViewController(alert, animated: true, completion: nil)
     }
 
-    func scaleDownAndConvertImageToNSData() -> NSData {
+    func scaleDownAndConvertImageToNSData(image: UIImage) -> NSData {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
