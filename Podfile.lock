@@ -23,7 +23,7 @@ PODS:
   - AWSCore (2.3.6)
   - AWSS3 (2.3.6):
     - AWSCore (= 2.3.6)
-  - Babbage (2016.2.0.115):
+  - Babbage (2016.3.0.116):
     - AFNetworking (= 2.5.3)
     - AWSS3 (~> 2.3.5)
     - HTMLReader (~> 0.7.1)
@@ -46,7 +46,7 @@ SPEC CHECKSUMS:
   AFNetworking: e1d86c2a96bb5d2e7408da36149806706ee122fe
   AWSCore: 917d84b32974136194a905b98c0ae25c9f3350b8
   AWSS3: 1caaf6b45100503fecf3d418c394519a89409a74
-  Babbage: 8e66b69c8a2f20ba6d487824405f341da444380a
+  Babbage: 397ec6c192b3da9f575839fe6b8a2f7e016919d1
   HTMLReader: e6ba09514d125f45e810b6c6c1cebf3542f04d89
   IQKeyboardManagerSwift: 7d06186460470f3f7e767630861a1303980ee5cf
   OpenSSL-Universal: 07489b0316f0f4f53c928e402e2ecbbedf96d93b
