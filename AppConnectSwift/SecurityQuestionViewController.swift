@@ -31,11 +31,8 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
                 return
             }
             
-            for questionId in questions.keys {
-                let questionIdInt:Int? = Int(questionId as! String)
-                let question = questions[questionId] as! String
-                
-                self.securityIdsByQuestion[question] = questionIdInt
+            for (questionId, question) in questions as! [String : String] {
+                self.securityIdsByQuestion[question] = Int(questionId)
                 self.tableDataSource.append(question)
             }
             
