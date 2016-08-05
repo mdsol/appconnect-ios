@@ -2,23 +2,14 @@ import UIKit
 
 class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
    
-    var tableDataSource: [String]  = ["What year were you born?",
-        "Last four digits of SSN or Tax ID number?",
-        "What is your fathers middle name?",
-        "What was the name of your first school?",
-        "Who was your childhood hero?",
-        "What is your favorite pastime?",
-        "What is your all-time favorite sports team?",
-        "What is your high school team or mascot?",
-        "What make was your first car or bike?",
-        "What is your pets name?",
-        "What is your mothers middle name?"
-    ]
+    var tableDataSource = [String]()
     var securityQuestion = "What year were you born?"
-    var securityQuestionID = 1
+    var securityQuestionID = -1
     var createAccountViewController = CreateAccountViewController()
     var userEmail : String!
     var userPassword : String!
+    
+    var securityIdsByQuestion = [String : Int]()
     
     @IBOutlet weak var tableView: UITableView!
     
@@ -27,6 +18,28 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         tableView.delegate = self
         tableView.dataSource = self
         self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Hybrid)
+        
+        client.loadSecurityQuestionsWithCompletion() { (questions: [NSObject : AnyObject]!, error: NSError!) -> Void in
+            if error != nil {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
+                });
+                
+                return
+            }
+            
+            for (questionId, question) in questions as! [String : String] {
+                self.securityIdsByQuestion[question] = Int(questionId)
+                self.tableDataSource.append(question)
+            }
+            
+            NSOperationQueue.mainQueue().addOperationWithBlock({
+                self.tableView.reloadData()
+            });
+        }
     }
     
     func numberOfSectionsInTableView(tableView: UITableView) -> Int {
@@ -41,16 +54,15 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         let cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
         
         cell.textLabel?.text = self.tableDataSource[indexPath.row]
-        cell.textLabel?.numberOfLines = 2
+        cell.textLabel?.numberOfLines = 0
         cell.textLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
         
         return cell
     }
     
     func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
-        // Row path starts from 0 and indexs used starts from 1
-        self.securityQuestionID = indexPath.row + 1
         self.securityQuestion = tableDataSource[indexPath.row]
+        self.securityQuestionID = securityIdsByQuestion[self.securityQuestion]!
         self.performSegueWithIdentifier("SecuritySuccess", sender: nil)
     }
     
