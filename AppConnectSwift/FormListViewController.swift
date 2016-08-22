@@ -2,8 +2,9 @@ import UIKit
 
 class FormListViewController: UITableViewController {
 
-    var objects = [AnyObject]()
+    var loadedForms = [MDForm]()
     var userID : Int64!
+    var primarySubjectId : Int64!
     
     var spinner : UIActivityIndicatorView!
 
@@ -23,64 +24,48 @@ class FormListViewController: UITableViewController {
         loadForms()
     }
 
-    override func viewWillAppear(animated: Bool) {
-        super.viewWillAppear(animated)
-        
-        // Populate the list with forms that are already in the datastore
-        populateForms()
-    }
-    
     func loadForms() {
-        // Start an asynchronous task to load the forms
-        var bgQueue : NSOperationQueue! = NSOperationQueue()
-        bgQueue.addOperationWithBlock() {
-            // Each secondary thread must create its own datastore instance and
-            // dispose of it when done
-            let clientFactory = MDClientFactory.sharedInstance()
-            let client = clientFactory.clientOfType(MDClientType.Network);
-            var datastore = MDDatastoreFactory.create()
-            let user = datastore.userWithID(Int64(self.userID))
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+
+        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        
+        let user = datastore.userWithID(self.userID)
+        
+        client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
             
-            // Keep track of loaded subjects so that we know when all have been loaded
-            var loadedSubjectsAndErrors : [AnyObject] = []
+            if error != nil {
+                NSOperationQueue.mainQueue().addOperationWithBlock({
+                    // no new forms from server
+                    self.populateForms()
+                    self.spinner.stopAnimating()
+                });
+                return;
+            }
             
-            client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-                if error != nil {
-                    loadedSubjectsAndErrors.append(error)
-                    if loadedSubjectsAndErrors.count == subjects.count {
-                        NSOperationQueue.mainQueue().addOperationWithBlock {
+            var subjectCount = 0
+            
+            for subject in subjects as! [MDSubject]! {
+                client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
+                    
+                    subjectCount += 1
+                    
+                    // When all subjects have been loaded, populate the UI and stop the spinner
+                    if subjectCount == subjects.count {
+                        NSOperationQueue.mainQueue().addOperationWithBlock({
                             self.populateForms()
                             self.spinner.stopAnimating()
-                            datastore = nil
-                            bgQueue = nil
-                        }
-                    }
-                    return
-                }
-
-                // Get the subjects for the current user and then iterate over
-                // the subjects to sync their forms. The objects returned from
-                // these methods are only usable during the lifetime of this
-                // temporary datastore.
-                for subject in subjects as! [MDSubject]! {
-                    client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
-                        loadedSubjectsAndErrors.append(subject)
-                        
-                        // When all subjects have been loaded, populate the UI and stop the spinner
-                        if loadedSubjectsAndErrors.count == subjects.count {
-                            NSOperationQueue.mainQueue().addOperationWithBlock {
-                                self.populateForms()
-                                self.spinner.stopAnimating()
-                                datastore = nil
-                                bgQueue = nil
-                            }
-                        }
+                        });
                     }
                 }
             }
+            
+            if (subjects.count > 0 ) {
+                self.primarySubjectId = subjects[0].objectID
+            }
         }
     }
-
+    
     func populateForms() {
         // This is how the UI retrieves forms from the datastore for display.
         // The user could have multiple subjects if they're assigned to multiple
@@ -93,8 +78,10 @@ class FormListViewController: UITableViewController {
             forms = subjects.map({ (subject : MDSubject) -> [MDForm] in
                 datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
             }).reduce([], combine: +)
-            self.objects = forms
+            
+            self.loadedForms = forms
         }
+        
         self.tableView.reloadData()
     }
     
@@ -106,13 +93,14 @@ class FormListViewController: UITableViewController {
 
     override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
-            if objects.count == 0 {
+            if loadedForms.count == 0 {
                 self.navigationItem.title = "Back"
                 let controller = segue.destinationViewController as! CaptureImageViewController
                 controller.userID = self.userID!
+                controller.subjectID = self.primarySubjectId!
             }
             else{
-                let form = objects[indexPath.row] as! MDForm
+                let form = loadedForms[indexPath.row]
                 if form.formOID == "FORM1" {
                     let controller = segue.destinationViewController as! OnePageFormViewController
                     controller.formID = form.objectID
@@ -130,11 +118,11 @@ class FormListViewController: UITableViewController {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
-        if objects.count == 0 {
+        if loadedForms.count == 0 {
             performSegueWithIdentifier("CaptureImage", sender: self)
         }
         else {
-            let form = objects[indexPath.row] as! MDForm
+            let form = loadedForms[indexPath.row]
             let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
             performSegueWithIdentifier(sequeIdentifier!, sender: self)
         }
@@ -145,18 +133,18 @@ class FormListViewController: UITableViewController {
     }
 
     override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return objects.count == 0 ? 1 : objects.count
+        return loadedForms.count == 0 ? 1 : loadedForms.count
     }
 
     override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
         let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
-        if objects.count == 0 {
+        if loadedForms.count == 0 {
             cell.textLabel!.text = "Capture Image"
             return cell
         }
-        let object = objects[indexPath.row] as! MDForm
+        let form = loadedForms[indexPath.row]
         
-        cell.textLabel!.text = object.name
+        cell.textLabel!.text = form.name
         return cell
     }
 
