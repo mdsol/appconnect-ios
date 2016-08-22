@@ -26,14 +26,25 @@ class CreateAccountViewController: UIViewController {
         }
         
         client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+
             if err == nil {
                 NSOperationQueue.mainQueue().addOperationWithBlock({
                     self.showAlert("Account Creation Success", message: "", okHandler:self.successfulAccountCreationHandler)
                 })
             }
             else {
+                var alertMessage = "Unable to regster user"
+                let errorCause = MDClientErrorCause(rawValue: err.code)
+
+                if errorCause == MDClientErrorCause.InvalidRegistrationToken {
+                    alertMessage = "Invalid Registration Token."
+                } else if errorCause == MDClientErrorCause.SubjectAlreadyExistsWithEmail {
+                    alertMessage = "User already exists with email."
+                }
+
+
                 NSOperationQueue.mainQueue().addOperationWithBlock({
-                    self.showAlert("Account Creation Failure", message: err.description, okHandler: nil)
+                    self.showAlert(alertMessage, message: err.description, okHandler: nil)
                 })
             }
         }
