@@ -33,7 +33,7 @@ class CreateAccountViewController: UIViewController {
                 })
             }
             else {
-                var alertMessage = "Unable to regster user"
+                var alertMessage = "Unable to register user"
                 let errorCause = MDClientErrorCause(rawValue: err.code)
 
                 if errorCause == MDClientErrorCause.InvalidRegistrationToken {
