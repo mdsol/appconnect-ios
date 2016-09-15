@@ -5,7 +5,6 @@ import IQKeyboardManagerSwift
 class AppDelegate: UIResponder, UIApplicationDelegate {
 
     var window: UIWindow?
-    var client: MDClient?
     var UIDatastore: MDDatastore?
 
     func application(application: UIApplication, didFinishLaunchingWithOptions launchOptions: [NSObject: AnyObject]?) -> Bool {
@@ -18,11 +17,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncoding)
         // TODO: Substitute the apiToken value with proper token
         MDBabbage.startWithEnvironment(MDClientEnvironment.Production, apiToken: "Your API token", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
-        
-        // The client that will be used to make requests to the backend can be
-        // created once and reused as needed throughout the app
-        client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Network)
-        
+
         // All UI code must get objects from the same datastore, so it's a good
         // idea to create it once and make it available to the rest of the app
         UIDatastore = MDDatastoreFactory.create()
