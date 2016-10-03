@@ -32,8 +32,12 @@ class LoginViewController: UIViewController {
             if(error != nil) {
                 var alertMessage = error.localizedDescription;
                 
-                if(MDClientErrorCause(rawValue: error.code) == MDClientErrorCause.AuthenticationFailure) {
+                let errorCause = MDClientErrorCause(rawValue: error.code)
+                
+                if(errorCause == MDClientErrorCause.AuthenticationFailure) {
                     alertMessage = "The provided credentials are incorrect."
+                } else if (errorCause == MDClientErrorCause.UserNotAssociatedWithToken) {
+                    alertMessage = "User is not associated with provided API token."
                 }
                 
                 NSOperationQueue.mainQueue().addOperationWithBlock({
