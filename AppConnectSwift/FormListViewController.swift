@@ -1,7 +1,21 @@
 import UIKit
+import ResearchKit
 
-class FormListViewController: UITableViewController {
 
+class FormListViewController: UITableViewController, ORKTaskViewControllerDelegate {
+    
+    func taskViewController(taskViewController: ORKTaskViewController, didFinishWithReason reason: ORKTaskViewControllerFinishReason, error: NSError?) {
+        //Handle results with taskViewController.result
+        taskViewController.dismissViewControllerAnimated(true, completion: nil)
+    }
+
+    @IBAction func consentTapped(sender : AnyObject) {
+        let taskViewController = ORKTaskViewController(task: ConsentTask, taskRunUUID: nil)
+        taskViewController.delegate = self
+        presentViewController(taskViewController, animated: true, completion: nil)
+    }
+
+    
     var loadedForms = [MDForm]()
     var userID : Int64!
     var primarySubjectId : Int64!
@@ -10,7 +24,7 @@ class FormListViewController: UITableViewController {
 
     override func viewDidLoad() {
         super.viewDidLoad()
-        
+        consentTapped(self)
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
         spinner.center = CGPointMake(self.view.frame.size.width/2.0, 22);
         spinner.hidesWhenStopped = true;

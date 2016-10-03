@@ -8,6 +8,10 @@
 
 /* Begin PBXBuildFile section */
 		2E0C2BD7AE756D5052077829 /* Pods.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = D0ACFE11926CFE2490549C72 /* Pods.framework */; };
+		2FB5B39E1D9ECE4E008235B1 /* ConsentTask.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB5B39D1D9ECE4E008235B1 /* ConsentTask.swift */; };
+		2FB5B3A01D9ECE67008235B1 /* ResearchKit.framework in Frameworks */ = {isa = PBXBuildFile; fileRef = 2FB5B39F1D9ECE67008235B1 /* ResearchKit.framework */; };
+		2FB5B3A21D9ED7F5008235B1 /* ORKTaskViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB5B3A11D9ED7F5008235B1 /* ORKTaskViewController.swift */; };
+		2FB5B3A41DA298E9008235B1 /* ConsentDocument.swift in Sources */ = {isa = PBXBuildFile; fileRef = 2FB5B3A31DA298E9008235B1 /* ConsentDocument.swift */; };
 		520806B91C29FB640070BA54 /* FieldViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 520806B81C29FB640070BA54 /* FieldViewController.swift */; };
 		523069721C319AEA0012A478 /* UIViewController+Extensions.swift in Sources */ = {isa = PBXBuildFile; fileRef = 523069711C319AEA0012A478 /* UIViewController+Extensions.swift */; };
 		523069741C31C04D0012A478 /* README.md in Sources */ = {isa = PBXBuildFile; fileRef = 523069731C31C04D0012A478 /* README.md */; };
@@ -33,6 +37,10 @@
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		2FB5B39D1D9ECE4E008235B1 /* ConsentTask.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentTask.swift; sourceTree = "<group>"; };
+		2FB5B39F1D9ECE67008235B1 /* ResearchKit.framework */ = {isa = PBXFileReference; lastKnownFileType = wrapper.framework; name = ResearchKit.framework; path = "Pods/../build/Debug-iphoneos/ResearchKit.framework"; sourceTree = "<group>"; };
+		2FB5B3A11D9ED7F5008235B1 /* ORKTaskViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ORKTaskViewController.swift; sourceTree = "<group>"; };
+		2FB5B3A31DA298E9008235B1 /* ConsentDocument.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ConsentDocument.swift; sourceTree = "<group>"; };
 		47EA63136A231013FA88F751 /* Pods_AppConnectSwift.framework */ = {isa = PBXFileReference; explicitFileType = wrapper.framework; includeInIndex = 0; path = Pods_AppConnectSwift.framework; sourceTree = BUILT_PRODUCTS_DIR; };
 		520806B81C29FB640070BA54 /* FieldViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = FieldViewController.swift; sourceTree = "<group>"; };
 		523069711C319AEA0012A478 /* UIViewController+Extensions.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = "UIViewController+Extensions.swift"; sourceTree = "<group>"; };
@@ -68,6 +76,7 @@
 			isa = PBXFrameworksBuildPhase;
 			buildActionMask = 2147483647;
 			files = (
+				2FB5B3A01D9ECE67008235B1 /* ResearchKit.framework in Frameworks */,
 				546DBFDDB0578C0C35B1988B /* Pods_AppConnectSwift.framework in Frameworks */,
 				2E0C2BD7AE756D5052077829 /* Pods.framework in Frameworks */,
 			);
@@ -79,6 +88,7 @@
 		203C8879E59240498BAF84BB /* Frameworks */ = {
 			isa = PBXGroup;
 			children = (
+				2FB5B39F1D9ECE67008235B1 /* ResearchKit.framework */,
 				47EA63136A231013FA88F751 /* Pods_AppConnectSwift.framework */,
 				D0ACFE11926CFE2490549C72 /* Pods.framework */,
 			);
@@ -137,6 +147,9 @@
 				52EC841A1C31863900683D5B /* Babbage.podspec */,
 				5232B6DC1C29B49B006D10EC /* Supporting Files */,
 				523069731C31C04D0012A478 /* README.md */,
+				2FB5B39D1D9ECE4E008235B1 /* ConsentTask.swift */,
+				2FB5B3A11D9ED7F5008235B1 /* ORKTaskViewController.swift */,
+				2FB5B3A31DA298E9008235B1 /* ConsentDocument.swift */,
 			);
 			name = AppConnectSample;
 			path = AppConnectSwift;
@@ -277,6 +290,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				7B2862C01CC051AB00FDBDBC /* CreateAccountViewController.swift in Sources */,
+				2FB5B3A41DA298E9008235B1 /* ConsentDocument.swift in Sources */,
 				523069721C319AEA0012A478 /* UIViewController+Extensions.swift in Sources */,
 				520806B91C29FB640070BA54 /* FieldViewController.swift in Sources */,
 				52C702521C3332A200FC00CF /* ReviewViewController.swift in Sources */,
@@ -285,6 +299,8 @@
 				AAE6D3431C21C355009B0C6B /* MultiPageFormViewController.swift in Sources */,
 				7B4919471CC013680051C55C /* SecurityQuestionViewController.swift in Sources */,
 				7B611DB31CBFFF79004A05BD /* PasswordViewController.swift in Sources */,
+				2FB5B3A21D9ED7F5008235B1 /* ORKTaskViewController.swift in Sources */,
+				2FB5B39E1D9ECE4E008235B1 /* ConsentTask.swift in Sources */,
 				AAE6D3471C21C355009B0C6B /* ModelController.swift in Sources */,
 				7B4A8F631CBFE5FF0027F405 /* EmailViewController.swift in Sources */,
 				523069741C31C04D0012A478 /* README.md in Sources */,
@@ -404,6 +420,10 @@
 			baseConfigurationReference = B28CB405AFD30F0E55793744 /* Pods-AppConnectSwift.debug.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = AppConnectSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
@@ -418,6 +438,10 @@
 			baseConfigurationReference = 7DBB722A8551C4664E43C24F /* Pods-AppConnectSwift.release.xcconfig */;
 			buildSettings = {
 				ASSETCATALOG_COMPILER_APPICON_NAME = AppIcon;
+				FRAMEWORK_SEARCH_PATHS = (
+					"$(inherited)",
+					"$(PROJECT_DIR)/build/Debug-iphoneos",
+				);
 				INFOPLIST_FILE = AppConnectSwift/Info.plist;
 				IPHONEOS_DEPLOYMENT_TARGET = 8.0;
 				LD_RUNPATH_SEARCH_PATHS = "$(inherited) @executable_path/Frameworks";
