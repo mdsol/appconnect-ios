@@ -11,14 +11,14 @@ class FormListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .Gray)
-        spinner.center = CGPointMake(self.view.frame.size.width/2.0, 22);
+        spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
+        spinner.center = CGPoint(x: self.view.frame.size.width/2.0, y: 22);
         spinner.hidesWhenStopped = true;
         self.view.addSubview(spinner)
         spinner.startAnimating()
         
-        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.Plain, target: self, action: "doLogout")
-        self.navigationItem.setLeftBarButtonItem(backButton, animated: true)
+        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
+        self.navigationItem.setLeftBarButton(backButton, animated: true)
         
         // Begin loading the forms for the logged-in user
         loadForms()
@@ -26,16 +26,16 @@ class FormListViewController: UITableViewController {
 
     func loadForms() {
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+        let client = clientFactory?.client(of: MDClientType.hybrid);
 
-        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         
-        let user = datastore.userWithID(self.userID)
+        let user = datastore.user(withID: self.userID)
         
-        client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
+        client?.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
             
             if error != nil {
-                NSOperationQueue.mainQueue().addOperationWithBlock({
+                OperationQueue.main.addOperation({
                     // no new forms from server
                     self.populateForms()
                     self.spinner.stopAnimating()
@@ -43,16 +43,20 @@ class FormListViewController: UITableViewController {
                 return;
             }
             
+            guard let subjects = subjects as? [MDSubject] else {
+                return
+            }
+            
             var subjectCount = 0
             
-            for subject in subjects as! [MDSubject]! {
-                client.loadFormsForSubject(subject) { (forms: [AnyObject]!, error: NSError!) -> Void in
+            for subject in subjects {
+                client?.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
                     subjectCount += 1
                     
                     // When all subjects have been loaded, populate the UI and stop the spinner
                     if subjectCount == subjects.count {
-                        NSOperationQueue.mainQueue().addOperationWithBlock({
+                        OperationQueue.main.addOperation({
                             self.populateForms()
                             self.spinner.stopAnimating()
                         });
@@ -61,7 +65,7 @@ class FormListViewController: UITableViewController {
             }
             
             if (subjects.count > 0 ) {
-                self.primarySubjectId = subjects[0].objectID
+                self.primarySubjectId = (subjects.first! as AnyObject).objectID
             }
         }
     }
@@ -72,12 +76,12 @@ class FormListViewController: UITableViewController {
         // studies. Here we just gather all available forms, but you could also
         // present them organized by subject if desired.
         var forms : [MDForm]
-        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
-        if let user = datastore.userWithID(Int64(self.userID)) {
+        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
+        if let user = datastore.user(withID: Int64(self.userID)) {
             let subjects = user.subjects as! [MDSubject]
             forms = subjects.map({ (subject : MDSubject) -> [MDForm] in
-                datastore.availableFormsForSubjectWithID(subject.objectID) as! [MDForm]
-            }).reduce([], combine: +)
+                datastore.availableFormsForSubject(withID: subject.objectID) as! [MDForm]
+            }).reduce([], +)
             
             self.loadedForms = forms
         }
@@ -86,58 +90,58 @@ class FormListViewController: UITableViewController {
     }
     
     func doLogout() {
-        self.dismissViewControllerAnimated(true, completion: nil)
+        self.dismiss(animated: true, completion: nil)
     }
 
     // MARK: - Segues
 
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
             if loadedForms.count == 0 {
                 self.navigationItem.title = "Back"
-                let controller = segue.destinationViewController as! CaptureImageViewController
+                let controller = segue.destination as! CaptureImageViewController
                 controller.userID = self.userID!
                 controller.subjectID = self.primarySubjectId!
             }
             else{
                 let form = loadedForms[indexPath.row]
                 if form.formOID == "FORM1" {
-                    let controller = segue.destinationViewController as! OnePageFormViewController
+                    let controller = segue.destination as! OnePageFormViewController
                     controller.formID = form.objectID
                 } else if form.formOID == "FORM2" {
-                    let controller = segue.destinationViewController as! MultiPageFormViewController
+                    let controller = segue.destination as! MultiPageFormViewController
                     controller.formID = form.objectID
                 }
             }
         }
-    }
+    }   
 
     // MARK: - Table View
     
-    override func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    override func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         // Start a view controller to fill out the form. If the form is from the SDK
         // sample CRF, we open FORM1 as a one-page form and FORM2 as a multi-page
         // form to demonstrate how to handle both cases.
         if loadedForms.count == 0 {
-            performSegueWithIdentifier("CaptureImage", sender: self)
+            performSegue(withIdentifier: "CaptureImage", sender: self)
         }
         else {
             let form = loadedForms[indexPath.row]
             let sequeIdentifier = ["FORM1" : "ShowOnePageForm", "FORM2" : "ShowMultiPageForm"][form.formOID]
-            performSegueWithIdentifier(sequeIdentifier!, sender: self)
+            performSegue(withIdentifier: sequeIdentifier!, sender: self)
         }
     }
 
-    override func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    override func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
 
-    override func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    override func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return loadedForms.count == 0 ? 1 : loadedForms.count
     }
 
-    override func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell = tableView.dequeueReusableCellWithIdentifier("Cell", forIndexPath: indexPath)
+    override func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell = tableView.dequeueReusableCell(withIdentifier: "Cell", for: indexPath)
         if loadedForms.count == 0 {
             cell.textLabel!.text = "Capture Image"
             return cell

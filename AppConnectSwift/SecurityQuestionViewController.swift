@@ -17,14 +17,14 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         super.viewDidLoad()
         tableView.delegate = self
         tableView.dataSource = self
-        self.tableView.registerClass(UITableViewCell.self, forCellReuseIdentifier: "Cell")
+        self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Hybrid)
+        let client = clientFactory?.client(of: MDClientType.hybrid)
         
-        client.loadSecurityQuestionsWithCompletion() { (questions: [NSObject : AnyObject]!, error: NSError!) -> Void in
+        client?.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
             if error != nil {
-                NSOperationQueue.mainQueue().addOperationWithBlock({
+                OperationQueue.main.addOperation({
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
                 });
                 
@@ -36,40 +36,40 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
                 self.tableDataSource.append(question)
             }
             
-            NSOperationQueue.mainQueue().addOperationWithBlock({
+            OperationQueue.main.addOperation({
                 self.tableView.reloadData()
             });
         }
     }
     
-    func numberOfSectionsInTableView(tableView: UITableView) -> Int {
+    func numberOfSections(in tableView: UITableView) -> Int {
         return 1
     }
     
-    func tableView(tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
+    func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
         return tableDataSource.count
     }
     
-    func tableView(tableView: UITableView, cellForRowAtIndexPath indexPath: NSIndexPath) -> UITableViewCell {
-        let cell:UITableViewCell = self.tableView.dequeueReusableCellWithIdentifier("Cell")! as UITableViewCell
+    func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
+        let cell:UITableViewCell = self.tableView.dequeueReusableCell(withIdentifier: "Cell")! as UITableViewCell
         
         cell.textLabel?.text = self.tableDataSource[indexPath.row]
         cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.lineBreakMode = NSLineBreakMode.ByWordWrapping
+        cell.textLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
         
         return cell
     }
     
-    func tableView(tableView: UITableView, didSelectRowAtIndexPath indexPath: NSIndexPath) {
+    func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.securityQuestion = tableDataSource[indexPath.row]
         self.securityQuestionID = securityIdsByQuestion[self.securityQuestion]!
-        self.performSegueWithIdentifier("SecuritySuccess", sender: nil)
+        self.performSegue(withIdentifier: "SecuritySuccess", sender: nil)
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Pass the userEmail, userPassword, securityQuestionID for creating account 
         if(segue.identifier == "SecuritySuccess"){
-            createAccountViewController = segue.destinationViewController as! CreateAccountViewController
+            createAccountViewController = segue.destination as! CreateAccountViewController
             createAccountViewController.userEmail = userEmail
             createAccountViewController.userPassword = userPassword
             createAccountViewController.userSecurityQuestionID = securityQuestionID

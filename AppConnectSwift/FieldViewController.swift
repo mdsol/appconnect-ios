@@ -18,29 +18,29 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 
         fieldHeader.text = field.label
         
-        dictionaryField.hidden = true
-        dateField.hidden = true
-        sliderField.hidden = true
+        dictionaryField.isHidden = true
+        dateField.isHidden = true
+        sliderField.isHidden = true
 
         // In this example app, we handle multiple fields in a single UIViewController. In a larger
         // application, it would make more sense to have a separate UIViewController for each field type.
         switch field {
         case is MDDictionaryField:
             dictionaryField.delegate = self
-            dictionaryField.hidden = false
+            dictionaryField.isHidden = false
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
             
-            var date = NSDate()
+            var date = Date()
             if let response = df.subjectResponse {
                 date = response
             }
             
             df.subjectResponse = date
 
-            dateField.datePickerMode = UIDatePickerMode.Date
+            dateField.datePickerMode = UIDatePickerMode.date
             dateField.date = date
-            dateField.hidden = false
+            dateField.isHidden = false
         case is MDScaleField:
             let sf = field as! MDScaleField
             
@@ -49,9 +49,9 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
                 value = response.floatValue
             }
             
-            sf.subjectResponse = value
+            sf.subjectResponse = value as NSNumber!
             
-            sliderField.hidden = false
+            sliderField.isHidden = false
             sliderField.minimumValue = Float(sf.minimumResponse)
             sliderField.maximumValue = Float(sf.maximumResponse)
             sliderField.value = value
@@ -62,15 +62,15 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         updateFieldInformation()
     }
     
-    override func viewWillAppear(animated: Bool) {
+    override func viewWillAppear(_ animated: Bool) {
         // The UIPicker is not fully loaded in viewDidLoad, so we must
         // set its value in viewWillAppear
         if let df = field as? MDDictionaryField {
-            dictionaryResponses = df.possibleResponses.map { return $0.userValue }
+            dictionaryResponses = df.possibleResponses.map { return ($0 as AnyObject).userValue }
             
             var index = 0
             if let response = df.subjectResponse {
-                index = dictionaryResponses.indexOf(response.userValue)!
+                index = dictionaryResponses.index(of: response.userValue)!
             }
             
             self.pickerView(self.dictionaryField, didSelectRow: index, inComponent: 0)
@@ -84,9 +84,9 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
         switch field {
         case is MDDictionaryField:
             let df = field as! MDDictionaryField
-            fieldFormat = df.possibleResponses.enumerate().map { (index, value) -> String in
-                return "Choice \(index): \(value.userValue)"
-            }.joinWithSeparator(", ")
+            fieldFormat = df.possibleResponses.enumerated().map { (index, value) -> String in
+                return "Choice \(index): \((value as AnyObject).userValue)"
+            }.joined(separator: ", ")
         case is MDDateTimeField:
             let df = field as! MDDateTimeField
             fieldFormat = df.dateTimeFormat
@@ -106,34 +106,34 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             "Problem: \(stringFromResponseProblem(field.responseProblem))"
         ]
         
-        fieldDescription.text = fieldInfo.joinWithSeparator("\n")
+        fieldDescription.text = fieldInfo.joined(separator: "\n")
     }
     
 
-    func stringFromResponseProblem(problem : MDFieldProblem) -> String {
+    func stringFromResponseProblem(_ problem : MDFieldProblem) -> String {
         return [
-            MDFieldProblem.FatalResponseMissing             : "FatalResponseMissing",
-            MDFieldProblem.FatalResponseOutOfRange          : "FatalResponseOutOfRange",
-            MDFieldProblem.FatalResponseUnrecognized        : "FatalResponseUnrecognized",
-            MDFieldProblem.FatalResponseError               : "FatalResponseError",
-            MDFieldProblem.None                             : "None",
-            MDFieldProblem.ConcernDateResponseInDistantPast : "ConcernDateResponseInDistantPast",
-            MDFieldProblem.ConcernDateResponseInFuture      : "ConcernDateResponseInFuture"
+            MDFieldProblem.fatalResponseMissing             : "FatalResponseMissing",
+            MDFieldProblem.fatalResponseOutOfRange          : "FatalResponseOutOfRange",
+            MDFieldProblem.fatalResponseUnrecognized        : "FatalResponseUnrecognized",
+            MDFieldProblem.fatalResponseError               : "FatalResponseError",
+            MDFieldProblem.none                             : "None",
+            MDFieldProblem.concernDateResponseInDistantPast : "ConcernDateResponseInDistantPast",
+            MDFieldProblem.concernDateResponseInFuture      : "ConcernDateResponseInFuture"
         ][problem]!
     }
 
     // MARK: - UISlider handling
     
-    @IBAction func sliderValueDidChange(sender: UISlider) {
+    @IBAction func sliderValueDidChange(_ sender: UISlider) {
         let sf = field as! MDScaleField
-        sf.subjectResponse = sender.value
+        sf.subjectResponse = sender.value as NSNumber!
         updateFieldInformation()
     }
     
     
     // MARK: - UIDatePicker handling
     
-    @IBAction func dateDidChange(sender: UIDatePicker) {
+    @IBAction func dateDidChange(_ sender: UIDatePicker) {
         let df = field as! MDDateTimeField
         df.subjectResponse = sender.date
         updateFieldInformation()
@@ -142,19 +142,19 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
     // MARK: - UIPickerView Delegate Methods
     
-    func numberOfComponentsInPickerView(pickerView: UIPickerView) -> Int {
+    func numberOfComponents(in pickerView: UIPickerView) -> Int {
         return 1
     }
     
-    func pickerView(pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
+    func pickerView(_ pickerView: UIPickerView, numberOfRowsInComponent component: Int) -> Int {
         return dictionaryResponses.count
     }
     
-    func pickerView(pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
+    func pickerView(_ pickerView: UIPickerView, titleForRow row: Int, forComponent component: Int) -> String? {
         return dictionaryResponses[row]
     }
     
-    func pickerView(pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
+    func pickerView(_ pickerView: UIPickerView, didSelectRow row: Int, inComponent component: Int) {
         let df = field as! MDDictionaryField
         df.subjectResponse = df.possibleResponses[row] as! MDDictionaryResponse
         updateFieldInformation()

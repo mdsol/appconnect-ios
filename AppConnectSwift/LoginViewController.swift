@@ -11,70 +11,70 @@ class LoginViewController: UIViewController {
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        self.navigationController?.navigationBarHidden = true
-        loginButton.setTitle("Logging In", forState: UIControlState.Disabled)
+        self.navigationController?.isNavigationBarHidden = true
+        loginButton.setTitle("Logging In", for: UIControlState.disabled)
     }
     
-    override func viewWillAppear(animated: Bool) {
-        self.navigationController?.navigationBarHidden = true
+    override func viewWillAppear(_ animated: Bool) {
+        self.navigationController?.isNavigationBarHidden = true
     }
     
-    @IBAction func doLogin(sender: UIButton) {
-        sender.enabled = false;
+    @IBAction func doLogin(_ sender: UIButton) {
+        sender.isEnabled = false;
         
-        let datastore = (UIApplication.sharedApplication().delegate as! AppDelegate).UIDatastore!
+        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+        let client = clientFactory?.client(of: MDClientType.hybrid);
         
-        client.logIn(usernameField.text, inDatastore: datastore, password: passwordField.text) { (user: MDUser!, error: NSError!) -> Void in
+        client?.log(in: usernameField.text, in: datastore, password: passwordField.text) { (user: MDUser?, err: Error?) -> Void in
             
-            if(error != nil) {
+            if let error = err as? NSError {
                 var alertMessage = error.localizedDescription;
                 
                 let errorCause = MDClientErrorCause(rawValue: error.code)
                 
-                if(errorCause == MDClientErrorCause.AuthenticationFailure) {
+                if(errorCause == MDClientErrorCause.authenticationFailure) {
                     alertMessage = "The provided credentials are incorrect."
-                } else if (errorCause == MDClientErrorCause.UserNotAssociatedWithToken) {
+                } else if (errorCause == MDClientErrorCause.userNotAssociatedWithToken) {
                     alertMessage = "User is not associated with provided API token."
                 }
                 
-                NSOperationQueue.mainQueue().addOperationWithBlock({
+                OperationQueue.main.addOperation({
                     self.showAlert("Error", message: alertMessage)
-                    sender.enabled = true
+                    sender.isEnabled = true
                 });
                 
                 return
             }
             
             // no error implies we have a user.
-            self.userID = user.objectID
+            self.userID = user?.objectID
             
-            NSOperationQueue.mainQueue().addOperationWithBlock({
-                self.performSegueWithIdentifier("LoginSuccess", sender: nil)
-                sender.enabled = true
+            OperationQueue.main.addOperation({
+                self.performSegue(withIdentifier: "LoginSuccess", sender: nil)
+                sender.isEnabled = true
             });
         }
     }
     
-    @IBAction func doSignUp(sender: AnyObject) {
+    @IBAction func doSignUp(_ sender: AnyObject) {
         // segue'ing to sign up viewcontroller, reveal back button
-        self.navigationController?.navigationBarHidden = false
+        self.navigationController?.isNavigationBarHidden = false
     }
     
-    override func prepareForSegue(segue: UIStoryboardSegue, sender: AnyObject?) {
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Pass the userID into the FormList controller
         if segue.identifier == "LoginSuccess" {
-            let navigationController = segue.destinationViewController as! UINavigationController
+            let navigationController = segue.destination as! UINavigationController
             let formListViewController = navigationController.viewControllers.first as! FormListViewController
             formListViewController.userID = self.userID!
         }
     }
     
-    func showAlert(title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: nil))
-        self.presentViewController(alert, animated: true, completion: nil)
+    func showAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        self.present(alert, animated: true, completion: nil)
     }
 }

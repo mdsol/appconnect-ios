@@ -12,7 +12,7 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    private var fields: [MDField] = []
+    fileprivate var fields: [MDField] = []
 
     var form: MDForm! {
         didSet {
@@ -20,7 +20,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         }
     }
 
-    func viewControllerAtIndex(index: Int, storyboard: UIStoryboard) -> UIViewController? {
+    func viewControllerAtIndex(_ index: Int, storyboard: UIStoryboard) -> UIViewController? {
         // If there are no fields or the index is greater than the field count,
         // then there is no ViewController to show
         guard self.fields.count > 0 || index <= self.fields.count else {
@@ -29,7 +29,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         
         // Show the ReviewViewController as the last page
         if index == self.fields.count {
-            let reviewViewController = storyboard.instantiateViewControllerWithIdentifier("ReviewViewController") as! ReviewViewController
+            let reviewViewController = storyboard.instantiateViewController(withIdentifier: "ReviewViewController") as! ReviewViewController
             reviewViewController.form = form
             return reviewViewController
         }
@@ -37,22 +37,23 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         let field = fields[index]
 
         // Create and return a new FieldViewController
-        let fieldViewController = storyboard.instantiateViewControllerWithIdentifier("FieldViewController") as! FieldViewController
+        let fieldViewController = storyboard.instantiateViewController(withIdentifier: "FieldViewController") as! FieldViewController
         fieldViewController.field = field
         return fieldViewController
     }
 
-    func indexOfViewController(viewController: UIViewController) -> Int {
+    func indexOfViewController(_ viewController: UIViewController) -> Int {
         // The ReviewController is the always the last possible page, shown
         // after all fields
-        if viewController.isMemberOfClass(ReviewViewController) {
+        if viewController is ReviewViewController {
             return fields.count
         }
+
         return indexOfField((viewController as! FieldViewController).field.objectID)
     }
     
-    func indexOfField(fieldID: Int64) -> Int {
-        for (index, f) in fields.enumerate() {
+    func indexOfField(_ fieldID: Int64) -> Int {
+        for (index, f) in fields.enumerated() {
             if f.objectID == fieldID {
                 return index
             }
@@ -62,7 +63,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
 
     // MARK: - Page View Controller Data Source
 
-    func pageViewController(pageViewController: UIPageViewController, viewControllerBeforeViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerBefore viewController: UIViewController) -> UIViewController? {
         var index = self.indexOfViewController(viewController)
         
         guard index != 0 && index != NSNotFound else {
@@ -73,7 +74,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         return self.viewControllerAtIndex(index, storyboard: viewController.storyboard!)
     }
 
-    func pageViewController(pageViewController: UIPageViewController, viewControllerAfterViewController viewController: UIViewController) -> UIViewController? {
+    func pageViewController(_ pageViewController: UIPageViewController, viewControllerAfter viewController: UIViewController) -> UIViewController? {
         var index = self.indexOfViewController(viewController)
         
         guard index < self.fields.count else {
@@ -86,7 +87,7 @@ class ModelController: NSObject, UIPageViewControllerDataSource {
         
         // We use the rawvalues to make sure the response problem is greater than .None. All
         // MDFieldProblems above .None are DateTime concerns that do not stop form progression.
-        guard field.responseProblem.rawValue >= MDFieldProblem.None.rawValue else {
+        guard field.responseProblem.rawValue >= MDFieldProblem.none.rawValue else {
             return nil
         }
         

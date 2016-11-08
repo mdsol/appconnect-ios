@@ -3,11 +3,11 @@ import UIKit
 class OnePageFormViewController: UIViewController {
     var dataObject: String = ""
     
-    private var form : MDForm!
+    fileprivate var form : MDForm!
     var formID : Int64! {
         didSet {
             // Get the corresponding form from the datastore
-            form = UIThreadDatastore().formWithID(formID)
+            form = UIThreadDatastore().form(withID: formID)
         }
     }
     
@@ -34,7 +34,7 @@ class OnePageFormViewController: UIViewController {
         // NumericFields. If you don't know in advance what the fields are going
         // to be, look at MultiPageFormViewController instead.
         for field in form.fields {
-            switch field.fieldOID {
+            switch (field as AnyObject).fieldOID {
             case "TEXTFIELD1":
                 let tf = field as! MDTextField
                 field1Label.text = tf.label
@@ -53,43 +53,43 @@ class OnePageFormViewController: UIViewController {
         }
     }
     
-    func numericFieldFormat(field : MDNumericField) -> String {
+    func numericFieldFormat(_ field : MDNumericField) -> String {
         // This shows how to inspect a NumericField to discover the format of
         // the response it expects. Each field type has specific methods to
         // discover such properties. See the documentation for more information.
         let components = [
             String(field.maximumResponseIntegerCount),
-            field.responseIntegerCountRequired ? "+" : "",
+            field.isResponseIntegerCountRequired ? "+" : "",
             ".",
             String(field.maximumResponseDecimalCount),
-            field.responseDecimalCountRequired ? "+" : ""
+            field.isResponseDecimalCountRequired ? "+" : ""
         ]
         
-        return components.joinWithSeparator("")
+        return components.joined(separator: "")
     }
 
-    @IBAction func doSubmit(sender: AnyObject) {
+    @IBAction func doSubmit(_ sender: AnyObject) {
         guard validateResponses() else {
             return
         }
         
         // Create a network client instance with which to send the responses
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Hybrid);
+        let client = MDClientFactory.sharedInstance().client(of: MDClientType.hybrid);
         
         // Babbage objects can't be shared between threads so you must pass
         // them around by ID instead and the receiving code can get its own
         // copy from its own datastore
         var datastore = MDDatastoreFactory.create()
-        let f = datastore.formWithID(self.formID)
+        let f = datastore?.form(withID: self.formID)
         
         // The form provided to the client method must have been loaded from the datastore provided
-        client.sendResponsesForForm(f, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+        client?.sendResponses(for: f, deviceID: "fake-device-id", completion: { (error: Error?) -> Void in
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
             } else {
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation {
                     self.showDialog("Success", message: "Your form has been submitted.") {
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             }
@@ -107,40 +107,40 @@ class OnePageFormViewController: UIViewController {
         // you don't know in advance what the fields are going to be,
         // look at MultiPageFormViewController.
         let sequencer = MDStepSequencer(form: self.form)
-        sequencer.start()
+        sequencer?.start()
         
         // Fill out the response for FIELD1, which we know is a NumericField
-        let field1 = sequencer.currentField as! MDTextField
+        let field1 = sequencer?.currentField as! MDTextField
         field1.subjectResponse = field1Response.text
-        if field1.responseProblem != MDFieldProblem.None {
+        if field1.responseProblem != MDFieldProblem.none {
             showDialog("Wrong Format", message: "The \"Text Field 1\" field is not the correct format.", completion:nil)
             return false
         }
         
-        sequencer.moveToNext()
+        sequencer?.moveToNext()
         
         // Fill out the response for FIELD2, which we know is a TextField
-        let field2 = sequencer.currentField as! MDNumericField
-        field2.subjectResponse = field2.responseFromString(field2Response.text, decimalSeparator: decimal)
-        if field2.responseProblem != MDFieldProblem.None {
+        let field2 = sequencer?.currentField as! MDNumericField
+        field2.subjectResponse = field2.response(from: field2Response.text, decimalSeparator: decimal)
+        if field2.responseProblem != MDFieldProblem.none {
             showDialog("Wrong Format", message: "The \"Numbers\" field is not the correct format.", completion:nil)
             return false
         }
         
-        sequencer.moveToNext()
+        sequencer?.moveToNext()
         
         // Fill out the response for FIELD3, which we know is a NumericField
-        let field3 = sequencer.currentField as! MDNumericField
-        field3.subjectResponse = field3.responseFromString(field3Response.text, decimalSeparator: decimal)
-        if field3.responseProblem != MDFieldProblem.None {
+        let field3 = sequencer?.currentField as! MDNumericField
+        field3.subjectResponse = field3.response(from: field3Response.text, decimalSeparator: decimal)
+        if field3.responseProblem != MDFieldProblem.none {
             showDialog("Wrong Format", message: "The \"Numeric Value\" field is not the correct format.", completion:nil)
             return false
         }
         
         // The sequencer must be in the reviewing state to be able to finish the form
-        sequencer.moveToNext()
+        sequencer?.moveToNext()
         
-        if sequencer.state != MDStepSequencerState.Reviewing{
+        if sequencer?.state != MDStepSequencerState.reviewing{
             showDialog("Wrong Format", message: "There are more fields to be filled out in this form", completion:nil)
             return false
         }
@@ -149,7 +149,7 @@ class OnePageFormViewController: UIViewController {
         // stamp the form with the completion date and time. Attempting to
         // submit will fail if finish() hasn't been called. If the form requires
         // a signature, form.sign() should also be called before calling finish().
-        if !sequencer.finish() {
+        if !(sequencer?.finish())! {
             showDialog("No Signature", message:"The form requests a signature, which is not supported by the sample app", completion:nil)
             return false
         }

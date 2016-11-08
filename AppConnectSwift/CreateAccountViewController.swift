@@ -15,50 +15,49 @@ class CreateAccountViewController: UIViewController {
         securityQuestionLabel.text = securityQuestion
     }
     
-    @IBAction func createAccount(sender: AnyObject) {
+    @IBAction func createAccount(_ sender: AnyObject) {
         
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.clientOfType(MDClientType.Hybrid);
+        let clientFactory = MDClientFactory.sharedInstance()!
+        let client = clientFactory.client(of: MDClientType.hybrid);
         
-        if userSecurityQuestionAnswer.text?.characters.count < 2 {
-            showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
-            return
+        if let answer = userSecurityQuestionAnswer.text {
+            if answer.characters.count < 2 {
+                showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
+            }
         }
         
-        client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+        client?.registerSubject(withEmail: userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
 
-            if err == nil {
-                NSOperationQueue.mainQueue().addOperationWithBlock({
+            if let error = err as? NSError {
+                var alertMessage = "Unable to register user"
+                let errorCause = MDClientErrorCause(rawValue: error.code)
+                
+                if errorCause == MDClientErrorCause.invalidRegistrationToken {
+                    alertMessage = "Invalid Registration Token."
+                } else if errorCause == MDClientErrorCause.subjectAlreadyExistsWithEmail {
+                    alertMessage = "User already exists with email."
+                }
+                
+                OperationQueue.main.addOperation({
+                    self.showAlert(alertMessage, message: error.description, okHandler: nil)
+                })
+            } else {
+                OperationQueue.main.addOperation({
                     self.showAlert("Account Creation Success", message: "", okHandler:self.successfulAccountCreationHandler)
                 })
             }
-            else {
-                var alertMessage = "Unable to register user"
-                let errorCause = MDClientErrorCause(rawValue: err.code)
-
-                if errorCause == MDClientErrorCause.InvalidRegistrationToken {
-                    alertMessage = "Invalid Registration Token."
-                } else if errorCause == MDClientErrorCause.SubjectAlreadyExistsWithEmail {
-                    alertMessage = "User already exists with email."
-                }
-
-
-                NSOperationQueue.mainQueue().addOperationWithBlock({
-                    self.showAlert(alertMessage, message: err.description, okHandler: nil)
-                })
-            }
         }
     }
     
-    func showAlert(title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.Alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.Default, handler: okHandler))
-        self.presentViewController(alert, animated: true, completion: nil)
+    func showAlert(_ title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: okHandler))
+        self.present(alert, animated: true, completion: nil)
     }
     
-    func successfulAccountCreationHandler(alert: UIAlertAction!) {
-        NSOperationQueue.mainQueue().addOperationWithBlock({
-                self.performSegueWithIdentifier("CreateAccountSuccess", sender: nil)
+    func successfulAccountCreationHandler(_ alert: UIAlertAction!) {
+        OperationQueue.main.addOperation({
+                self.performSegue(withIdentifier: "CreateAccountSuccess", sender: nil)
         })
     }
 }
