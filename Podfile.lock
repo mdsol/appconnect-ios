@@ -12,7 +12,7 @@ PODS:
 
 DEPENDENCIES:
   - Babbage (from `AppConnectSwift/Babbage.podspec`)
-  - IQKeyboardManagerSwift
+  - IQKeyboardManagerSwift (~> 4.0)
 
 EXTERNAL SOURCES:
   Babbage:
@@ -26,6 +26,6 @@ SPEC CHECKSUMS:
   IQKeyboardManagerSwift: 58bbcf46b5cf9fd4ed625d28a60cb2fbae4ab0f4
   UICKeyChainStore: f1cbd42216a113f0165de1e733e62905b8823432
 
-PODFILE CHECKSUM: 544ceccc2f28a01b32d55697079ea06c1e4d7c4d
+PODFILE CHECKSUM: 7a65bedd0c7532eccfdf4378b6b2d1f7d8360981
 
 COCOAPODS: 1.1.1

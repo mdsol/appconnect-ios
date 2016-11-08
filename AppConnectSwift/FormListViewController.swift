@@ -12,13 +12,13 @@ class FormListViewController: UITableViewController {
         super.viewDidLoad()
         
         spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
-        spinner.center = CGPoint(x: self.view.frame.size.width/2.0, y: 22);
+        spinner.center = CGPoint(x: view.frame.size.width/2.0, y: 22);
         spinner.hidesWhenStopped = true;
-        self.view.addSubview(spinner)
+        view.addSubview(spinner)
         spinner.startAnimating()
         
         let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
-        self.navigationItem.setLeftBarButton(backButton, animated: true)
+        navigationItem.setLeftBarButton(backButton, animated: true)
         
         // Begin loading the forms for the logged-in user
         loadForms()
@@ -86,11 +86,11 @@ class FormListViewController: UITableViewController {
             self.loadedForms = forms
         }
         
-        self.tableView.reloadData()
+        tableView.reloadData()
     }
     
     func doLogout() {
-        self.dismiss(animated: true, completion: nil)
+        dismiss(animated: true)
     }
 
     // MARK: - Segues
@@ -98,7 +98,7 @@ class FormListViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if let indexPath = self.tableView.indexPathForSelectedRow {
             if loadedForms.count == 0 {
-                self.navigationItem.title = "Back"
+                navigationItem.title = "Back"
                 let controller = segue.destination as! CaptureImageViewController
                 controller.userID = self.userID!
                 controller.subjectID = self.primarySubjectId!

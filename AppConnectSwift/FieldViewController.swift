@@ -1,6 +1,16 @@
 import UIKit
 
 class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewDataSource {
+    
+    private static let responseProblems = [
+        MDFieldProblem.fatalResponseMissing             : "FatalResponseMissing",
+        MDFieldProblem.fatalResponseOutOfRange          : "FatalResponseOutOfRange",
+        MDFieldProblem.fatalResponseUnrecognized        : "FatalResponseUnrecognized",
+        MDFieldProblem.fatalResponseError               : "FatalResponseError",
+        MDFieldProblem.none                             : "None",
+        MDFieldProblem.concernDateResponseInDistantPast : "ConcernDateResponseInDistantPast",
+        MDFieldProblem.concernDateResponseInFuture      : "ConcernDateResponseInFuture"
+    ]
 
     @IBOutlet var fieldHeader : UILabel!
     @IBOutlet var fieldDescription : UILabel!
@@ -111,15 +121,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
     
 
     func stringFromResponseProblem(_ problem : MDFieldProblem) -> String {
-        return [
-            MDFieldProblem.fatalResponseMissing             : "FatalResponseMissing",
-            MDFieldProblem.fatalResponseOutOfRange          : "FatalResponseOutOfRange",
-            MDFieldProblem.fatalResponseUnrecognized        : "FatalResponseUnrecognized",
-            MDFieldProblem.fatalResponseError               : "FatalResponseError",
-            MDFieldProblem.none                             : "None",
-            MDFieldProblem.concernDateResponseInDistantPast : "ConcernDateResponseInDistantPast",
-            MDFieldProblem.concernDateResponseInFuture      : "ConcernDateResponseInFuture"
-        ][problem]!
+        return FieldViewController.responseProblems[problem]!
     }
 
     // MARK: - UISlider handling

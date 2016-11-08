@@ -24,9 +24,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         
         client?.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
             if error != nil {
-                OperationQueue.main.addOperation({
+                OperationQueue.main.addOperation() {
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
-                });
+                }
                 
                 return
             }
@@ -36,9 +36,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
                 self.tableDataSource.append(question)
             }
             
-            OperationQueue.main.addOperation({
+            OperationQueue.main.addOperation() {
                 self.tableView.reloadData()
-            });
+            }
         }
     }
     
@@ -55,7 +55,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         
         cell.textLabel?.text = self.tableDataSource[indexPath.row]
         cell.textLabel?.numberOfLines = 0
-        cell.textLabel?.lineBreakMode = NSLineBreakMode.byWordWrapping
+        cell.textLabel?.lineBreakMode = .byWordWrapping
         
         return cell
     }
@@ -68,7 +68,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         // Pass the userEmail, userPassword, securityQuestionID for creating account 
-        if(segue.identifier == "SecuritySuccess"){
+        if segue.identifier == "SecuritySuccess" {
             createAccountViewController = segue.destination as! CreateAccountViewController
             createAccountViewController.userEmail = userEmail
             createAccountViewController.userPassword = userPassword

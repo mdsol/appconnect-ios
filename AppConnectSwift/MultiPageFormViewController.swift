@@ -4,12 +4,12 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
     var pageViewController: UIPageViewController?
     
-    @IBOutlet var previousButton : UIButton!
-    @IBOutlet var nextButton : UIButton!
+    @IBOutlet var previousButton: UIButton!
+    @IBOutlet var nextButton: UIButton!
     
-    fileprivate var form : MDForm!
-    fileprivate var stepSequencer : MDStepSequencer!
-    var formID : Int64! {
+    fileprivate var form: MDForm!
+    fileprivate var stepSequencer: MDStepSequencer!
+    var formID: Int64! {
         didSet {
             // Get the corresponding form from the datastore
             form = UIThreadDatastore().form(withID: formID)
@@ -23,13 +23,13 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         super.viewDidLoad()
         
         // Configure the page view controller and add it as a child view controller.
-        self.pageViewController = UIPageViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
-        self.pageViewController!.delegate = self
+        pageViewController = UIPageViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
+        pageViewController!.delegate = self
         
         // Setup field data in the ModelController
-        self.modelController = ModelController()
-        self.modelController.form = form
-        self.pageViewController!.dataSource = self.modelController
+        modelController = ModelController()
+        modelController.form = form
+        pageViewController!.dataSource = self.modelController
         
         // You must use a StepSequencer to fill out the form. Calling start()
         // will clear out all the field responses and begin on the first field.
@@ -40,11 +40,11 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
         // Setup the PageViewController with its initial ViewController
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
-        self.pageViewController!.setViewControllers([startingViewController], direction: .forward, animated: false, completion: {done in })
-        self.addChildViewController(self.pageViewController!)
-        self.view.addSubview(self.pageViewController!.view)
-        self.pageViewController!.view.frame = self.view.bounds.insetBy(dx: 0, dy: 40.0)
-        self.pageViewController!.didMove(toParentViewController: self)
+        pageViewController!.setViewControllers([startingViewController], direction: .forward, animated: false, completion: {done in })
+        addChildViewController(self.pageViewController!)
+        view.addSubview(self.pageViewController!.view)
+        pageViewController!.view.frame = self.view.bounds.insetBy(dx: 0, dy: 40.0)
+        pageViewController!.didMove(toParentViewController: self)
 
         // Set the initial state of our Previous and Next buttons
         updateButtonState()
@@ -65,7 +65,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         let f = datastore?.form(withID: self.formID)
         
         // The form provided to the client method must have been loaded from the datastore provided
-        client?.sendResponses(for: f, deviceID: "fake-device-id", completion: { (error: Error?) -> Void in
+        client?.sendResponses(for: f, deviceID: "fake-device-id") { (error: Error?) -> Void in
             
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
@@ -79,13 +79,13 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
             // Keep the datastore alive until after the request is completed
             datastore = nil
-        })
+        }
     }
     
     @IBAction func doMoveToNext() {
         
         // Submit the answers if the user was on the review step
-        if stepSequencer.state == MDStepSequencerState.reviewing {
+        if stepSequencer.state == .reviewing {
             doSubmit()
             return
         }

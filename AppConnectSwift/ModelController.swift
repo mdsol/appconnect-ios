@@ -12,7 +12,7 @@ import UIKit
 
 class ModelController: NSObject, UIPageViewControllerDataSource {
 
-    fileprivate var fields: [MDField] = []
+    private var fields = [MDField]()
 
     var form: MDForm! {
         didSet {

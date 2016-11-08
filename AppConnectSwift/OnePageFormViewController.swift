@@ -33,8 +33,8 @@ class OnePageFormViewController: UIViewController {
         // know in advance that TEXTFIELD1 is a TextField and the other two are
         // NumericFields. If you don't know in advance what the fields are going
         // to be, look at MultiPageFormViewController instead.
-        for field in form.fields {
-            switch (field as AnyObject).fieldOID {
+        for field in form.fields as! [MDField] {
+            switch field.fieldOID {
             case "TEXTFIELD1":
                 let tf = field as! MDTextField
                 field1Label.text = tf.label

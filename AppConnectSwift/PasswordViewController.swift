@@ -11,7 +11,7 @@ class PasswordViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         // Keep the confirm label hidden till password text fields submitted are satisfying criteria
-        confirmPasswordsMatching.isHidden =  true
+        confirmPasswordsMatching.isHidden = true
         passwordField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
         passwordConfirmField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
     }

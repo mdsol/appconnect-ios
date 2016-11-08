@@ -22,7 +22,7 @@ class CreateAccountViewController: UIViewController {
         
         if let answer = userSecurityQuestionAnswer.text {
             if answer.characters.count < 2 {
-                showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.", okHandler: nil)
+                showAlert("Account Creation Failure", message: "Security answer must be at least 2 characters long.")
             }
         }
         
@@ -39,7 +39,7 @@ class CreateAccountViewController: UIViewController {
                 }
                 
                 OperationQueue.main.addOperation({
-                    self.showAlert(alertMessage, message: error.description, okHandler: nil)
+                    self.showAlert(alertMessage, message: error.description)
                 })
             } else {
                 OperationQueue.main.addOperation({
@@ -49,15 +49,15 @@ class CreateAccountViewController: UIViewController {
         }
     }
     
-    func showAlert(_ title: String, message: String,  okHandler: ((UIAlertAction) -> Void)?) {
+    func showAlert(_ title: String, message: String,  okHandler: ((UIAlertAction) -> Void)? = nil) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
         alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: okHandler))
-        self.present(alert, animated: true, completion: nil)
+        self.present(alert, animated: true)
     }
     
     func successfulAccountCreationHandler(_ alert: UIAlertAction!) {
-        OperationQueue.main.addOperation({
-                self.performSegue(withIdentifier: "CreateAccountSuccess", sender: nil)
-        })
+        OperationQueue.main.addOperation() {
+            self.performSegue(withIdentifier: "CreateAccountSuccess", sender: nil)
+        }
     }
 }

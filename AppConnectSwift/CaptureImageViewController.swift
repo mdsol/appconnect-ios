@@ -32,7 +32,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     // MARK: Image picker delegate functions
     func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
         let img = info[UIImagePickerControllerOriginalImage] as! UIImage
         self.data = self.scaleDownAndConvertImageToNSData(img)
         
@@ -41,7 +41,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
-        self.dismiss(animated: true, completion: nil)
+        self.dismiss(animated: true)
     }
     
     // MARK: View Controller Toolbar Items
@@ -65,17 +65,17 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         subject?.collect(self.data, withMetadata: "Random String", contentType: "image/jpeg", completion: { (err: Error?) -> Void in
             if let error = err {
-                OperationQueue.main.addOperation({
+                OperationQueue.main.addOperation() {
                     self.showAlert("", message: error.localizedDescription)
-                });
+                }
             } else {
                 // update the UI.
-                OperationQueue.main.addOperation({
+                OperationQueue.main.addOperation() {
                     self.showAlert("Data saved successfully", message: "Will be uploaded automatically!")
                     self.imageView.image = nil
                     self.data = nil
                     self.saveImageButton.isEnabled = false
-                });
+                }
             }
         })
     }
@@ -85,7 +85,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         if fromCamera {
             if UIImagePickerController.isSourceTypeAvailable(.camera) {
                 imagePicker.sourceType = .camera
-                present(imagePicker, animated: true, completion: {})
+                present(imagePicker, animated: true)
             } else {
                 showAlert("Camera not accessible", message: "")
             }
@@ -95,13 +95,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         // Looks for images in photo library
         imagePicker.sourceType = .photoLibrary
-        present(imagePicker, animated: true, completion: {})
+        present(imagePicker, animated: true)
     }
 
     func showAlert(_ title: String, message: String) {
         let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
-        self.present(alert, animated: true, completion: nil)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
+        self.present(alert, animated: true)
     }
 
     func scaleDownAndConvertImageToNSData(_ image: UIImage) -> Data {
