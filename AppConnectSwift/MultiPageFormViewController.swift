@@ -4,15 +4,15 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
     var pageViewController: UIPageViewController?
     
-    @IBOutlet var previousButton : UIButton!
-    @IBOutlet var nextButton : UIButton!
+    @IBOutlet var previousButton: UIButton!
+    @IBOutlet var nextButton: UIButton!
     
-    private var form : MDForm!
-    private var stepSequencer : MDStepSequencer!
-    var formID : Int64! {
+    fileprivate var form: MDForm!
+    fileprivate var stepSequencer: MDStepSequencer!
+    var formID: Int64! {
         didSet {
             // Get the corresponding form from the datastore
-            form = UIThreadDatastore().formWithID(formID)
+            form = UIThreadDatastore().form(withID: formID)
             stepSequencer = MDStepSequencer(form: form)
         }
     }
@@ -23,13 +23,13 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         super.viewDidLoad()
         
         // Configure the page view controller and add it as a child view controller.
-        self.pageViewController = UIPageViewController(transitionStyle: .PageCurl, navigationOrientation: .Horizontal, options: nil)
-        self.pageViewController!.delegate = self
+        pageViewController = UIPageViewController(transitionStyle: .pageCurl, navigationOrientation: .horizontal, options: nil)
+        pageViewController!.delegate = self
         
         // Setup field data in the ModelController
-        self.modelController = ModelController()
-        self.modelController.form = form
-        self.pageViewController!.dataSource = self.modelController
+        modelController = ModelController()
+        modelController.form = form
+        pageViewController!.dataSource = self.modelController
         
         // You must use a StepSequencer to fill out the form. Calling start()
         // will clear out all the field responses and begin on the first field.
@@ -40,11 +40,11 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
 
         // Setup the PageViewController with its initial ViewController
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
-        self.pageViewController!.setViewControllers([startingViewController], direction: .Forward, animated: false, completion: {done in })
-        self.addChildViewController(self.pageViewController!)
-        self.view.addSubview(self.pageViewController!.view)
-        self.pageViewController!.view.frame = CGRectInset(self.view.bounds, 0, 40.0)
-        self.pageViewController!.didMoveToParentViewController(self)
+        pageViewController!.setViewControllers([startingViewController], direction: .forward, animated: false, completion: {done in })
+        addChildViewController(self.pageViewController!)
+        view.addSubview(self.pageViewController!.view)
+        pageViewController!.view.frame = self.view.bounds.insetBy(dx: 0, dy: 40.0)
+        pageViewController!.didMove(toParentViewController: self)
 
         // Set the initial state of our Previous and Next buttons
         updateButtonState()
@@ -58,44 +58,47 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         stepSequencer.finish()
         
         // Create a hybrid client instance with which to send the responses
-        let client = MDClientFactory.sharedInstance().clientOfType(MDClientType.Hybrid);
+        let client = MDClientFactory.sharedInstance().client(of: MDClientType.hybrid);
         
         // Create a new datastore to use for the request
         var datastore = MDDatastoreFactory.create()
-        let f = datastore.formWithID(self.formID)
+        let f = datastore?.form(withID: self.formID)
         
         // The form provided to the client method must have been loaded from the datastore provided
-        client.sendResponsesForForm(f, deviceID: "fake-device-id", completion: { (error: NSError!) -> Void in
+        client?.sendResponses(for: f, deviceID: "fake-device-id") { (error: Error?) -> Void in
+            
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
             } else {
-                NSOperationQueue.mainQueue().addOperationWithBlock {
+                OperationQueue.main.addOperation {
                     self.showDialog("Success", message: "Your form has been submitted.") {
-                        self.navigationController?.popViewControllerAnimated(true)
+                        self.navigationController?.popViewController(animated: true)
                     }
                 }
             }
+
             // Keep the datastore alive until after the request is completed
             datastore = nil
-        })
+        }
     }
     
     @IBAction func doMoveToNext() {
-        let field = stepSequencer.currentField
         
         // Submit the answers if the user was on the review step
-        if stepSequencer.state == MDStepSequencerState.Reviewing {
+        if stepSequencer.state == .reviewing {
             doSubmit()
             return
         }
         
+        let field = stepSequencer.currentField!
+        
         // If the field has a valid response and the StepSequencer can move forward, 
         // show the next available ViewController. Otherwise, show an error alert.
-        if stepSequencer.moveToNext() {
+        if stepSequencer.moveToNext(), let field = stepSequencer.currentField {
             let index = modelController.indexOfField(field.objectID)
             let newViewController = modelController.viewControllerAtIndex(index+1, storyboard: self.storyboard!)
             
-            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Forward, animated: true) { done in
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.forward, animated: true) { done in
                 self.updateButtonState()
             }
         } else {
@@ -105,24 +108,24 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     
     @IBAction func doMoveToPrevious() {
         // Move the StepSequencer to the previous step and show the appropriate ViewController
-        if stepSequencer.moveToPreviousWithResponseRequired(false) {
+        if stepSequencer.moveToPrevious(withResponseRequired: false) {
             let index = modelController.indexOfField(stepSequencer.currentField.objectID)
             let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
             
-            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.Reverse, animated: true) { done in
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.reverse, animated: true) { done in
                 self.updateButtonState()
             }
         }
     }
     
     func updateButtonState() {
-        let reviewing = (stepSequencer.state == MDStepSequencerState.Reviewing)
+        let reviewing = (stepSequencer.state == MDStepSequencerState.reviewing)
 
-        previousButton.enabled = modelController.indexOfViewController(pageViewController!.viewControllers!.first!) != 0
-        nextButton.setTitle(reviewing ? "Submit" : "Next", forState: UIControlState.Normal)
+        previousButton.isEnabled = modelController.indexOfViewController(pageViewController!.viewControllers!.first!) != 0
+        nextButton.setTitle(reviewing ? "Submit" : "Next", for: UIControlState())
     }
     
-    func pageViewController(pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
+    func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {
         
         // Handle the swiping page change to keep the StepSequencer in sync with the PageViewController
         let newViewController = pageViewController.viewControllers!.first!
@@ -135,7 +138,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         if (newViewControllerIndex > oldViewControllerIndex) {
             stepSequencer.moveToNext()
         } else {
-            stepSequencer.moveToPreviousWithResponseRequired(false)
+            stepSequencer.moveToPrevious(withResponseRequired: false)
         }
 
         updateButtonState()
