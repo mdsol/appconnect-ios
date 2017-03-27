@@ -16,7 +16,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         let dir = FileManager.default.urls(for: FileManager.SearchPathDirectory.documentDirectory, in: FileManager.SearchPathDomainMask.userDomainMask).last
         let key = "12345678901234567890123456789012".data(using: String.Encoding.utf8)
         // TODO: Substitute the apiToken value with proper token
-        MDBabbage.start(with: MDClientEnvironment.production, apiToken: "Your API token", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
+        MDBabbage.start(with: MDClientEnvironment.validation, apiToken: "4354b09883e5e5a63bddf7cbd43d76d6", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
 
         // All UI code must get objects from the same datastore, so it's a good
         // idea to create it once and make it available to the rest of the app
