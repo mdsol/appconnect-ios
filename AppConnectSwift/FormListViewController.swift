@@ -17,7 +17,12 @@ class FormListViewController: UITableViewController {
         view.addSubview(spinner)
         spinner.startAnimating()
         
-        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
+        //let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
+        
+        // the logout button has now been set to do the appropriate search and fetch 
+        // appconnect 2.0 calls that were stubbed out...
+        
+        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doSearch))
         navigationItem.setLeftBarButton(backButton, animated: true)
         
         // Begin loading the forms for the logged-in user
@@ -87,6 +92,100 @@ class FormListViewController: UITableViewController {
         }
         
         tableView.reloadData()
+    }
+    
+    
+    func doSearch() {
+        
+        // the following data is sample fetch only
+        // used to illustrate how the appconnect 2.0 calls are supposed to work.
+        let clientFactory = MDClientFactory.sharedInstance()
+        let client = clientFactory?.client(of: MDClientType.network);
+
+        // take an arbitrary subjectUUID
+        let SubjectUUID = "686e525b-6608-46a3-bbb4-5079d97dcded";
+        
+        let formatter = DateFormatter()
+        formatter.dateFormat = "yyyy/MM/dd HH:mm";
+        let startDate = formatter.date(from: "2017/01/01 22:31");
+        let endDate = formatter.date(from: "2017/02/01 22:31");
+        
+        let parametersDictionary = ["size": "10", "page": "1"];
+        
+        // make the call to fetch all available records in this given time interval
+        // the results will be passed back as an NSDictionary
+        // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
+        // when connected to a live server it will be something like 
+        // 
+        
+        //  subjectmetadatas = ["submission_collected_at": "2016-10-20T14:27:56.587Z",
+        // "content_type": "application/json",
+        // "file_size": "3456",
+        // "subject_uuid": "686e525b-6608-46a3-bbb4-5079d97dcded",...]
+        
+        client?.fetchAvailableSubjectMetadataWithSubjectUUID(withDateRange: SubjectUUID, from: startDate, to: endDate, withParameters: parametersDictionary) {
+            (subjectmetadatas: [AnyHashable: Any]?, error: Error?) -> Void in
+            
+            
+            if let err = error as? NSError {
+                print(err);
+                //var alertMessage = "Unable to fetch metadata"
+                // let the user know that there is no metadata or server has returned no information....
+                // we will return various error codes along with the error cause...
+ 
+            }
+            else
+            {
+                
+                for (metadataKey, metadataValue) in subjectmetadatas as! [String : String] {
+                    print(metadataKey);
+                    print(metadataValue);
+                    
+                    // use the return type here to call a function to get actual data......
+                    // store this data and go to section B
+                }
+                
+                OperationQueue.main.addOperation({
+                    //self.showAlert("metadata fetched", message: "");
+                });
+
+            }
+        }
+        
+        // section B
+        // so from subjectmetadatas you will get some SubmissionUUIDs.
+        // for each set of submissionUUIDS you can fetch to retrieve the actual data...
+        
+         let submissionUUIDS = [
+         "686e525b-6608-46a3-bbb4-5079d97dcded",
+         "686e525b-6608-46a3-bbb4-5079d97dcdee",
+         "686e525b-6608-46a3-bbb4-5079d97dcdef",
+         "686e525b-6608-46a3-bbb4-5079d97dcdeg"
+         ]
+         
+         client?.fetchAvailableSubjectData(bySubjectUUIDAndSubmissionUUIDs: SubjectUUID, submissionUUIDS: submissionUUIDS, withParameters: parametersDictionary) {
+         (subjectdatas: [Any]?, error: Error?) -> Void in
+            
+            if let err = error as? NSError {
+                print(err);
+                //var alertMessage = "Unable to fetch data"
+                // let the user know that there is no metadata or server has returned no information....
+                
+            }
+            
+            // Right now this will just give you an empty NSArray of Subject data.
+            // in next implementation, this will return either an NSArray of 
+            // Subject Data information or another class defined with this data....
+            //
+            /*guard let subjectdatas = subjectdatas as? [MDSubject] else {
+                return
+            }
+            */
+         
+        }
+        
+        
+   
     }
     
     func doLogout() {
