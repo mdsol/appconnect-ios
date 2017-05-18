@@ -25,11 +25,11 @@ class LoginViewController: UIViewController {
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory?.client(of: MDClientType.hybrid);
+        let client = clientFactory.client(of: MDClientType.hybrid);
         
-        client?.log(in: usernameField.text, in: datastore, password: passwordField.text) { (user: MDUser?, err: Error?) -> Void in
+        client.log(in: usernameField.text, in: datastore, password: passwordField.text) { (user: MDUser?, err: Error?) -> Void in
             
-            if let error = err as? NSError {
+            if let error = err as NSError? {
                 var alertMessage = error.localizedDescription;
                 
                 let errorCause = MDClientErrorCause(rawValue: error.code)
