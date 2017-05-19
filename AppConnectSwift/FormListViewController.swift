@@ -5,6 +5,7 @@ class FormListViewController: UITableViewController {
     var loadedForms = [MDForm]()
     var userID : Int64!
     var primarySubjectId : Int64!
+    var subject1 : MDSubject!
     
     var spinner : UIActivityIndicatorView!
 
@@ -31,13 +32,13 @@ class FormListViewController: UITableViewController {
 
     func loadForms() {
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory?.client(of: MDClientType.hybrid);
+        let client = clientFactory.client(of: MDClientType.hybrid);
 
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         
         let user = datastore.user(withID: self.userID)
         
-        client?.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
+        client.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
             
             if error != nil {
                 OperationQueue.main.addOperation({
@@ -55,7 +56,10 @@ class FormListViewController: UITableViewController {
             var subjectCount = 0
             
             for subject in subjects {
-                client?.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
+                
+                self.subject1 = subject;
+                
+                client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
                     subjectCount += 1
                     
@@ -100,15 +104,19 @@ class FormListViewController: UITableViewController {
         // the following data is sample fetch only
         // used to illustrate how the appconnect 2.0 calls are supposed to work.
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory?.client(of: MDClientType.network);
-
+        let client = clientFactory.client(of: MDClientType.network);
+        
+        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
+        let subject = datastore.subject(withID: self.primarySubjectId)
+        
         // take an arbitrary subjectUUID
-        let SubjectUUID = "686e525b-6608-46a3-bbb4-5079d97dcded";
+       // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
+       // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "yyyy/MM/dd HH:mm";
-        let startDate = formatter.date(from: "2017/01/01 22:31");
-        let endDate = formatter.date(from: "2017/02/01 22:31");
+        formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
+        let startDate = formatter.date(from: "2017-05-16T17:37:11.627Z");
+        let endDate = formatter.date(from: "2017-05-19T17:37:11.627Z");
         
         let parametersDictionary = ["size": "10", "page": "1"];
         
@@ -118,16 +126,11 @@ class FormListViewController: UITableViewController {
         // when connected to a live server it will be something like 
         // 
         
-        //  subjectmetadatas = ["submission_collected_at": "2016-10-20T14:27:56.587Z",
-        // "content_type": "application/json",
-        // "file_size": "3456",
-        // "subject_uuid": "686e525b-6608-46a3-bbb4-5079d97dcded",...]
-        
-        client?.fetchAvailableSubjectMetadataWithSubjectUUID(withDateRange: SubjectUUID, from: startDate, to: endDate, withParameters: parametersDictionary) {
-            (subjectmetadatas: [AnyHashable: Any]?, error: Error?) -> Void in
+        client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
+            (submissions: [Any]?, error: Error?) -> Void in
             
             
-            if let err = error as? NSError {
+            if let err = error as NSError? {
                 print(err);
                 //var alertMessage = "Unable to fetch metadata"
                 // let the user know that there is no metadata or server has returned no information....
@@ -136,15 +139,17 @@ class FormListViewController: UITableViewController {
             }
             else
             {
-                
-                for (metadataKey, metadataValue) in subjectmetadatas as! [String : String] {
-                    print(metadataKey);
-                    print(metadataValue);
-                    
-                    // use the return type here to call a function to get actual data......
-                    // store this data and go to section B
+                guard let submissions = submissions as? [MDSubmission] else {
+                   return
                 }
                 
+                for submission in submissions {
+                    
+                    print(submission.submissionUUID);
+                    print(submission.contentType);
+                    print(submission.fileSize);
+                    
+                }
                 OperationQueue.main.addOperation({
                     //self.showAlert("metadata fetched", message: "");
                 });
@@ -152,6 +157,8 @@ class FormListViewController: UITableViewController {
             }
         }
         
+      
+        /*
         // section B
         // so from subjectmetadatas you will get some SubmissionUUIDs.
         // for each set of submissionUUIDS you can fetch to retrieve the actual data...
@@ -163,7 +170,7 @@ class FormListViewController: UITableViewController {
          "686e525b-6608-46a3-bbb4-5079d97dcdeg"
          ]
          
-         client?.fetchAvailableSubjectData(bySubjectUUIDAndSubmissionUUIDs: SubjectUUID, submissionUUIDS: submissionUUIDS, withParameters: parametersDictionary) {
+         client.fetchAvailableSubjectData(bySubjectAndSubmissionUUIDs: SubjectUUID, submissionUUIDS: submissionUUIDS, withParameters: parametersDictionary) {
          (subjectdatas: [Any]?, error: Error?) -> Void in
             
             if let err = error as? NSError {
@@ -181,8 +188,9 @@ class FormListViewController: UITableViewController {
                 return
             }
             */
-         
-        }
+         */
+        
+       // }
         
         
    
