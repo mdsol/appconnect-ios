@@ -115,19 +115,29 @@ class FormListViewController: UITableViewController {
         
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
-        let startDate = formatter.date(from: "2017-05-16T17:37:11.627Z");
-        let endDate = formatter.date(from: "2017-05-19T17:37:11.627Z");
         
-        let parametersDictionary = ["size": "10", "page": "1"];
+        
+        let startDate = formatter.date(from: "2017-05-16T17:37:11.627Z");
+        let endDate = formatter.date(from: "2017-05-18T17:37:11.627Z");
+        
+        //let startDate = formatter.date(from: "2017-05-01T17:37:11.627Z");
+        //let endDate = formatter.date(from: "2017-05-29T17:37:11.627Z");
+        
+        
+        let parametersDictionary = ["sort_order": "asc"];
         
         // make the call to fetch all available records in this given time interval
         // the results will be passed back as an NSDictionary
         // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
         // when connected to a live server it will be something like 
         // 
+        let submissionsArray = ["afa06f82-d844-4820-a699-df1bbff79d3b"];
         
-        client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
-            (submissions: [Any]?, error: Error?) -> Void in
+        client.fetchAvailableSubjectMetadata(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS:submissionsArray, withParameters: parametersDictionary) {
+            (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
+
+        //client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
+        //    (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
             
             
             if let err = error as NSError? {
@@ -139,15 +149,17 @@ class FormListViewController: UITableViewController {
             }
             else
             {
-                guard let submissions = submissions as? [MDSubmission] else {
-                   return
+                let pagination = appConnectResponse?.pagination;
+                
+                if ((pagination) != nil) {
+                   print(pagination);
                 }
                 
-                for submission in submissions {
+                for submission in (appConnectResponse?.submissions)! {
                     
-                    print(submission.submissionUUID);
-                    print(submission.contentType);
-                    print(submission.fileSize);
+                    print((submission as AnyObject).submissionUUID);
+                    print((submission as AnyObject).contentType);
+                    print((submission as AnyObject).fileSize);
                     
                 }
                 OperationQueue.main.addOperation({
