@@ -5,7 +5,6 @@ class FormListViewController: UITableViewController {
     var loadedForms = [MDForm]()
     var userID : Int64!
     var primarySubjectId : Int64!
-    var subject1 : MDSubject!
     
     var spinner : UIActivityIndicatorView!
 
@@ -23,12 +22,21 @@ class FormListViewController: UITableViewController {
         // the logout button has now been set to do the appropriate search and fetch 
         // appconnect 2.0 calls that were stubbed out...
         
-        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doSearch))
+        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
         navigationItem.setLeftBarButton(backButton, animated: true)
+        
+        let appConnectButton = UIBarButtonItem(title: "AppConnect2Way", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.loadAppConnect))
+        navigationItem.setRightBarButton(appConnectButton, animated: true)
         
         // Begin loading the forms for the logged-in user
         loadForms()
     }
+    
+    func loadAppConnect() {
+        
+        performSegue(withIdentifier: "appConnect", sender: self)
+    }
+    
 
     func loadForms() {
         let clientFactory = MDClientFactory.sharedInstance()
@@ -56,8 +64,6 @@ class FormListViewController: UITableViewController {
             var subjectCount = 0
             
             for subject in subjects {
-                
-                self.subject1 = subject;
                 
                 client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
@@ -98,116 +104,7 @@ class FormListViewController: UITableViewController {
         tableView.reloadData()
     }
     
-    
-    func doSearch() {
-        
-        // the following data is sample fetch only
-        // used to illustrate how the appconnect 2.0 calls are supposed to work.
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.client(of: MDClientType.network);
-        
-        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
-        let subject = datastore.subject(withID: self.primarySubjectId)
-        
-        // take an arbitrary subjectUUID
-       // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
-       // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
-        
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
-        
-        
-        let startDate = formatter.date(from: "2017-05-16T17:37:11.627Z");
-        let endDate = formatter.date(from: "2017-05-18T17:37:11.627Z");
-        
-        //let startDate = formatter.date(from: "2017-05-01T17:37:11.627Z");
-        //let endDate = formatter.date(from: "2017-05-29T17:37:11.627Z");
-        
-        
-        let parametersDictionary = ["sort_order": "asc"];
-        
-        // make the call to fetch all available records in this given time interval
-        // the results will be passed back as an NSDictionary
-        // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
-        // when connected to a live server it will be something like 
-        // 
-        let submissionsArray = ["afa06f82-d844-4820-a699-df1bbff79d3b"];
-        
-        client.fetchAvailableSubjectMetadata(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS:submissionsArray, withParameters: parametersDictionary) {
-            (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
-
-        //client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
-        //    (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
-            
-            
-            if let err = error as NSError? {
-                print(err);
-                //var alertMessage = "Unable to fetch metadata"
-                // let the user know that there is no metadata or server has returned no information....
-                // we will return various error codes along with the error cause...
- 
-            }
-            else
-            {
-                let pagination = appConnectResponse?.pagination;
-                
-                if ((pagination) != nil) {
-                   print(pagination);
-                }
-                
-                for submission in (appConnectResponse?.submissions)! {
-                    
-                    print((submission as AnyObject).submissionUUID);
-                    print((submission as AnyObject).contentType);
-                    print((submission as AnyObject).fileSize);
-                    
-                }
-                OperationQueue.main.addOperation({
-                    //self.showAlert("metadata fetched", message: "");
-                });
-
-            }
-        }
-        
-      
-        /*
-        // section B
-        // so from subjectmetadatas you will get some SubmissionUUIDs.
-        // for each set of submissionUUIDS you can fetch to retrieve the actual data...
-        
-         let submissionUUIDS = [
-         "686e525b-6608-46a3-bbb4-5079d97dcded",
-         "686e525b-6608-46a3-bbb4-5079d97dcdee",
-         "686e525b-6608-46a3-bbb4-5079d97dcdef",
-         "686e525b-6608-46a3-bbb4-5079d97dcdeg"
-         ]
-         
-         client.fetchAvailableSubjectData(bySubjectAndSubmissionUUIDs: SubjectUUID, submissionUUIDS: submissionUUIDS, withParameters: parametersDictionary) {
-         (subjectdatas: [Any]?, error: Error?) -> Void in
-            
-            if let err = error as? NSError {
-                print(err);
-                //var alertMessage = "Unable to fetch data"
-                // let the user know that there is no metadata or server has returned no information....
-                
-            }
-            
-            // Right now this will just give you an empty NSArray of Subject data.
-            // in next implementation, this will return either an NSArray of 
-            // Subject Data information or another class defined with this data....
-            //
-            /*guard let subjectdatas = subjectdatas as? [MDSubject] else {
-                return
-            }
-            */
-         */
-        
-       // }
-        
-        
-   
-    }
-    
+     
     func doLogout() {
         dismiss(animated: true)
     }
@@ -215,6 +112,15 @@ class FormListViewController: UITableViewController {
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "appConnect"{
+            
+            let controller = segue.destination as! AppConnectViewController
+            controller.userID = self.userID!
+            controller.subjectID = self.primarySubjectId!
+            
+        }
+        
         if let indexPath = self.tableView.indexPathForSelectedRow {
             if loadedForms.count == 0 {
                 navigationItem.title = "Back"
