@@ -12,6 +12,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     var userID : Int64!
     var primarySubjectId : Int64!
     var subjectID: Int64!
+    var loadedSubmissions : [MDSubmission] = []
     
     @IBOutlet weak var fromDateTxtField: UITextField!
     
@@ -19,10 +20,11 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     
     @IBOutlet weak var submissionsTxtField: UITextField!
     
+    @IBOutlet weak var paginationLbl: UILabel!
     @IBOutlet weak var SortTxtField: UITextField!
     
     // Data model: These strings will be the data for the table view cells
-    var subids: [String] = []
+    //var subids: [String] = []
     
     // cell reuse id (cells that scroll out of view can be reused)
     let cellReuseIdentifier = "cell"
@@ -81,6 +83,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         print(self.primarySubjectId);
         print(self.userID);
+        self.paginationLbl.text = ""
         
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
@@ -120,7 +123,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
             (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
-            
+
             
             if let err = error as NSError? {
                 print(err);
@@ -134,18 +137,14 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
                 let pagination = appConnectResponse?.pagination;
                 
                 if ((pagination) != nil) {
-                    print(pagination);
+                    self.paginationLbl.text = pagination
                 }
                 
-                self.subids.removeAll()
+                self.loadedSubmissions.removeAll()
                 
                 for submission in (appConnectResponse?.submissions)! {
                     
-                    print((submission as AnyObject).submissionUUID);
-                    print((submission as AnyObject).contentType);
-                    print((submission as AnyObject).fileSize);
-                    
-                    self.subids.append((submission as AnyObject).submissionUUID)
+                    self.loadedSubmissions.append(submission as! MDSubmission)
                     
                 }
                 OperationQueue.main.addOperation({
@@ -169,6 +168,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subject(withID: self.primarySubjectId)
+        self.paginationLbl.text = ""
         
         // take an arbitrary subjectUUID
         // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
@@ -213,18 +213,14 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
                 let pagination = appConnectResponse?.pagination;
                 
                 if ((pagination) != nil) {
-                    print(pagination);
+                    self.paginationLbl.text = pagination
                 }
                 
-                self.subids.removeAll()
+                self.loadedSubmissions.removeAll()
                 
                 for submission in (appConnectResponse?.submissions)! {
                     
-                    print((submission as AnyObject).submissionUUID);
-                    print((submission as AnyObject).contentType);
-                    print((submission as AnyObject).fileSize);
-                    
-                    self.subids.append((submission as AnyObject).submissionUUID)
+                    self.loadedSubmissions.append(submission as! MDSubmission)
                     
                 }
                 OperationQueue.main.addOperation({
@@ -240,12 +236,23 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     }
     
     
+    override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        if segue.identifier == "appConnectDetail" {
+            if let indexPath = self.tableView.indexPathForSelectedRow {
+                let submission = self.loadedSubmissions[indexPath.row]
+                let controller = segue.destination as! AppConnectViewDetailController
+                controller.detailItem = submission as MDSubmission?
+            }
+        }
+    }
     
     // MARK: - Table View
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
   
         print("You tapped cell number \(indexPath.row).")
+        let sequeIdentifier = "appConnectDetail"
+        performSegue(withIdentifier: sequeIdentifier, sender: self)
     }
     
     func numberOfSections(in tableView: UITableView) -> Int {
@@ -253,7 +260,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, numberOfRowsInSection section: Int) -> Int {
-        return subids.count
+        return self.loadedSubmissions.count
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
@@ -263,8 +270,10 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
         
+        let submission = self.loadedSubmissions[indexPath.row]
+        
         // set the text from the data model
-        cell.textLabel?.text = self.subids[indexPath.row]
+        cell.textLabel?.text = submission.submissionUUID
         
         return cell
     }
