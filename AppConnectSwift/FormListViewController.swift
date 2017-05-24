@@ -114,9 +114,7 @@ class FormListViewController: UITableViewController {
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         
         if segue.identifier == "appConnect"{
-            
             let controller = segue.destination as! AppConnectViewController
-            controller.userID = self.userID!
             controller.subjectID = self.primarySubjectId!
             
         }

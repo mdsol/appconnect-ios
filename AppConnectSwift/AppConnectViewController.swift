@@ -7,29 +7,17 @@
 //
 import UIKit
 
-class AppConnectViewController: UIViewController,  UITableViewDataSource, UITableViewDelegate, UINavigationControllerDelegate {
-    
-    var userID : Int64!
-    var primarySubjectId : Int64!
+class AppConnectViewController: UIViewController, UINavigationControllerDelegate {
     var subjectID: Int64!
     var loadedSubmissions : [MDSubmission] = []
     
     @IBOutlet weak var fromDateTxtField: UITextField!
-    
     @IBOutlet weak var toDateTxtField: UITextField!
-    
     @IBOutlet weak var submissionsTxtField: UITextField!
-    
     @IBOutlet weak var SortTxtField: UITextField!
-   
     @IBOutlet weak var paginationLbl: UILabel!
     
-    // Data model: These strings will be the data for the table view cells
-    //var subids: [String] = []
-    
-    // cell reuse id (cells that scroll out of view can be reused)
-    let cellReuseIdentifier = "cell"
-    
+    let cellReuseIdentifier = "submissionMetadataCell"
     
     @IBOutlet weak var tableView: UITableView!
     var spinner : UIActivityIndicatorView!
@@ -40,34 +28,12 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     
     override func viewDidLoad() {
         super.viewDidLoad()
-        // Keep the confirm label hidden till email text fields submitted are satisfying criteria
-        loadSubjects();
         
-        // load default strings.
         fromDateTxtField.text = "2017-05-16"
         toDateTxtField.text = "2017-05-19"
         submissionsTxtField.text = "afa06f82-d844-4820-a699-df1bbff79d3b"
 
-    }
-    
-    
-    func loadSubjects() {
-        let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.client(of: MDClientType.hybrid);
-        
-        let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
-        let user = datastore.user(withID: self.userID)
-        
-        client.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
-            guard error == nil, let subjects = subjects as? [MDSubject] else {
-                return
-            }
-            
-            if let primarySubject = subjects.first {
-                self.primarySubjectId = primarySubject.objectID
-                print(self.primarySubjectId);
-            }
-        }
+        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     }
 
     @IBAction func doSearch(_ sender: Any) {
@@ -77,13 +43,12 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.network)
         
-        print(self.primarySubjectId)
-        print(self.userID);
+        print(self.subjectID)
         self.paginationLbl.text = ""
         
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
-        let subject = datastore.subject(withID: self.primarySubjectId)
+        let subject = datastore.subject(withID: self.subjectID)
         
         // take an arbitrary subjectUUID
         // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
@@ -109,34 +74,10 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
             parametersDictionary["sort_order"] = sortParam
         }
         
-        client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
-            (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
-
-            if let err = error as NSError? {
-                print(err);
-                // var alertMessage = "Unable to fetch metadata"
-                // let the user know that there is no metadata or server has returned no information....
-                // we will return various error codes along with the error cause...
-                
-            } else {
-                if let pagination = appConnectResponse?.pagination {
-                    print(pagination)
-                    self.paginationLbl.text = pagination
-                }
-                
-                self.loadedSubmissions.removeAll()
-                if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
-                    self.loadedSubmissions.append(contentsOf: submissions)
-                }
-
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
+        client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) { (response, error) in
+            self.handleFetchMetadataResponse(appConnectResponse: response, error: error)
         }
     }
-    
-
 
     @IBAction func doSearchSubmissions(_ sender: Any) {
         
@@ -146,7 +87,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         let client = clientFactory.client(of: MDClientType.network);
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
-        let subject = datastore.subject(withID: self.primarySubjectId)
+        let subject = datastore.subject(withID: self.subjectID)
         self.paginationLbl.text = ""
         
         // take an arbitrary subjectUUID
@@ -155,7 +96,6 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
-        
         
         var parametersDictionary = [String:String]();
         
@@ -167,36 +107,37 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         // the results will be passed back as an NSDictionary
         // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
         // when connected to a live server it will be something like
-        //
         let submissionsArray = [submissionsTxtField.text];
         
-        client.fetchAvailableSubjectMetadata(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS:submissionsArray, withParameters: parametersDictionary) {
-            (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
-            
-            if let err = error as NSError? {
-                print(err);
-                // var alertMessage = "Unable to fetch metadata"
-                // let the user know that there is no metadata or server has returned no information....
-                // we will return various error codes along with the error cause...
-                
-            } else {
-                if let pagination = appConnectResponse?.pagination {
-                    print(pagination)
-                    self.paginationLbl.text = pagination
-                }
-                
-                self.loadedSubmissions.removeAll()
-                if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
-                    self.loadedSubmissions.append(contentsOf: submissions)
-                }
-                
-                DispatchQueue.main.async {
-                    self.tableView.reloadData()
-                }
-            }
+        client.fetchAvailableSubjectMetadata(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS: submissionsArray, withParameters: parametersDictionary) {
+            (response, error) in
+            self.handleFetchMetadataResponse(appConnectResponse: response, error: error)
         }
     }
     
+    private func handleFetchMetadataResponse(appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void {
+        if let err = error as NSError? {
+            print(err);
+            // var alertMessage = "Unable to fetch metadata"
+            // let the user know that there is no metadata or server has returned no information....
+            // we will return various error codes along with the error cause...
+            
+        } else {
+            if let pagination = appConnectResponse?.pagination {
+                print(pagination)
+                self.paginationLbl.text = pagination
+            }
+            
+            self.loadedSubmissions.removeAll()
+            if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
+                self.loadedSubmissions.append(contentsOf: submissions)
+            }
+            
+            DispatchQueue.main.async {
+                self.tableView.reloadData()
+            }
+        }
+    }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
         if segue.identifier == "appConnectDetail", let controller = segue.destination as? AppConnectViewDetailController {
@@ -206,12 +147,14 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
             }
         }
     }
-    
-    // MARK: - Table View
-    
+
+}
+
+
+// MARK: - UITableViewDataSource, UITableViewDelegate
+
+extension AppConnectViewController: UITableViewDataSource, UITableViewDelegate {
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
-  
-        print("You tapped cell number \(indexPath.row).")
         let sequeIdentifier = "appConnectDetail"
         performSegue(withIdentifier: sequeIdentifier, sender: self)
     }
@@ -225,12 +168,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     }
     
     func tableView(_ tableView: UITableView, cellForRowAt indexPath: IndexPath) -> UITableViewCell {
-        // create a new cell if needed or reuse an old one
-        // Register the table view cell class and its reuse id
-        tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
-        
-        let cell:UITableViewCell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier) as UITableViewCell!
-        
+        let cell = tableView.dequeueReusableCell(withIdentifier: cellReuseIdentifier, for: indexPath)
         let submission = self.loadedSubmissions[indexPath.row]
         
         // set the text from the data model
@@ -238,7 +176,4 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         return cell
     }
-
-
-
 }
