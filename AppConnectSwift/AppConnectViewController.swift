@@ -159,15 +159,8 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         
         var parametersDictionary = [String:String]();
         
-        if SortTxtField.text != nil && SortTxtField.text == "asc" {
-            
-            parametersDictionary["sort_order"] = SortTxtField.text
-            
-        }
-        if SortTxtField.text != nil && SortTxtField.text == "desc" {
-            
-            parametersDictionary["sort_order"] = SortTxtField.text
-            
+        if let sortParam = SortTxtField.text, ["asc", "desc"].contains(sortParam) {
+            parametersDictionary["sort_order"] = sortParam
         }
         
         // make the call to fetch all available records in this given time interval
@@ -182,37 +175,26 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
             
             if let err = error as NSError? {
                 print(err);
-                //var alertMessage = "Unable to fetch metadata"
+                // var alertMessage = "Unable to fetch metadata"
                 // let the user know that there is no metadata or server has returned no information....
                 // we will return various error codes along with the error cause...
                 
-            }
-            else
-            {
-                let pagination = appConnectResponse?.pagination;
-                
-                if ((pagination) != nil) {
+            } else {
+                if let pagination = appConnectResponse?.pagination {
                     print(pagination)
                     self.paginationLbl.text = pagination
                 }
                 
                 self.loadedSubmissions.removeAll()
-                
-                for submission in (appConnectResponse?.submissions)! {
-                    
-                    self.loadedSubmissions.append(submission as! MDSubmission)
-                    
+                if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
+                    self.loadedSubmissions.append(contentsOf: submissions)
                 }
-                OperationQueue.main.addOperation({
-                    self.tableView.reloadData()
-                });
                 
+                DispatchQueue.main.async {
+                    self.tableView.reloadData()
+                }
             }
         }
-        
-        
-       
-        
     }
     
     
