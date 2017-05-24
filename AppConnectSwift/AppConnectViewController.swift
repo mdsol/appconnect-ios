@@ -199,11 +199,10 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "appConnectDetail" {
+        if segue.identifier == "appConnectDetail", let controller = segue.destination as? AppConnectViewDetailController {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let submission = self.loadedSubmissions[indexPath.row]
-                let controller = segue.destination as! AppConnectViewDetailController
-                controller.detailItem = submission as MDSubmission?
+                controller.detailItem = submission
             }
         }
     }

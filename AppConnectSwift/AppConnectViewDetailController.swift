@@ -20,7 +20,7 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
     
     @IBOutlet weak var collectedAtLbl: UILabel!
     
-    var detailItem: AnyObject? {
+    var detailItem: MDSubmission! {
         didSet {
             // Update the view.
             //self.configureView()
