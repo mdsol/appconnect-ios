@@ -59,17 +59,12 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         let user = datastore.user(withID: self.userID)
         
         client.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
-            
-            if error != nil {
-                return;
-            }
-            
-            guard let subjects = subjects as? [MDSubject] else {
+            guard error == nil, let subjects = subjects as? [MDSubject] else {
                 return
             }
             
-            if (subjects.count > 0 ) {
-                self.primarySubjectId = (subjects.first! as AnyObject).objectID
+            if let primarySubject = subjects.first {
+                self.primarySubjectId = primarySubject.objectID
                 print(self.primarySubjectId);
             }
         }
@@ -80,9 +75,9 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         // the following data is sample fetch only
         // used to illustrate how the appconnect 2.0 calls are supposed to work.
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory.client(of: MDClientType.network);
+        let client = clientFactory.client(of: MDClientType.network)
         
-        print(self.primarySubjectId);
+        print(self.primarySubjectId)
         print(self.userID);
         self.paginationLbl.text = ""
         
@@ -95,39 +90,31 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
         // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
         
         let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
+        formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ"
+        
+        guard var startDateStr = fromDateTxtField.text, var endDateStr = toDateTxtField.text else {
+            return
+        }
         
         let dateEnd = "T00:00:00.000Z"
-        let startDateStr = fromDateTxtField.text! + dateEnd;
-        let endDateStr = toDateTxtField.text! + dateEnd;
+        startDateStr.append(dateEnd)
+        endDateStr.append(dateEnd)
         
-        let startDate = formatter.date(from: startDateStr);
-        let endDate = formatter.date(from: endDateStr);
-        
-        //let startDate = formatter.date(from: "2017-05-01T17:37:11.627Z");
-        //let endDate = formatter.date(from: "2017-05-29T17:37:11.627Z");
-        
-        
+        let startDate = formatter.date(from: startDateStr)
+        let endDate = formatter.date(from: endDateStr)
+
         var parametersDictionary = [String:String]();
         
-        if SortTxtField.text != nil && SortTxtField.text == "asc" {
-           
-            parametersDictionary["sort_order"] = SortTxtField.text
-            
+        if let sortParam = SortTxtField.text, ["asc", "desc"].contains(sortParam) {
+            parametersDictionary["sort_order"] = sortParam
         }
-        if SortTxtField.text != nil && SortTxtField.text == "desc" {
-            
-            parametersDictionary["sort_order"] = SortTxtField.text
-            
-        }
-        
         
         client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) {
             (appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void in
 
             if let err = error as NSError? {
                 print(err);
-                //var alertMessage = "Unable to fetch metadata"
+                // var alertMessage = "Unable to fetch metadata"
                 // let the user know that there is no metadata or server has returned no information....
                 // we will return various error codes along with the error cause...
                 
