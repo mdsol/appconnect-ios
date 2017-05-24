@@ -143,11 +143,10 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
         if segue.identifier == "appConnectDetail", let controller = segue.destination as? AppConnectViewDetailController {
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let submission = self.loadedSubmissions[indexPath.row]
-                controller.detailItem = submission
+                controller.submission = submission
             }
         }
     }
-
 }
 
 
