@@ -8,7 +8,7 @@
 
 import UIKit
 
-class AppConnectViewDetailController: UIViewController {
+class AppConnectViewDetailController: UIViewController, UINavigationControllerDelegate {
     
     @IBOutlet weak var submissionUUIDLbl: UILabel!
    

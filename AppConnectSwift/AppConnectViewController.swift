@@ -20,8 +20,9 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
     
     @IBOutlet weak var submissionsTxtField: UITextField!
     
-    @IBOutlet weak var paginationLbl: UILabel!
     @IBOutlet weak var SortTxtField: UITextField!
+   
+    @IBOutlet weak var paginationLbl: UILabel!
     
     // Data model: These strings will be the data for the table view cells
     //var subids: [String] = []
@@ -137,6 +138,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
                 let pagination = appConnectResponse?.pagination;
                 
                 if ((pagination) != nil) {
+                    print(pagination)
                     self.paginationLbl.text = pagination
                 }
                 
@@ -213,6 +215,7 @@ class AppConnectViewController: UIViewController,  UITableViewDataSource, UITabl
                 let pagination = appConnectResponse?.pagination;
                 
                 if ((pagination) != nil) {
+                    print(pagination)
                     self.paginationLbl.text = pagination
                 }
                 

@@ -24,7 +24,7 @@
                                 <rect key="frame" x="0.0" y="28" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="Z91-Z4-U1C" id="u2c-4j-Ifq">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -35,7 +35,7 @@
                                 <rect key="frame" x="0.0" y="72" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="3Od-MM-U6K" id="dlI-1h-RSF">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -46,7 +46,7 @@
                                 <rect key="frame" x="0.0" y="116" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask"/>
                                 <tableViewCellContentView key="contentView" opaque="NO" clipsSubviews="YES" multipleTouchEnabled="YES" contentMode="center" tableViewCell="CHo-1h-1gM" id="flI-18-hhk">
-                                    <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
+                                    <rect key="frame" x="0.0" y="0.0" width="375" height="43.5"/>
                                     <autoresizingMask key="autoresizingMask"/>
                                 </tableViewCellContentView>
                                 <connections>
@@ -222,13 +222,6 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="IbH-VX-HCc">
-                                <rect key="frame" x="168" y="328" width="135" height="21"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
-                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
-                                <nil key="textColor"/>
-                                <nil key="highlightedColor"/>
-                            </label>
                             <tableView clipsSubviews="YES" contentMode="scaleToFill" fixedFrame="YES" alwaysBounceVertical="YES" dataMode="prototypes" style="plain" separatorStyle="default" rowHeight="44" sectionHeaderHeight="28" sectionFooterHeight="28" translatesAutoresizingMaskIntoConstraints="NO" id="uRt-Jg-y5m">
                                 <rect key="frame" x="0.0" y="357" width="375" height="266"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
@@ -245,6 +238,13 @@
                                 <fontDescription key="fontDescription" type="system" pointSize="14"/>
                                 <textInputTraits key="textInputTraits"/>
                             </textField>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text=" " textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="v7c-pg-P6B">
+                                <rect key="frame" x="150" y="327" width="199" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" weight="semibold" pointSize="13"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" red="1" green="1" blue="1" alpha="1" colorSpace="calibratedRGB"/>
                     </view>
@@ -254,19 +254,19 @@
                         <outlet property="SortTxtField" destination="RnH-8f-duC" id="AjK-XL-nuH"/>
                         <outlet property="dateSearch" destination="mjB-5h-IWp" id="OEw-Tb-1MZ"/>
                         <outlet property="fromDateTxtField" destination="Y9K-4z-IzM" id="BQV-kg-Hbm"/>
-                        <outlet property="paginationLbl" destination="IbH-VX-HCc" id="ZGw-9g-f5t"/>
+                        <outlet property="paginationLbl" destination="v7c-pg-P6B" id="eGE-HA-Chl"/>
                         <outlet property="submissionSearch" destination="eQl-Bi-nZR" id="cAh-sR-KfE"/>
                         <outlet property="submissionsTxtField" destination="Mvf-uS-UQS" id="mXQ-hL-pvI"/>
                         <outlet property="tableView" destination="uRt-Jg-y5m" id="ucj-7j-7bg"/>
                         <outlet property="toDateTxtField" destination="KKD-EJ-9Tb" id="M7v-Tz-CAJ"/>
-                        <segue destination="JBo-va-IDw" kind="show" identifier="appConnectDetail" action="showDetailViewController:sender:" id="yiC-2W-Vkc"/>
+                        <segue destination="JBo-va-IDw" kind="presentation" identifier="appConnectDetail" id="1MT-PE-dFZ"/>
                     </connections>
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="4WP-Bw-51y" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="2258" y="-1272"/>
+            <point key="canvasLocation" x="2660" y="-1311.0944527736133"/>
         </scene>
-        <!--Detail-->
+        <!--App Connect View Detail Controller-->
         <scene sceneID="8kk-aY-y4X">
             <objects>
                 <viewController id="JBo-va-IDw" customClass="AppConnectViewDetailController" customModule="AppConnectSwift" customModuleProvider="target" sceneMemberID="viewController">
@@ -286,10 +286,10 @@
                                 <nil key="highlightedColor"/>
                             </label>
                             <navigationBar contentMode="scaleToFill" fixedFrame="YES" translatesAutoresizingMaskIntoConstraints="NO" id="afy-nZ-pMb">
-                                <rect key="frame" x="-8" y="0.0" width="383" height="44"/>
+                                <rect key="frame" x="0.0" y="0.0" width="375" height="44"/>
                                 <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
                                 <items>
-                                    <navigationItem title="Submission Details" id="8Ao-be-SVX"/>
+                                    <navigationItem title="Submission Details" id="Xpo-OX-eHH"/>
                                 </items>
                             </navigationBar>
                             <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="SubmissionUUID:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="NCT-nx-jgO">
@@ -358,7 +358,7 @@
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
-                    <navigationItem key="navigationItem" title="Detail" id="Xpo-OX-eHH"/>
+                    <navigationItem key="navigationItem" id="2EG-rt-p0F"/>
                     <connections>
                         <outlet property="collectedAtLbl" destination="p9V-TO-JTG" id="4Dm-bu-s9b"/>
                         <outlet property="contentTypeLbl" destination="7HB-ej-odR" id="Ggo-PW-BOs"/>
@@ -369,7 +369,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D0m-4q-i23" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="3332" y="-1272.4137931034484"/>
+            <point key="canvasLocation" x="4249" y="-1311"/>
         </scene>
         <!--Multi Page Form View Controller-->
         <scene sceneID="snT-py-3hH">
@@ -490,7 +490,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="ba6-Xv-thF" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="5576.8000000000002" y="-849.62518740629696"/>
+            <point key="canvasLocation" x="6516" y="-849.62518740629696"/>
         </scene>
         <!--Review View Controller-->
         <scene sceneID="NdV-HB-BvE">
