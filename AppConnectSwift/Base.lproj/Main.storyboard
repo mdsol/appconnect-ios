@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="UTF-8"?>
-<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16D32" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="OHm-QC-Xci">
+<document type="com.apple.InterfaceBuilder3.CocoaTouch.Storyboard.XIB" version="3.0" toolsVersion="12120" systemVersion="16F73" targetRuntime="iOS.CocoaTouch" propertyAccessControl="none" useAutolayout="YES" useTraitCollections="YES" colorMatched="YES" initialViewController="OHm-QC-Xci">
     <device id="retina4_7" orientation="portrait">
         <adaptation id="fullscreen"/>
     </device>
@@ -355,6 +355,14 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
+                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgY-y4-Gpz">
+                                <rect key="frame" x="150" y="617" width="75" height="30"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <state key="normal" title="Fetch Data"/>
+                                <connections>
+                                    <action selector="fetchDataAction:" destination="JBo-va-IDw" eventType="touchUpInside" id="cZR-rC-9Pg"/>
+                                </connections>
+                            </button>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
                     </view>
@@ -362,6 +370,7 @@
                     <connections>
                         <outlet property="collectedAtLbl" destination="p9V-TO-JTG" id="4Dm-bu-s9b"/>
                         <outlet property="contentTypeLbl" destination="7HB-ej-odR" id="Ggo-PW-BOs"/>
+                        <outlet property="fetchDataBtn" destination="dgY-y4-Gpz" id="kXG-Lc-tXV"/>
                         <outlet property="fileSizeLbl" destination="6we-Vh-eYa" id="HDl-IK-LMK"/>
                         <outlet property="subjectUUIDLbl" destination="sSD-0r-sct" id="mlf-sj-kG1"/>
                         <outlet property="submissionUUIDLbl" destination="o25-2x-xu2" id="rYT-5p-hB1"/>

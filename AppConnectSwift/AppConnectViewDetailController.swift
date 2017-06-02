@@ -23,6 +23,8 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
     
     @IBOutlet weak var fetchDataImageView: UIImageView!
     
+    var submission: MDSubmission!
+    
     @IBAction func fetchDataAction(_ sender: Any) {
         
         // the following data is sample fetch only
@@ -43,33 +45,24 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         let submissionsArray = [submission.submissionUUID];
 
 
-        
-        client.fetchAvailableSubjectData(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS: submissionsArray, withParameters: parametersDictionary) {
-            (response, error) in
-            self.handleFetchMetadataResponse(appConnectResponse: response, error: error)
+        client.fetchAvailableSubjectData(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS: submissionsArray, withParameters: parametersDictionary) { (response, error) in
+            if let submissions = response as? [MDSubmission] {
+                self.handleDataFetchResponse(submissions: submissions, error: error)
+            }
         }
-        
     }
     
-    private func handleFetchMetadataResponse(appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void {
+    private func handleDataFetchResponse(submissions: [MDSubmission], error: Error?) -> Void {
         if let err = error as NSError? {
             print(err);
-            // var alertMessage = "Unable to fetch metadata"
-            // let the user know that there is no metadata or server has returned no information....
-            // we will return various error codes along with the error cause...
-            
         } else {
-            if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
-                //self.loadedSubmissions.append(contentsOf: submissions)
-            }
-            
             DispatchQueue.main.async {
+                // TODO: Get data, put in textview or show picture
             }
         }
     }
     
     
-    var submission: MDSubmission!
     
     override func viewDidLoad() {
         super.viewDidLoad()
