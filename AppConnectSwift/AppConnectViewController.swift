@@ -29,10 +29,20 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        fromDateTxtField.text = "2017-05-16"
-        toDateTxtField.text = "2017-05-19"
-        submissionsTxtField.text = "afa06f82-d844-4820-a699-df1bbff79d3b"
-
+        fromDateTxtField.text = "2017-05-25"
+        toDateTxtField.text = "2017-06-30"
+        //submissionsTxtField.text = "1c350d17-a5d8-4414-a900-82c2966bea33"
+        //submissionsTxtField.text = "b7a035b5-e574-4bc3-baec-2344e04f35b1"
+        //submissionsTxtField.text = "afe58988-8155-4f0b-ac62-3390bc0a43d6"
+        
+        //submissionsTxtField.text = "f2387324-a15d-4332-9d6a-151b41466a08" simple avro no userdefconf.
+        //088a700c-7b40-4cce-a385-8523d3ca4832
+        //submissionsTxtField.text = "088a700c-7b40-4cce-a385-8523d3ca4832"  // no top level default
+        
+        submissionsTxtField.text = "421a8041-b9b0-4870-a2ac-55c904b4840d"  // latest updated 2:08
+        
+        //submissionsTxtField.text = "e3d4a43e-3d95-42e7-8fd6-768a164a835b"  // 1.7.7
+        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     }
 
@@ -144,6 +154,7 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
             if let indexPath = self.tableView.indexPathForSelectedRow {
                 let submission = self.loadedSubmissions[indexPath.row]
                 controller.submission = submission
+                controller.subjectID = self.subjectID
             }
         }
     }
