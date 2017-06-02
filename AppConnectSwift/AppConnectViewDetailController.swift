@@ -57,6 +57,8 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
             print(err);
         } else {
             DispatchQueue.main.async {
+                print("Data: ")
+                print(String(data: submissions.first!.data, encoding: .utf8) ?? "missing")
                 // TODO: Get data, put in textview or show picture
             }
         }
