@@ -355,21 +355,54 @@
                                 <nil key="textColor"/>
                                 <nil key="highlightedColor"/>
                             </label>
-                            <button opaque="NO" contentMode="scaleToFill" fixedFrame="YES" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgY-y4-Gpz">
-                                <rect key="frame" x="150" y="617" width="75" height="30"/>
-                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                            <button opaque="NO" contentMode="scaleToFill" contentHorizontalAlignment="center" contentVerticalAlignment="center" buttonType="roundedRect" lineBreakMode="middleTruncation" translatesAutoresizingMaskIntoConstraints="NO" id="dgY-y4-Gpz">
+                                <rect key="frame" x="56" y="617" width="263" height="30"/>
                                 <state key="normal" title="Fetch Data"/>
                                 <connections>
-                                    <action selector="fetchDataAction:" destination="JBo-va-IDw" eventType="touchUpInside" id="cZR-rC-9Pg"/>
+                                    <action selector="fetchDataAction:" destination="JBo-va-IDw" eventType="touchUpInside" id="W7q-Yj-Lf4"/>
                                 </connections>
                             </button>
+                            <stackView opaque="NO" contentMode="scaleToFill" axis="vertical" distribution="fillEqually" translatesAutoresizingMaskIntoConstraints="NO" id="NEe-GS-dOb">
+                                <rect key="frame" x="16" y="347" width="343" height="250"/>
+                                <subviews>
+                                    <imageView userInteractionEnabled="NO" contentMode="scaleToFill" horizontalHuggingPriority="251" verticalHuggingPriority="251" translatesAutoresizingMaskIntoConstraints="NO" id="xKE-A4-wKz">
+                                        <rect key="frame" x="0.0" y="0.0" width="343" height="125"/>
+                                    </imageView>
+                                    <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" text="Label" textAlignment="center" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="JfR-TT-qdJ">
+                                        <rect key="frame" x="0.0" y="125" width="343" height="125"/>
+                                        <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                        <nil key="textColor"/>
+                                        <nil key="highlightedColor"/>
+                                    </label>
+                                </subviews>
+                                <constraints>
+                                    <constraint firstAttribute="height" constant="250" id="XPY-du-gYh"/>
+                                </constraints>
+                            </stackView>
+                            <label opaque="NO" userInteractionEnabled="NO" contentMode="left" horizontalHuggingPriority="251" verticalHuggingPriority="251" fixedFrame="YES" text="Submission Content:" textAlignment="natural" lineBreakMode="tailTruncation" baselineAdjustment="alignBaselines" adjustsFontSizeToFit="NO" translatesAutoresizingMaskIntoConstraints="NO" id="yg0-aP-Ztm">
+                                <rect key="frame" x="20" y="306" width="159" height="21"/>
+                                <autoresizingMask key="autoresizingMask" flexibleMaxX="YES" flexibleMaxY="YES"/>
+                                <fontDescription key="fontDescription" type="system" pointSize="17"/>
+                                <nil key="textColor"/>
+                                <nil key="highlightedColor"/>
+                            </label>
                         </subviews>
                         <color key="backgroundColor" white="1" alpha="1" colorSpace="calibratedWhite"/>
+                        <constraints>
+                            <constraint firstAttribute="trailingMargin" secondItem="NEe-GS-dOb" secondAttribute="trailing" id="4of-7z-QpX"/>
+                            <constraint firstAttribute="trailingMargin" secondItem="dgY-y4-Gpz" secondAttribute="trailing" constant="40" id="HRW-aV-c7g"/>
+                            <constraint firstItem="dgY-y4-Gpz" firstAttribute="top" secondItem="NEe-GS-dOb" secondAttribute="bottom" constant="20" id="Kit-j1-EiX"/>
+                            <constraint firstItem="NEe-GS-dOb" firstAttribute="leading" secondItem="EHf-Dl-QCX" secondAttribute="leadingMargin" id="Pj6-NB-0Vm"/>
+                            <constraint firstItem="n4z-h4-K5K" firstAttribute="top" secondItem="dgY-y4-Gpz" secondAttribute="bottom" constant="20" id="dqg-zf-Imu"/>
+                            <constraint firstItem="dgY-y4-Gpz" firstAttribute="leading" secondItem="EHf-Dl-QCX" secondAttribute="leadingMargin" constant="40" id="skg-OH-v4f"/>
+                        </constraints>
                     </view>
                     <navigationItem key="navigationItem" id="2EG-rt-p0F"/>
                     <connections>
                         <outlet property="collectedAtLbl" destination="p9V-TO-JTG" id="4Dm-bu-s9b"/>
                         <outlet property="contentTypeLbl" destination="7HB-ej-odR" id="Ggo-PW-BOs"/>
+                        <outlet property="dataImageView" destination="xKE-A4-wKz" id="cJN-fT-SAA"/>
+                        <outlet property="dataTextLabel" destination="JfR-TT-qdJ" id="Yoz-cz-SRl"/>
                         <outlet property="fetchDataBtn" destination="dgY-y4-Gpz" id="kXG-Lc-tXV"/>
                         <outlet property="fileSizeLbl" destination="6we-Vh-eYa" id="HDl-IK-LMK"/>
                         <outlet property="subjectUUIDLbl" destination="sSD-0r-sct" id="mlf-sj-kG1"/>
@@ -378,7 +411,7 @@
                 </viewController>
                 <placeholder placeholderIdentifier="IBFirstResponder" id="D0m-4q-i23" userLabel="First Responder" sceneMemberID="firstResponder"/>
             </objects>
-            <point key="canvasLocation" x="4249" y="-1311"/>
+            <point key="canvasLocation" x="4248.8000000000002" y="-1311.0944527736133"/>
         </scene>
         <!--Multi Page Form View Controller-->
         <scene sceneID="snT-py-3hH">

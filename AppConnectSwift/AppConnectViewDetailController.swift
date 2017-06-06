@@ -19,16 +19,32 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
     @IBOutlet weak var collectedAtLbl: UILabel!
     
     @IBOutlet weak var fetchDataBtn: UIButton!
-    @IBOutlet weak var fetchDataTxtView: UITextView!
-    
-    @IBOutlet weak var fetchDataImageView: UIImageView!
+    @IBOutlet weak var dataTextLabel: UILabel!
+    @IBOutlet weak var dataImageView: UIImageView!
     
     var submission: MDSubmission!
     
-    @IBAction func fetchDataAction(_ sender: Any) {
+    
+    
+    override func viewDidLoad() {
+        super.viewDidLoad()
         
-        // the following data is sample fetch only
-        // used to illustrate how the appconnect 2.0 calls are supposed to work.
+        navigationItem.title = "Submission Details"
+        
+        let dateFormatter = DateFormatter()
+        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
+        
+        submissionUUIDLbl.text = submission.submissionUUID
+        subjectUUIDLbl.text = submission.subjectUUID
+        contentTypeLbl.text = submission.contentType
+        fileSizeLbl.text = submission.fileSize
+        collectedAtLbl.text = dateFormatter.string(from: submission.submissionCollectedAt)
+        
+        dataImageView.isHidden = true
+        dataTextLabel.isHidden = true
+    }
+    
+    @IBAction func fetchDataAction(_ sender: Any) {
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.network);
         
@@ -56,31 +72,23 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         if let err = error as NSError? {
             print(err);
         } else {
-            DispatchQueue.main.async {
-                print("Data: ")
-                print(String(data: submissions.first!.data, encoding: .utf8) ?? "missing")
-                // TODO: Get data, put in textview or show picture
+            guard let data = submissions.first else {
+                return
+            }
+            
+            if data.contentType == "application/json",
+                let text = String(data: submissions.first!.data, encoding: .utf8) {
+                
+                DispatchQueue.main.async {
+                    self.dataTextLabel.text = text
+                    self.dataTextLabel.isHidden = false
+                }
+            } else if data.contentType == "image/jpeg" {
+                let image = UIImage(data: data.data)
+                self.dataImageView.image = image
+                self.dataImageView.isHidden = false
+                
             }
         }
-    }
-    
-    
-    
-    override func viewDidLoad() {
-        super.viewDidLoad()
-         self.configureView()
-        
-        self.navigationItem.title = "Submission Details"
-    }
-    
-    func configureView() {
-        let dateFormatter = DateFormatter()
-        dateFormatter.dateFormat = "yyyy-MM-dd HH:mm:ss"
-        
-        submissionUUIDLbl.text = submission.submissionUUID
-        subjectUUIDLbl.text = submission.subjectUUID
-        contentTypeLbl.text = submission.contentType
-        fileSizeLbl.text = submission.fileSize
-        collectedAtLbl.text = dateFormatter.string(from: submission.submissionCollectedAt)
     }
 }
