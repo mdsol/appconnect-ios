@@ -58,11 +58,15 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         // the results will be passed back as an NSDictionary
         // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
         // when connected to a live server it will be something like
-        let submissionsArray = [submission.submissionUUID];
+        
+        guard let submissionUUID = submission.submissionUUID else {
+            return
+        }
+        
+        let submissionsArray = [submissionUUID];
 
-
-        client.fetchAvailableSubjectData(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS: submissionsArray, withParameters: parametersDictionary) { (response, error) in
-            if let submissions = response as? [MDSubmission] {
+        client.fetchSubmissions(for: subject, withSubmissionUUIDS: submissionsArray, withParameters: parametersDictionary) { (response, error) in
+            if let submissions = response {
                 self.handleDataFetchResponse(submissions: submissions, error: error)
             }
         }

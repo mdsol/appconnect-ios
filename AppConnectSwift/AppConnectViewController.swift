@@ -31,17 +31,9 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
         
         fromDateTxtField.text = "2017-05-25"
         toDateTxtField.text = "2017-06-30"
-        //submissionsTxtField.text = "1c350d17-a5d8-4414-a900-82c2966bea33"
-        //submissionsTxtField.text = "b7a035b5-e574-4bc3-baec-2344e04f35b1"
-        //submissionsTxtField.text = "afe58988-8155-4f0b-ac62-3390bc0a43d6"
         
-        //submissionsTxtField.text = "f2387324-a15d-4332-9d6a-151b41466a08" simple avro no userdefconf.
-        //088a700c-7b40-4cce-a385-8523d3ca4832
-        //submissionsTxtField.text = "088a700c-7b40-4cce-a385-8523d3ca4832"  // no top level default
-        
-        submissionsTxtField.text = "421a8041-b9b0-4870-a2ac-55c904b4840d"  // latest updated 2:08
-        
-        //submissionsTxtField.text = "e3d4a43e-3d95-42e7-8fd6-768a164a835b"  // 1.7.7
+        // TODO: remove
+        submissionsTxtField.text = "421a8041-b9b0-4870-a2ac-55c904b4840d"
         
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     }
@@ -84,13 +76,12 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
             parametersDictionary["sort_order"] = sortParam
         }
         
-        client.fetchAvailableSubjectMetadataWithSubject(withDateRange: subject, from: startDate, to: endDate, withParameters: parametersDictionary) { (response, error) in
+        client.fetchSubmissionDetails(for: subject, from: startDate, to: endDate, withParameters: parametersDictionary) { (response, error) in
             self.handleFetchMetadataResponse(appConnectResponse: response, error: error)
         }
     }
 
     @IBAction func doSearchSubmissions(_ sender: Any) {
-        
         // the following data is sample fetch only
         // used to illustrate how the appconnect 2.0 calls are supposed to work.
         let clientFactory = MDClientFactory.sharedInstance()
@@ -113,19 +104,22 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
             parametersDictionary["sort_order"] = sortParam
         }
         
+        guard let submissionUUID = submissionsTxtField.text else {
+            return
+        }
+        
         // make the call to fetch all available records in this given time interval
         // the results will be passed back as an NSDictionary
         // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
         // when connected to a live server it will be something like
-        let submissionsArray = [submissionsTxtField.text];
+        let submissionsArray = [submissionUUID];
         
-        client.fetchAvailableSubjectMetadata(bySubjectAndSubmissionUUIDs: subject, submissionUUIDS: submissionsArray, withParameters: parametersDictionary) {
-            (response, error) in
+        client.fetchSubmissionDetails(for: subject, withSubmissionUUIDs: submissionsArray, withParameters: parametersDictionary) { (response, error) in
             self.handleFetchMetadataResponse(appConnectResponse: response, error: error)
         }
     }
     
-    private func handleFetchMetadataResponse(appConnectResponse: MDAppConnectResponse?, error: Error?) -> Void {
+    private func handleFetchMetadataResponse(appConnectResponse: MDSubmissionDetailsResponse?, error: Error?) -> Void {
         if let err = error as NSError? {
             print(err);
             // var alertMessage = "Unable to fetch metadata"
@@ -139,7 +133,7 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
             }
             
             self.loadedSubmissions.removeAll()
-            if let submissions = appConnectResponse?.submissions as? [MDSubmission] {
+            if let submissions = appConnectResponse?.submissions {
                 self.loadedSubmissions.append(contentsOf: submissions)
             }
             

@@ -2,7 +2,6 @@
 #define Babbage_Bridging_Header_h
 
 #import <Babbage/MDBabbage.h>
-#import <Babbage/MDAppConnectResponse.h>
 #import <Babbage/MDClient.h>
 #import <Babbage/MDClientFactory.h>
 #import <Babbage/MDCommentField.h>
@@ -25,5 +24,6 @@
 #import <Babbage/MDTextField.h>
 #import <Babbage/MDTimestampField.h>
 #import <Babbage/MDUser.h>
+#import <Babbage/MDSubmissionDetailsResponse.h>
 
 #endif /* Babbage_Bridging_Header_h */

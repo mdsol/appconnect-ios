@@ -1,5 +1,5 @@
 RELEASE = "2017.1.0"
-VERSION = "#{RELEASE}.22"
+VERSION = "#{RELEASE}.36"
 
 if File.exist?('local.yaml')
 require 'yaml'
