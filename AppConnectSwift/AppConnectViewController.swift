@@ -95,9 +95,6 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
         // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
         // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
         
-        let formatter = DateFormatter()
-        formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ";
-        
         var parametersDictionary = [String:String]();
         
         if let sortParam = SortTxtField.text, ["asc", "desc"].contains(sortParam) {

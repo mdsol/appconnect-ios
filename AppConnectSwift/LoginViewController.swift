@@ -34,16 +34,16 @@ class LoginViewController: UIViewController {
                 
                 let errorCause = MDClientErrorCause(rawValue: error.code)
                 
-                if(errorCause == MDClientErrorCause.authenticationFailure) {
+                if errorCause == MDClientErrorCause.authenticationFailure {
                     alertMessage = "The provided credentials are incorrect."
-                } else if (errorCause == MDClientErrorCause.userNotAssociatedWithToken) {
+                } else if errorCause == MDClientErrorCause.userNotAssociatedWithToken {
                     alertMessage = "User is not associated with provided API token."
                 }
                 
-                OperationQueue.main.addOperation({
+                DispatchQueue.main.async {
                     self.showAlert("Error", message: alertMessage)
                     sender.isEnabled = true
-                });
+                }
                 
                 return
             }
@@ -51,10 +51,10 @@ class LoginViewController: UIViewController {
             // no error implies we have a user.
             self.userID = user?.objectID
             
-            OperationQueue.main.addOperation({
+            DispatchQueue.main.async {
                 self.performSegue(withIdentifier: "LoginSuccess", sender: nil)
                 sender.isEnabled = true
-            });
+            }
         }
     }
     
