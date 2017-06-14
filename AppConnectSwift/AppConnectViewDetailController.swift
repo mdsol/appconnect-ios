@@ -50,14 +50,6 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subject(withID: self.subjectID)
-
-        var parametersDictionary = [String:String]();
-        parametersDictionary["sort_order"] = "desc"
-        
-        // make the call to fetch all available records in this given time interval
-        // the results will be passed back as an NSDictionary
-        // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
-        // when connected to a live server it will be something like
         
         guard let submissionUUID = submission.submissionUUID else {
             return
@@ -65,7 +57,7 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         
         let submissionsArray = [submissionUUID];
 
-        client.fetchSubmissions(for: subject, withSubmissionUUIDS: submissionsArray, withParameters: parametersDictionary) { (response, error) in
+        client.fetchSubmissions(for: subject, withSubmissionUUIDS: submissionsArray, withParameters: nil) { (response, error) in
             if let submissions = response {
                 self.handleDataFetchResponse(submissions: submissions, error: error)
             }
