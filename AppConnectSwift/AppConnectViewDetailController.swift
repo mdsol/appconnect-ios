@@ -58,9 +58,7 @@ class AppConnectViewDetailController: UIViewController, UINavigationControllerDe
         let submissionsArray = [submissionUUID];
 
         client.fetchSubmissions(for: subject, withSubmissionUUIDS: submissionsArray, withParameters: nil) { (response, error) in
-            if let submissions = response {
-                self.handleDataFetchResponse(submissions: submissions, error: error)
-            }
+            self.handleDataFetchResponse(submissions: response ?? [], error: error)
         }
     }
     
