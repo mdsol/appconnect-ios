@@ -32,16 +32,11 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
         fromDateTxtField.text = "2017-05-25"
         toDateTxtField.text = "2017-06-30"
         
-        // TODO: remove
-        submissionsTxtField.text = "421a8041-b9b0-4870-a2ac-55c904b4840d"
-        
         tableView.register(UITableViewCell.self, forCellReuseIdentifier: cellReuseIdentifier)
     }
 
     @IBAction func doSearch(_ sender: Any) {
         
-        // the following data is sample fetch only
-        // used to illustrate how the appconnect 2.0 calls are supposed to work.
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.network)
         
@@ -51,10 +46,6 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subject(withID: self.subjectID)
-        
-        // take an arbitrary subjectUUID
-        // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
-        // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
         
         let formatter = DateFormatter()
         formatter.dateFormat = "YYYY-MM-dd'T'HH:mm:ss.SSSZ"
@@ -82,18 +73,12 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
     }
 
     @IBAction func doSearchSubmissions(_ sender: Any) {
-        // the following data is sample fetch only
-        // used to illustrate how the appconnect 2.0 calls are supposed to work.
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.network);
         
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         let subject = datastore.subject(withID: self.subjectID)
         self.paginationLbl.text = ""
-        
-        // take an arbitrary subjectUUID
-        // let SubjectUUID = "045e6689-b85e-4fad-bbb1-b4a34ab75d64";
-        // https://epro-sandbox.imedidata.net/api/v2/subject_submissions.json?subject_uuid=045e6689-b85e-4fad-bbb1-b4a34ab75d64&study_auth_token=7591e9775049f126709657a968784082&start_date=2017-05-16T17:37:11.627Z&end_date=2017-05-19T17:37:11.627Z
         
         var parametersDictionary = [String:String]();
         
@@ -105,10 +90,6 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
             return
         }
         
-        // make the call to fetch all available records in this given time interval
-        // the results will be passed back as an NSDictionary
-        // in this stubbed method it will be ["SubjectUUID", "TestSubjectUUID"];
-        // when connected to a live server it will be something like
         let submissionsArray = [submissionUUID];
         
         client.fetchSubmissionDetails(for: subject, withSubmissionUUIDs: submissionsArray, withParameters: parametersDictionary) { (response, error) in
@@ -119,9 +100,6 @@ class AppConnectViewController: UIViewController, UINavigationControllerDelegate
     private func handleFetchMetadataResponse(appConnectResponse: MDSubmissionDetailsResponse?, error: Error?) -> Void {
         if let err = error as NSError? {
             print(err);
-            // var alertMessage = "Unable to fetch metadata"
-            // let the user know that there is no metadata or server has returned no information....
-            // we will return various error codes along with the error cause...
             
         } else {
             if let pagination = appConnectResponse?.pagination {
