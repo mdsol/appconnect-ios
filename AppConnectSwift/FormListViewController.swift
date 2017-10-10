@@ -26,13 +26,13 @@ class FormListViewController: UITableViewController {
 
     func loadForms() {
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory?.client(of: MDClientType.hybrid);
+        let client = clientFactory.client(of: MDClientType.hybrid);
 
         let datastore = (UIApplication.shared.delegate as! AppDelegate).UIDatastore!
         
         let user = datastore.user(withID: self.userID)
         
-        client?.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
+        client.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
             
             if error != nil {
                 OperationQueue.main.addOperation({
@@ -50,7 +50,7 @@ class FormListViewController: UITableViewController {
             var subjectCount = 0
             
             for subject in subjects {
-                client?.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
+                client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
                     subjectCount += 1
                     

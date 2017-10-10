@@ -17,7 +17,7 @@ class CreateAccountViewController: UIViewController {
     
     @IBAction func createAccount(_ sender: AnyObject) {
         
-        let clientFactory = MDClientFactory.sharedInstance()!
+        let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.hybrid);
         
         if let answer = userSecurityQuestionAnswer.text {
@@ -26,7 +26,7 @@ class CreateAccountViewController: UIViewController {
             }
         }
         
-        client?.registerSubject(withEmail: userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
+        client.registerSubject(withEmail: userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: userSecurityQuestionAnswer.text) { (err) in
 
             if let error = err as? NSError {
                 var alertMessage = "Unable to register user"
