@@ -65,7 +65,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         let f = datastore?.form(withID: self.formID)
         
         // The form provided to the client method must have been loaded from the datastore provided
-        client?.sendResponses(for: f, deviceID: "fake-device-id") { (error: Error?) -> Void in
+        client.sendResponses(for: f, deviceID: "fake-device-id") { (error: Error?) -> Void in
             
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)

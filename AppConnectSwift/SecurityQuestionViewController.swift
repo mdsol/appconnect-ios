@@ -20,9 +20,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         self.tableView.register(UITableViewCell.self, forCellReuseIdentifier: "Cell")
         
         let clientFactory = MDClientFactory.sharedInstance()
-        let client = clientFactory?.client(of: MDClientType.hybrid)
+        let client = clientFactory.client(of: MDClientType.hybrid)
         
-        client?.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
+        client.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
             if error != nil {
                 OperationQueue.main.addOperation() {
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
