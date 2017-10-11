@@ -17,12 +17,26 @@ class FormListViewController: UITableViewController {
         view.addSubview(spinner)
         spinner.startAnimating()
         
+        //let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
+        
+        // the logout button has now been set to do the appropriate search and fetch 
+        // appconnect 2.0 calls that were stubbed out...
+        
         let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
         navigationItem.setLeftBarButton(backButton, animated: true)
+        
+        let appConnectButton = UIBarButtonItem(title: "AppConnect2Way", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.loadAppConnect))
+        navigationItem.setRightBarButton(appConnectButton, animated: true)
         
         // Begin loading the forms for the logged-in user
         loadForms()
     }
+    
+    func loadAppConnect() {
+        
+        performSegue(withIdentifier: "appConnect", sender: self)
+    }
+    
 
     func loadForms() {
         let clientFactory = MDClientFactory.sharedInstance()
@@ -50,6 +64,7 @@ class FormListViewController: UITableViewController {
             var subjectCount = 0
             
             for subject in subjects {
+
                 client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
                     subjectCount += 1
@@ -89,6 +104,7 @@ class FormListViewController: UITableViewController {
         tableView.reloadData()
     }
     
+     
     func doLogout() {
         dismiss(animated: true)
     }
@@ -96,6 +112,13 @@ class FormListViewController: UITableViewController {
     // MARK: - Segues
 
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
+        
+        if segue.identifier == "appConnect"{
+            let controller = segue.destination as! AppConnectViewController
+            controller.subjectID = self.primarySubjectId!
+            
+        }
+        
         if let indexPath = self.tableView.indexPathForSelectedRow {
             if loadedForms.count == 0 {
                 navigationItem.title = "Back"

@@ -18,10 +18,12 @@
 #import <Babbage/MDScaleField.h>
 #import <Babbage/MDStepSequencer.h>
 #import <Babbage/MDStudy.h>
+#import <Babbage/MDSubmission.h>
 #import <Babbage/MDSubject.h>
 #import <Babbage/MDSubjectDataEnvelope.h>
 #import <Babbage/MDTextField.h>
 #import <Babbage/MDTimestampField.h>
 #import <Babbage/MDUser.h>
+#import <Babbage/MDSubmissionDetailsResponse.h>
 
 #endif /* Babbage_Bridging_Header_h */

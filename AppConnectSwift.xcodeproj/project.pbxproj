@@ -17,6 +17,8 @@
 		526B32951C249BD400C4DBB8 /* LoginViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 526B32941C249BD400C4DBB8 /* LoginViewController.swift */; };
 		52C702521C3332A200FC00CF /* ReviewViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 52C702511C3332A200FC00CF /* ReviewViewController.swift */; };
 		52EC841B1C31863900683D5B /* Babbage.podspec in Resources */ = {isa = PBXBuildFile; fileRef = 52EC841A1C31863900683D5B /* Babbage.podspec */; };
+		602DA41E1ED372F600031014 /* AppConnectViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602DA41D1ED372F600031014 /* AppConnectViewController.swift */; };
+		602DA4241ED3E9A900031014 /* AppConnectViewDetailController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 602DA4231ED3E9A900031014 /* AppConnectViewDetailController.swift */; };
 		7B2862C01CC051AB00FDBDBC /* CreateAccountViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B2862BF1CC051AB00FDBDBC /* CreateAccountViewController.swift */; };
 		7B4919471CC013680051C55C /* SecurityQuestionViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4919461CC013680051C55C /* SecurityQuestionViewController.swift */; };
 		7B4A8F631CBFE5FF0027F405 /* EmailViewController.swift in Sources */ = {isa = PBXBuildFile; fileRef = 7B4A8F621CBFE5FF0027F405 /* EmailViewController.swift */; };
@@ -42,6 +44,8 @@
 		52AFE38D1DD27AE700192606 /* AppConnectSwift-Debug.entitlements */ = {isa = PBXFileReference; lastKnownFileType = text.plist.entitlements; name = "AppConnectSwift-Debug.entitlements"; path = "AppConnectSwift/AppConnectSwift-Debug.entitlements"; sourceTree = "<group>"; };
 		52C702511C3332A200FC00CF /* ReviewViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = ReviewViewController.swift; sourceTree = "<group>"; };
 		52EC841A1C31863900683D5B /* Babbage.podspec */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = text; path = Babbage.podspec; sourceTree = "<group>"; };
+		602DA41D1ED372F600031014 /* AppConnectViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConnectViewController.swift; sourceTree = "<group>"; };
+		602DA4231ED3E9A900031014 /* AppConnectViewDetailController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = AppConnectViewDetailController.swift; sourceTree = "<group>"; };
 		7B2862BF1CC051AB00FDBDBC /* CreateAccountViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = CreateAccountViewController.swift; sourceTree = "<group>"; };
 		7B4919461CC013680051C55C /* SecurityQuestionViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = SecurityQuestionViewController.swift; sourceTree = "<group>"; };
 		7B4A8F621CBFE5FF0027F405 /* EmailViewController.swift */ = {isa = PBXFileReference; fileEncoding = 4; lastKnownFileType = sourcecode.swift; path = EmailViewController.swift; sourceTree = "<group>"; };
@@ -125,8 +129,10 @@
 			isa = PBXGroup;
 			children = (
 				AAE6D3401C21C355009B0C6B /* AppDelegate.swift */,
+				602DA4231ED3E9A900031014 /* AppConnectViewDetailController.swift */,
 				7BBE62851CBD4B7800AA91E5 /* CaptureImageViewController.swift */,
 				7B4A8F621CBFE5FF0027F405 /* EmailViewController.swift */,
+				602DA41D1ED372F600031014 /* AppConnectViewController.swift */,
 				7B611DB21CBFFF79004A05BD /* PasswordViewController.swift */,
 				7B4919461CC013680051C55C /* SecurityQuestionViewController.swift */,
 				7B2862BF1CC051AB00FDBDBC /* CreateAccountViewController.swift */,
@@ -299,7 +305,9 @@
 				7B2862C01CC051AB00FDBDBC /* CreateAccountViewController.swift in Sources */,
 				523069721C319AEA0012A478 /* UIViewController+Extensions.swift in Sources */,
 				520806B91C29FB640070BA54 /* FieldViewController.swift in Sources */,
+				602DA41E1ED372F600031014 /* AppConnectViewController.swift in Sources */,
 				52C702521C3332A200FC00CF /* ReviewViewController.swift in Sources */,
+				602DA4241ED3E9A900031014 /* AppConnectViewDetailController.swift in Sources */,
 				526B32951C249BD400C4DBB8 /* LoginViewController.swift in Sources */,
 				5268D2A31C2497FC00C75096 /* FormListViewController.swift in Sources */,
 				AAE6D3431C21C355009B0C6B /* MultiPageFormViewController.swift in Sources */,
