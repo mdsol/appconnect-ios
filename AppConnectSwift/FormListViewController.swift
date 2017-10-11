@@ -64,7 +64,7 @@ class FormListViewController: UITableViewController {
             var subjectCount = 0
             
             for subject in subjects {
-                
+
                 client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
                     
                     subjectCount += 1
