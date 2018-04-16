@@ -20,6 +20,7 @@ The Babbage library is packaged as a [CocoaPod](https://guides.cocoapods.org/usi
 ```bash
     export ARTIFACTORY_USERNAME=providedusername
     export ARTIFACTORY_PASSWORD=providedpassword
+    export ARTIFACTORY_SERVER=mdsol.jfrog.io
 ```
 
 or you can create a `local.yaml` file containing your credentials
@@ -27,7 +28,7 @@ or you can create a `local.yaml` file containing your credentials
 ```yaml
    ARTIFACTORY_PASSWORD: providedpassword
    ARTIFACTORY_USERNAME: providedusername
-   ARTIFACTORY_URL: 
+   ARTIFACTORY_SERVER: mdsol.jfrog.io
 ```
 
 Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
