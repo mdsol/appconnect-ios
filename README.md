@@ -27,6 +27,7 @@ or you can create a `local.yaml` file containing your credentials
 ```yaml
    ARTIFACTORY_PASSWORD: providedpassword
    ARTIFACTORY_USERNAME: providedusername
+   ARTIFACTORY_URL: 
 ```
 
 Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
