@@ -169,7 +169,6 @@
 				AAE6D33A1C21C355009B0C6B /* Frameworks */,
 				AAE6D33B1C21C355009B0C6B /* Resources */,
 				7A23C907D0A118C474B9582C /* [CP] Embed Pods Frameworks */,
-				91FBB4C2D89B348980ADB22A /* [CP] Copy Pods Resources */,
 			);
 			buildRules = (
 			);
@@ -192,7 +191,7 @@
 				TargetAttributes = {
 					AAE6D33C1C21C355009B0C6B = {
 						CreatedOnToolsVersion = 7.2;
-						LastSwiftMigration = 0810;
+						LastSwiftMigration = 0930;
 						SystemCapabilities = {
 							com.apple.Keychain = {
 								enabled = 0;
@@ -278,21 +277,6 @@
 			runOnlyForDeploymentPostprocessing = 0;
 			shellPath = /bin/sh;
 			shellScript = "diff \"${PODS_PODFILE_DIR_PATH}/Podfile.lock\" \"${PODS_ROOT}/Manifest.lock\" > /dev/null\nif [ $? != 0 ] ; then\n    # print error to STDERR\n    echo \"error: The sandbox is not in sync with the Podfile.lock. Run 'pod install' or update your CocoaPods installation.\" >&2\n    exit 1\nfi\n# This output is used by Xcode 'outputs' to avoid re-running this script phase.\necho \"SUCCESS\" > \"${SCRIPT_OUTPUT_FILE_0}\"\n";
-			showEnvVarsInLog = 0;
-		};
-		91FBB4C2D89B348980ADB22A /* [CP] Copy Pods Resources */ = {
-			isa = PBXShellScriptBuildPhase;
-			buildActionMask = 2147483647;
-			files = (
-			);
-			inputPaths = (
-			);
-			name = "[CP] Copy Pods Resources";
-			outputPaths = (
-			);
-			runOnlyForDeploymentPostprocessing = 0;
-			shellPath = /bin/sh;
-			shellScript = "\"${SRCROOT}/Pods/Target Support Files/Pods-AppConnectSwift/Pods-AppConnectSwift-resources.sh\"\n";
 			showEnvVarsInLog = 0;
 		};
 /* End PBXShellScriptBuildPhase section */
@@ -440,7 +424,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mdsol.AppConnectSwift;
 				PRODUCT_NAME = AppConnectSwift;
 				SWIFT_OBJC_BRIDGING_HEADER = "AppConnectSwift/Babbage-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Debug;
 		};
@@ -456,7 +441,8 @@
 				PRODUCT_BUNDLE_IDENTIFIER = com.mdsol.AppConnectSwift;
 				PRODUCT_NAME = AppConnectSwift;
 				SWIFT_OBJC_BRIDGING_HEADER = "AppConnectSwift/Babbage-Bridging-Header.h";
-				SWIFT_VERSION = 3.0;
+				SWIFT_SWIFT3_OBJC_INFERENCE = On;
+				SWIFT_VERSION = 4.0;
 			};
 			name = Release;
 		};
