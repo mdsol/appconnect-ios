@@ -8,7 +8,7 @@ artifactory_server = content['ARTIFACTORY_SERVER'] || raise("You must set an art
 username = content['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the variable ARTIFACTORY_USERNAME in the local.yaml file.")
 password = content['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the variable ARTIFACTORY_PASSWORD in the local.yaml file.")
 else
-artifactory_server = ENV['ARTIFACTORY_SERVER'] || raise("You must set an artifactory username using the environment variable ARTIFACTORY_SERVER.")
+artifactory_server = ENV['ARTIFACTORY_SERVER'] || raise("You must set an artifactory server using the environment variable ARTIFACTORY_SERVER.")
 username = ENV['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the environment variable ARTIFACTORY_USERNAME.")
 password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the environment variable ARTIFACTORY_PASSWORD.")
 end
