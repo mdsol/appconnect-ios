@@ -1,0 +1,36 @@
+{
+  "name": "Babbage",
+  "version": "2018.1.0.24",
+  "summary": "The Medidata Patient Cloud SDK",
+  "description": "AppConnect SDK, built from hash d037c172be94c1b677bf95296ff88ab5009e2fc4",
+  "homepage": "https://github.com/mdsol/babbage",
+  "license": {
+    "type": "Proprietary",
+    "text": "TBD"
+  },
+  "authors": "Medidata Solutions, Inc.",
+  "source": {
+    "http": "https://s3.amazonaws.com/medidata/appconnect-sdk/release/ios/2018.1.0/babbage-2018.1.0.24.zip"
+  },
+  "source_files": "artifacts/include/babbage/*.h",
+  "vendored_libraries": "artifacts/libBabbage.a",
+  "libraries": [
+    "c++",
+    "z"
+  ],
+  "platforms": {
+    "ios": "8.0"
+  },
+  "requires_arc": true,
+  "dependencies": {
+    "HTMLReader": [
+      "~> 0.7"
+    ],
+    "UICKeyChainStore": [
+      "~> 2.0"
+    ],
+    "AWSS3": [
+      "~> 2.3.5"
+    ]
+  }
+}
