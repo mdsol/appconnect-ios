@@ -8,6 +8,10 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     var createAccountViewController = CreateAccountViewController()
     var userEmail : String!
     var userPassword : String!
+    let securityQuestionKey = "user_security_questions"
+    let depricatedKey = "deprecated"
+    let idKey = "id"
+    let questionKey = "name"
     
     var securityIdsByQuestion = [String : Int]()
     
@@ -22,8 +26,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.hybrid)
         
-        client.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
-            if error != nil {
+        client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) -> Void in
+            guard error == nil,
+            let questions = response?[self.securityQuestionKey] as? [[String: AnyHashable]] else {
                 OperationQueue.main.addOperation() {
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
                 }
@@ -31,9 +36,15 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
                 return
             }
             
-            for (questionId, question) in questions as! [String : String] {
-                self.securityIdsByQuestion[question] = Int(questionId)
-                self.tableDataSource.append(question)
+            for (question) in questions {
+                guard let id = question[self.idKey] as? String,
+                    let questionString = question[self.questionKey] as? String,
+                    ((question[self.depricatedKey] as? Bool) ?? false) == false else {
+                    continue
+                }
+
+                self.securityIdsByQuestion[questionString] = Int(id)
+                self.tableDataSource.append(questionString)
             }
             
             OperationQueue.main.addOperation() {
