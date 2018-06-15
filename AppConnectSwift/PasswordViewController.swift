@@ -1,6 +1,6 @@
 import UIKit
 
-class PasswordViewController: UIViewController {
+class PasswordViewController: UIViewController, UITextFieldDelegate {
     
     var userEmail : String!
     

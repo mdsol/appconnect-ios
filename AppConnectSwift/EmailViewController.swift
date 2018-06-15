@@ -1,6 +1,6 @@
 import UIKit
 
-class EmailViewController: UIViewController {
+class EmailViewController: UIViewController, UITextFieldDelegate {
     
     @IBOutlet weak var emailTextField: UITextField!
     @IBOutlet weak var emailConfirmTextField: UITextField!
