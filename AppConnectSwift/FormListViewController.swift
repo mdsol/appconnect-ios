@@ -32,7 +32,7 @@ class FormListViewController: UITableViewController {
         loadForms()
     }
     
-    func loadAppConnect() {
+    @objc func loadAppConnect() {
         
         performSegue(withIdentifier: "appConnect", sender: self)
     }
@@ -75,7 +75,7 @@ class FormListViewController: UITableViewController {
     }
     
      
-    func doLogout() {
+    @objc func doLogout() {
         dismiss(animated: true)
     }
 
