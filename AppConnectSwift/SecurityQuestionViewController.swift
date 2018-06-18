@@ -1,17 +1,18 @@
 import UIKit
 
 class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
-   
+
+    static let securityQuestionKey = "user_security_questions"
+    static let deprecatedKey = "deprecated"
+    static let idKey = "id"
+    static let questionKey = "name"
+
     var tableDataSource = [String]()
     var securityQuestion = "What year were you born?"
     var securityQuestionID = -1
     var createAccountViewController = CreateAccountViewController()
     var userEmail : String!
     var userPassword : String!
-    let securityQuestionKey = "user_security_questions"
-    let depricatedKey = "deprecated"
-    let idKey = "id"
-    let questionKey = "name"
     
     var securityIdsByQuestion = [String : Int]()
     
@@ -28,7 +29,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         
         client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) -> Void in
             guard error == nil,
-            let questions = response?[self.securityQuestionKey] as? [[String: AnyHashable]] else {
+            let questions = response?[SecurityQuestionViewController.securityQuestionKey] as? [[String: AnyHashable]] else {
                 OperationQueue.main.addOperation() {
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
                 }
@@ -37,9 +38,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
             }
             
             for (question) in questions {
-                guard let id = question[self.idKey] as? String,
-                    let questionString = question[self.questionKey] as? String,
-                    ((question[self.depricatedKey] as? Bool) ?? false) == false else {
+                guard let id = question[SecurityQuestionViewController.idKey] as? String,
+                    let questionString = question[SecurityQuestionViewController.questionKey] as? String,
+                    ((question[SecurityQuestionViewController.deprecatedKey] as? Bool) ?? false) == false else {
                     continue
                 }
 
