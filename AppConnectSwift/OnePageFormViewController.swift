@@ -83,7 +83,7 @@ class OnePageFormViewController: UIViewController {
         let f = datastore?.form(withID: self.formID)
         
         // The form provided to the client method must have been loaded from the datastore provided
-        client.sendResponses(for: f, deviceID: "fake-device-id", completion: { (error: Error?) -> Void in
+        client.sendResponses(for: f, authorizedBy: f?.parentSubject.user, deviceID: "fake-device-id", completion: { (error: Error?) -> Void in
             if error != nil {
                 self.showDialog("Error", message: "There was an error submitting the form", completion: nil)
             } else {

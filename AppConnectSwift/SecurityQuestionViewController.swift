@@ -1,7 +1,12 @@
 import UIKit
 
 class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
-   
+
+    static let securityQuestionKey = "user_security_questions"
+    static let deprecatedKey = "deprecated"
+    static let idKey = "id"
+    static let questionKey = "name"
+
     var tableDataSource = [String]()
     var securityQuestion = "What year were you born?"
     var securityQuestionID = -1
@@ -22,8 +27,9 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         let clientFactory = MDClientFactory.sharedInstance()
         let client = clientFactory.client(of: MDClientType.hybrid)
         
-        client.loadSecurityQuestions() { (questions: [AnyHashable: Any]?, error: Error?) -> Void in
-            if error != nil {
+        client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) -> Void in
+            guard error == nil,
+            let questions = response?[SecurityQuestionViewController.securityQuestionKey] as? [[String: AnyHashable]] else {
                 OperationQueue.main.addOperation() {
                     self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
                 }
@@ -31,9 +37,15 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
                 return
             }
             
-            for (questionId, question) in questions as! [String : String] {
-                self.securityIdsByQuestion[question] = Int(questionId)
-                self.tableDataSource.append(question)
+            for (question) in questions {
+                guard let id = question[SecurityQuestionViewController.idKey] as? String,
+                    let questionString = question[SecurityQuestionViewController.questionKey] as? String,
+                    ((question[SecurityQuestionViewController.deprecatedKey] as? Bool) ?? false) == false else {
+                    continue
+                }
+
+                self.securityIdsByQuestion[questionString] = Int(id)
+                self.tableDataSource.append(questionString)
             }
             
             OperationQueue.main.addOperation() {

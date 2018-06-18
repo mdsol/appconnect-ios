@@ -32,7 +32,7 @@ class FormListViewController: UITableViewController {
         loadForms()
     }
     
-    func loadAppConnect() {
+    @objc func loadAppConnect() {
         
         performSegue(withIdentifier: "appConnect", sender: self)
     }
@@ -46,41 +46,15 @@ class FormListViewController: UITableViewController {
         
         let user = datastore.user(withID: self.userID)
         
-        client.loadSubjects(for: user) { (subjects: [Any]?, error: Error?) -> Void in
+        client.loadData(for: user) { (error: Error?) -> Void in
             
-            if error != nil {
-                OperationQueue.main.addOperation({
-                    // no new forms from server
-                    self.populateForms()
-                    self.spinner.stopAnimating()
-                });
-                return;
-            }
-            
-            guard let subjects = subjects as? [MDSubject] else {
-                return
-            }
-            
-            var subjectCount = 0
-            
-            for subject in subjects {
+            OperationQueue.main.addOperation({
+                self.populateForms()
+                self.spinner.stopAnimating()
+            });
 
-                client.loadForms(for: subject) { (forms: [Any]?, error: Error?) -> Void in
-                    
-                    subjectCount += 1
-                    
-                    // When all subjects have been loaded, populate the UI and stop the spinner
-                    if subjectCount == subjects.count {
-                        OperationQueue.main.addOperation({
-                            self.populateForms()
-                            self.spinner.stopAnimating()
-                        });
-                    }
-                }
-            }
-            
-            if (subjects.count > 0 ) {
-                self.primarySubjectId = (subjects.first! as AnyObject).objectID
+            if (user?.subjects.count ?? 0 > 0 ) {
+                self.primarySubjectId = (user?.subjects.first! as AnyObject).objectID
             }
         }
     }
@@ -105,7 +79,7 @@ class FormListViewController: UITableViewController {
     }
     
      
-    func doLogout() {
+    @objc func doLogout() {
         dismiss(animated: true)
     }
 

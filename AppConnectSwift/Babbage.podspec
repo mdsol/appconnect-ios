@@ -1,28 +1,13 @@
-RELEASE = "2017.1.0"
-VERSION = "#{RELEASE}.57"
-
-if File.exist?('local.yaml')
-require 'yaml'
-content = YAML.load_file('local.yaml')
-artifactory_server = content['ARTIFACTORY_SERVER'] || raise("You must set an artifactory server using the variable ARTIFACTORY_SERVER in the local.yaml file.")
-username = content['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the variable ARTIFACTORY_USERNAME in the local.yaml file.")
-password = content['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the variable ARTIFACTORY_PASSWORD in the local.yaml file.")
-else
-artifactory_server = ENV['ARTIFACTORY_SERVER'] || raise("You must set an artifactory server using the environment variable ARTIFACTORY_SERVER.")
-username = ENV['ARTIFACTORY_USERNAME'] || raise("You must set an artifactory username using the environment variable ARTIFACTORY_USERNAME.")
-password = ENV['ARTIFACTORY_PASSWORD'] || raise("You must set an artifactory password using the environment variable ARTIFACTORY_PASSWORD.")
-end
-
 Pod::Spec.new do |s|
 s.name               = "Babbage"
-s.version            = VERSION
+s.version            = "2018.2.0.9"
 s.summary            = "The Medidata Patient Cloud SDK"
+s.description        = "AppConnect SDK, built from hash 40209408"
 s.homepage           = "https://github.com/mdsol/babbage"
 s.license            = { type: "Proprietary", text: "TBD" }
 s.author             = "Medidata Solutions, Inc."
 
-s.source             = { http: "https://#{username}:#{password}@#{artifactory_server}/mdsol/p-cloud-release/com/mdsol/babbage/ios/#{RELEASE}/babbage-#{VERSION}.zip" }
-
+s.source             = { http: 'https://s3.amazonaws.com/medidata/appconnect-sdk/release/ios/2018.2.0/babbage-2018.2.0.9.zip' }
 s.source_files       = "artifacts/include/babbage/*.h"
 s.vendored_libraries = "artifacts/libBabbage.a"
 
