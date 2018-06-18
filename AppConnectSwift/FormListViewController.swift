@@ -52,6 +52,10 @@ class FormListViewController: UITableViewController {
                 self.populateForms()
                 self.spinner.stopAnimating()
             });
+
+            if (user?.subjects.count ?? 0 > 0 ) {
+                self.primarySubjectId = (user?.subjects.first! as AnyObject).objectID
+            }
         }
     }
     
