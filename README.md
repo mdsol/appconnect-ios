@@ -101,8 +101,7 @@ You can create an account for storing data to AWS S3 buckets.
 //      "id": 1,
 //      "name" : "What year were you born?",
 //      "deprecated" : "true"
-//   }
-//   ,
+//   },
 //   ...]
 // }
 
