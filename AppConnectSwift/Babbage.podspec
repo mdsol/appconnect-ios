@@ -1,5 +1,5 @@
-RELEASE = "2017.1.0"
-VERSION = "#{RELEASE}.57"
+RELEASE = "2017.1.1"
+VERSION = "#{RELEASE}.2"
 
 if File.exist?('local.yaml')
 require 'yaml'
@@ -21,7 +21,7 @@ s.homepage           = "https://github.com/mdsol/babbage"
 s.license            = { type: "Proprietary", text: "TBD" }
 s.author             = "Medidata Solutions, Inc."
 
-s.source             = { http: "https://#{username}:#{password}@#{artifactory_server}/mdsol/p-cloud-release/com/mdsol/babbage/ios/#{RELEASE}/babbage-#{VERSION}.zip" }
+s.source             = { http: "https://#{username}:#{password}@#{artifactory_server}/p-cloud-release/com/mdsol/babbage/ios/#{RELEASE}/babbage-#{VERSION}.zip" }
 
 s.source_files       = "artifacts/include/babbage/*.h"
 s.vendored_libraries = "artifacts/libBabbage.a"
