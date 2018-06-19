@@ -97,12 +97,13 @@ You can create an account for storing data to AWS S3 buckets.
 // JSON returned is structured
 // {
 //  "security_questions" : [
-//   {
-//      "id": 1,
-//      "name" : "What year were you born?",
-//      "deprecated" : "true"
-//   },
-//   ...]
+//      {
+//          "id": 1,
+//          "name" : "What year were you born?",
+//          "deprecated" : "true"
+//      },
+//      ...
+//  ]
 // }
 
 var validQuestions = [[String: AnyHashable]]()
