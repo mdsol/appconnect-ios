@@ -92,9 +92,41 @@ You can create an account for storing data to AWS S3 buckets.
 
 ```swift
 // In CreateAccountViewController.swift
+
+// fetch the security questions and filter out those that are deprecated
+// JSON returned is structured
+// {
+//  "security_questions" : [
+//   {
+//      "id": 1,
+//      "name" : "What year were you born?",
+//      "deprecated" : "true"
+//   }
+//   ,
+//   ...]
+// }
+
+var validQuestions = [[String: AnyHashable]]()
+
+client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) -> Void in
+        guard error == nil,
+        let questions = response?["security_questions"] as? [[String: AnyHashable]] else {
+            return
+        }
+
+        for (question) in questions {
+            guard ((question["deprecated"] as? Bool) ?? false) == false else {
+                continue
+            }
+
+            validQuestions.append(question)
+        }
+    }
+}
+
 let userEmail = "newuser@mdsol.com"
 let userPassword = "Password1"  
-let userSecurityQuestionID = 1 // ID of the security question
+let userSecurityQuestionID = validQuestions.first["id"] as Int // ID of a non deprecated the security question
 let userSecurityAnswer = "1990" // Answer to the security question
 
 client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuestionID: userSecurityQuestionID, securityQuestionAnswer: securityQuestionLabel.text) { (err) in
@@ -106,6 +138,7 @@ client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuest
 #### Requirements:
 Email to have the following:
 •  Any valid and unique email
+•  Use the id of a security question that is not deprecated
 
 Password to have the following
 •  At least 8 characters long
