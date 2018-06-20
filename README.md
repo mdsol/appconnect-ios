@@ -94,7 +94,7 @@ You can create an account for storing data to AWS S3 buckets.
 // In CreateAccountViewController.swift
 
 // fetch the security questions and filter out those that are deprecated
-// JSON returned is structured
+// The returned JSON is structured:
 // {
 //  "security_questions" : [
 //      {
@@ -114,7 +114,7 @@ client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) 
             return
         }
 
-        for (question) in questions {
+        for question in questions {
             guard ((question["deprecated"] as? Bool) ?? false) == false else {
                 continue
             }
