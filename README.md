@@ -2,7 +2,7 @@
 
 AppConnectSwift is an example iOS app, written in Swift, that showcases proper usage of the AppConnect SDK. The functionality of AppConnect is contained within a library called Babbage, an homage to the [father of the computer](https://en.wikipedia.org/wiki/Charles_Babbage).
 
->See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/Medidata+AppConnect+Home) for more information. 
+>See [Medidata AppConnect Home](https://learn.mdsol.com/display/APPCONNECTprd/AppConnect+SDKs) for more information. 
 
 ### Prerequisites
 
@@ -58,15 +58,15 @@ To use this sample form:
 2. Log in with the sample app using the credentials of the subject you chose.
 > You should see two forms, Form 1 and Form 2. Form 1 opens as one page. Form 2 opens as multiple pages.
 
-### Using self-registration and data capture functionality
+### Using Self-registration and Data Capture Functionality
 
-1. Uses the in-app registartion to enroll a new user.
+1. Uses the in-app registration to enroll a new user.
 2. Login with the user created above.
 3. Demo app shows an Image Capture form to take a picture or load an image, which will be uploaded to AWS S3 
 
-# Using the API in your own application #
+# Using the API in Your Own Application
 
-This is a guide to the basics of Babbage - intialization, making network requests, and loading data from the datastore.
+This is a guide to the basics of Babbage - initialization, making network requests, and loading data from the datastore.
 
 ## Installation
 To install Babbage, include it in your Podfile:
@@ -87,7 +87,7 @@ let key = "12345678901234567890123456789012".dataUsingEncoding(NSUTF8StringEncod
 MDBabbage.startWithEnvironment(MDClientEnvironment.Sandbox, apiToken: "Your provided API token", publicDirectory: dir, privateDirectory: dir, encryptionKey: key)
 ```
 
-## Self Registering the user
+## Self-Registering the User
 You can create an account for storing data to AWS S3 buckets.
 
 ```swift
@@ -137,14 +137,16 @@ client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuest
 ```
 #### Requirements:
 Email to have the following:
-•  Any valid and unique email
-•  Use the id of a security question that is not deprecated
+
+-  Any valid and unique email
+-  Use the ID of a security question that is not deprecated
 
 Password to have the following
-•  At least 8 characters long
-•  At least one upper-case letter
-•  At least one lower-case letter
-•  At least one numeric digit
+
+-  At least 8 characters long
+-  At least one upper-case letter
+-  At least one lower-case letter
+-  At least one numeric digit
 
 ## Using the Datastore
 
@@ -167,7 +169,7 @@ func uploadData() {
 }
 ```
 
-Because collectData is asynchronous, it is possible that the datastore will be released before `doSomething()` is called. To avoid this, set the datastore to nil at the end of the block in which the object is used. This will keep a reference around until it is no longer needed. Here's the revised `uploadData()` function:
+Because collectData is asynchronous, it is possible that the datastore is released before `doSomething()` is called. To avoid this, set the datastore to nil at the end of the block in which the object is used. This keeps a reference around until it is no longer needed. Here's the revised `uploadData()` function:
 
 ```swift
 func uploadData() {
@@ -182,9 +184,10 @@ func uploadData() {
 ```
 
 >**Important Considerations:** 
-  - Although there can be multiple Datastore instances, they are all communicating with the same persistent store (a local SQlite database).
-  - Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
-  - Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
+
+>- Although there can be multiple Datastore instances, they all communicate with the same persistent store (a local SQlite database).
+- Datastore instances are not thread-safe. If you are creating a new thread - perhaps to make a network request asynchronously - then you should create a new Datastore to accompany it.
+- Instances loaded from a Datastore are not thread-safe. Instead of passing an instance to a separate thread, pass the instance's ID - for example, Java: `user.getID()`, Swift: `user.objectID` - and use a separate Datastore to load the instance.
 
 
 ## Collecting and Uploading Arbitrary Data
@@ -205,29 +208,34 @@ subject.collectData(self.data, withMetadata: "Random String", withContentType: "
 ```
 
 ## Network Requests
-Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like this:
+Babbage talks to back-end services to retrieve all information, such as users, subjects, forms, and so on. A normal application flow goes something like:
 
 1. Log in using a username / password 
 2. Load subjects for the logged in user
 3. Load forms and present them to the user
 
 The following code replicates this process:
+
 ```swift
-client.logIn(username, inDatastore: datastore, password: password) { (user: MDUser!, error: NSError!) -> Void in
-  client.loadSubjectsForUser(user) { (subjects: [AnyObject]!, error: NSError!) -> Void in
-    client.loadFormsForSubject(subjects.first!) { (forms: [AnyObject]!, error: NSError!) -> Void in
+client.logIn(username, inDatastore: datastore, password: password) 
+{ (user: MDUser!, error: NSError!) -> Void in
+  client.loadSubjectsForUser(user) 
+  { (subjects: [AnyObject]!, error: NSError!) -> Void in
+    client.loadFormsForSubject(subjects.first!) 
+    { (forms: [AnyObject]!, error: NSError!) -> Void in
       ...
     }
   }
 }
 ```
 
->**Important Considerations:** 
-  - The preceding example assumes the user is associated with a single subject. In reality they may have multiple subjects associated with them.
-  - The example assumes a best-case scenario where each request is successful. A robust application should have adequate error handling throughout the process.
-  - To avoid interfering with the UI, make all requests asynchronously on a background thread.
+>**Important Considerations:**
+
+>- The preceding example assumes the user is associated with a single subject. In reality they may have multiple subjects associated with them.
+>- The example assumes a best-case scenario where each request is successful. A robust application should have adequate error handling throughout the process.
+>- To avoid interfering with the UI, make all requests asynchronously on a background thread.
 
 
-### Documentation ###
+### Documentation
 
-Please refer to the documentation for detailed instruction on how to use the various APIs.
+Refer to the [AppConnect documentation](https://learn.mdsol.com/display/APPCONNECTprd/AppConnect+SDKs) for detailed instructions on how to use the various APIs.
