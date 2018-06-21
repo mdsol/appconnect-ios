@@ -107,6 +107,7 @@ client.registerSubjectWithEmail(userEmail, password: userPassword, securityQuest
 Email to have the following:
 
 -  Any valid and unique email
+-  Use the ID of a security question that is not deprecated
 
 Password to have the following
 
