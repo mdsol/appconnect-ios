@@ -22,8 +22,8 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
         // idea to create it once and make it available to the rest of the app
         UIDatastore = MDDatastoreFactory.create()
         
-        IQKeyboardManager.sharedManager().enable = true
-        IQKeyboardManager.sharedManager().toolbarManageBehaviour = IQAutoToolbarManageBehaviour.byPosition
+        IQKeyboardManager.shared.enable = true
+        IQKeyboardManager.shared.toolbarManageBehaviour = IQAutoToolbarManageBehaviour.byPosition
         
         return true
     }
