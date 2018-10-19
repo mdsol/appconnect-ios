@@ -109,7 +109,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
     @IBAction func doMoveToPrevious() {
         // Move the StepSequencer to the previous step and show the appropriate ViewController
         if stepSequencer.moveToPrevious(withResponseRequired: false) {
-            let index = modelController.indexOfField(stepSequencer.currentField.objectID)
+            let index = modelController.indexOfField((stepSequencer.currentField?.objectID)!)
             let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
             
             pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.reverse, animated: true) { done in

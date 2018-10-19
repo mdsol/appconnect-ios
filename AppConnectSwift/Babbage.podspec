@@ -1,13 +1,13 @@
 Pod::Spec.new do |s|
 s.name               = "Babbage"
-s.version            = "2018.2.0.9"
+s.version            = "2018.2.0.41"
 s.summary            = "The Medidata Patient Cloud SDK"
 s.description        = "AppConnect SDK, built from hash 40209408"
 s.homepage           = "https://github.com/mdsol/babbage"
 s.license            = { type: "Proprietary", text: "TBD" }
 s.author             = "Medidata Solutions, Inc."
 
-s.source             = { http: 'https://s3.amazonaws.com/medidata/appconnect-sdk/release/ios/2018.2.0/babbage-2018.2.0.9.zip' }
+s.source             = { http: 'https://s3.amazonaws.com/medidata/appconnect-sdk/release/ios/2018.2.0/babbage-2018.2.0.41.zip' }
 s.source_files       = "artifacts/include/babbage/*.h"
 s.vendored_libraries = "artifacts/libBabbage.a"
 
