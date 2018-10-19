@@ -2,13 +2,13 @@ PODS:
   - AWSCore (2.3.6)
   - AWSS3 (2.3.6):
     - AWSCore (= 2.3.6)
-  - Babbage (2018.2.0.9):
+  - Babbage (2018.2.0.41):
     - AWSS3 (~> 2.3.5)
     - HTMLReader (~> 0.7)
     - UICKeyChainStore (~> 2.0)
   - HTMLReader (0.9.6)
   - IQKeyboardManagerSwift (6.0.5)
-  - UICKeyChainStore (2.1.1)
+  - UICKeyChainStore (2.1.2)
 
 DEPENDENCIES:
   - Babbage (from `AppConnectSwift/Babbage.podspec`)
@@ -29,10 +29,10 @@ EXTERNAL SOURCES:
 SPEC CHECKSUMS:
   AWSCore: 917d84b32974136194a905b98c0ae25c9f3350b8
   AWSS3: 1caaf6b45100503fecf3d418c394519a89409a74
-  Babbage: 8ce53375a4c64f2b6fff1ee6cb32b5a6a8e51d22
+  Babbage: 98a04ad784b0f35337921395ec0faf7d93947544
   HTMLReader: 7e21488ee378afc56ccade8af35840c4e03e434c
   IQKeyboardManagerSwift: c14eca30f6001457d6ddf25e313f23fb6578c41c
-  UICKeyChainStore: 239558492fa260531a0774cfc611ea83a6eaff3a
+  UICKeyChainStore: 85db518bb1d294366d15ec9b92a416c4e670518f
 
 PODFILE CHECKSUM: 6615eebc8204a52b7378993d24db3e80b616f3a1
 
