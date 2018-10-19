@@ -2,18 +2,12 @@ import UIKit
 
 class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UITableViewDataSource  {
 
-    static let securityQuestionKey = "user_security_questions"
-    static let deprecatedKey = "deprecated"
-    static let idKey = "id"
-    static let questionKey = "name"
-
     var tableDataSource = [String]()
     var securityQuestion = "What year were you born?"
-    var securityQuestionID = -1
+    var securityQuestionID = -1 // the IDs of security questions start from 1
     var createAccountViewController = CreateAccountViewController()
     var userEmail : String!
     var userPassword : String!
-    
     var securityIdsByQuestion = [String : Int]()
     
     @IBOutlet weak var tableView: UITableView!
@@ -29,23 +23,17 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
         
         client.loadSecurityQuestions() { (response: [AnyHashable: Any]?, error: Error?) -> Void in
             guard error == nil,
-            let questions = response?[SecurityQuestionViewController.securityQuestionKey] as? [[String: AnyHashable]] else {
-                OperationQueue.main.addOperation() {
-                    self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
-                }
-                
-                return
+                let questions = response as? [String: String] else {
+                    OperationQueue.main.addOperation() {
+                        self.showDialog("Error", message: "There was an error retrieving the security questions", completion: nil)
+                    }
+                    
+                    return
             }
             
-            for (question) in questions {
-                guard let id = question[SecurityQuestionViewController.idKey] as? String,
-                    let questionString = question[SecurityQuestionViewController.questionKey] as? String,
-                    ((question[SecurityQuestionViewController.deprecatedKey] as? Bool) ?? false) == false else {
-                    continue
-                }
-
-                self.securityIdsByQuestion[questionString] = Int(id)
-                self.tableDataSource.append(questionString)
+            for (id, question) in questions {
+                self.securityIdsByQuestion[question] = Int(id)
+                self.tableDataSource.append(question)
             }
             
             OperationQueue.main.addOperation() {
@@ -74,7 +62,7 @@ class SecurityQuestionViewController: UIViewController, UITableViewDelegate, UIT
     
     func tableView(_ tableView: UITableView, didSelectRowAt indexPath: IndexPath) {
         self.securityQuestion = tableDataSource[indexPath.row]
-        self.securityQuestionID = securityIdsByQuestion[self.securityQuestion]!
+        self.securityQuestionID = securityIdsByQuestion[self.securityQuestion] ?? -1
         self.performSegue(withIdentifier: "SecuritySuccess", sender: nil)
     }
     
