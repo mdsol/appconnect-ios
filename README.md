@@ -8,30 +8,13 @@ AppConnectSwift is an example iOS app, written in Swift, that showcases proper u
 
 If you are running this application, it is assumed that:
 
-- You were provided Artifactory credentials by a Medidata representative.
 - You have a valid Rave installation with Patient Cloud functionality enabled.[if you are using Rave-enabled forms]
 
 >You also need permission to access Rave studies and sites. If you do not have these permissions, contact your Medidata representative for more information. [When using a Rave based Study]
 
 ### Setup
 
-The Babbage library is packaged as a [CocoaPod](https://guides.cocoapods.org/using/getting-started.html) to ease installation and usage. To properly access the Babbage pod, you must have credentials for the Artifactory repository where the library is hosted. Set the following environment variables based on the credentials you were provided:
-
-```bash
-    export ARTIFACTORY_USERNAME=providedusername
-    export ARTIFACTORY_PASSWORD=providedpassword
-    export ARTIFACTORY_SERVER=mdsol.jfrog.io
-```
-
-or you can create a `local.yaml` file containing your credentials
-
-```yaml
-   ARTIFACTORY_PASSWORD: providedpassword
-   ARTIFACTORY_USERNAME: providedusername
-   ARTIFACTORY_SERVER: mdsol.jfrog.io
-```
-
-Once the variables have been set, run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
+Run `pod install` to install the necessary dependencies. When the CocoaPods have finished installing, open `AppConnectSwift.xcworkspace` and click "Run." The app should build and run successfully.
 
 ### Architecture
 
@@ -69,12 +52,10 @@ To use this sample form:
 This is a guide to the basics of Babbage - initialization, making network requests, and loading data from the datastore.
 
 ## Installation
-To install Babbage, include it in your Podfile:
-
-Using the credentials provided to you, run the following command to install the Babbage Cocoapod:
+To install Babbage, include it in your Podfile and run the following command:
 
 ```bash
-ARTIFACTORY_USERNAME=myusername ARTIFACTORY_PASSWORD=mypassword pod install
+pod install
 ```
 
 ## Initialization
