@@ -181,7 +181,7 @@ let img = UIGraphicsGetImageFromCurrentImageContext()
 let imageData = UIImageJPEGRepresentation(img, 0.5)
 
 // Collecting the data from the image view
-subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", withAppSpecificTag: "", withSchemaURI: "", completion: { (dataEnvelope:  MDSubjectDataEnvelope!, err: NSError!) -> Void in
+subject.collectData(self.data, withMetadata: "Random String", withContentType: "image/jpeg", completion: { (err: NSError!) -> Void in
 	if err == nil {
     	print("Successfully collected")
 	}
