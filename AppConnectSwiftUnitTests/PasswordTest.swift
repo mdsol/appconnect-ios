@@ -42,4 +42,14 @@ class PasswordTest: XCTestCase {
         password = "12345678 bcA"
         XCTAssertTrue(PasswordViewController.validatePassword(password))
     }
+    
+    func testEmptyPassword() {
+        password = ""
+        XCTAssertFalse(PasswordViewController.validatePassword(password))
+    }
+    
+    func testWhiteSpacePassword() {
+        password = " "
+        XCTAssertFalse(PasswordViewController.validatePassword(password))
+    }
 }
