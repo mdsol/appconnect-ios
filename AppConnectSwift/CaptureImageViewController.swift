@@ -15,9 +15,7 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
     
     var imagePicker = UIImagePickerController()
     var userID : Int64!
-    
     var data : Data!
-    
     var subjectID: Int64!
     
     override func viewDidLoad() {
@@ -25,19 +23,21 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
        
         imagePicker.allowsEditing = false
         imagePicker.delegate = self
-        self.saveImageButton.isEnabled = false
-        
-        self.navigationItem.title = "Capture Image"
+        saveImageButton.isEnabled = false
+        navigationItem.title = "Capture Image"
     }
     
     // MARK: Image picker delegate functions
-    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [String : Any]) {
+    func imagePickerController(_ picker: UIImagePickerController, didFinishPickingMediaWithInfo info: [UIImagePickerController.InfoKey : Any]) {
         self.dismiss(animated: true)
-        let img = info[UIImagePickerControllerOriginalImage] as! UIImage
-        self.data = self.scaleDownAndConvertImageToNSData(img)
         
-        self.imageView.image = img
-        self.saveImageButton.isEnabled = true
+        guard let img = info[UIImagePickerController.InfoKey.originalImage] as? UIImage else {
+            return
+        }
+        
+        data = self.scaleDownAndConvertImageToNSData(img)
+        imageView.image = img
+        saveImageButton.isEnabled = true
     }
     
     func imagePickerControllerDidCancel(_ picker: UIImagePickerController) {
@@ -98,13 +98,13 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         present(imagePicker, animated: true)
     }
 
-    func showAlert(_ title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default))
+    private func showAlert(_ title: String, message: String) {
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default))
         self.present(alert, animated: true)
     }
 
-    func scaleDownAndConvertImageToNSData(_ image: UIImage) -> Data {
+    private func scaleDownAndConvertImageToNSData(_ image: UIImage) -> Data {
         var imgHeight = image.size.height as CGFloat
         var imgWidth = image.size.width as CGFloat
         let adjustedHeight = 1136.0 as CGFloat
@@ -135,10 +135,11 @@ class CaptureImageViewController: UIViewController, UIImagePickerControllerDeleg
         
         UIGraphicsBeginImageContextWithOptions(rect.size, false, 0.0);
         image.draw(in: rect)
-        let img = UIGraphicsGetImageFromCurrentImageContext()
-        let imageData = UIImageJPEGRepresentation(img!, compressionQuality)
-        UIGraphicsEndImageContext()
         
-        return imageData!;
+        guard let imageData = image.jpegData(compressionQuality: compressionQuality) else {
+            return Data()
+        }
+        
+        return imageData
     }
 }

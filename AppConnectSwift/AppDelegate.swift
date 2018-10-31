@@ -7,7 +7,7 @@ class AppDelegate: UIResponder, UIApplicationDelegate {
     var window: UIWindow?
     var UIDatastore: MDDatastore?
 
-    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplicationLaunchOptionsKey: Any]?) -> Bool {
+    func application(_ application: UIApplication, didFinishLaunchingWithOptions launchOptions: [UIApplication.LaunchOptionsKey: Any]?) -> Bool {
         // Start AppConnect. This must be done as early as possible during the
         // lifetime of the app, so doing it in the AppDelegate is ideal.
         // The passed directory is used to store the database. The key is used

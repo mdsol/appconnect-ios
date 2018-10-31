@@ -12,7 +12,7 @@ class LoginViewController: UIViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         self.navigationController?.isNavigationBarHidden = true
-        loginButton.setTitle("Logging In", for: UIControlState.disabled)
+        loginButton.setTitle("Logging In", for: UIControl.State.disabled)
     }
     
     override func viewWillAppear(_ animated: Bool) {
@@ -73,8 +73,8 @@ class LoginViewController: UIViewController {
     }
     
     func showAlert(_ title: String, message: String) {
-        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertControllerStyle.alert)
-        alert.addAction(UIAlertAction(title: "OK", style: UIAlertActionStyle.default, handler: nil))
+        let alert = UIAlertController(title: title, message: message, preferredStyle: UIAlertController.Style.alert)
+        alert.addAction(UIAlertAction(title: "OK", style: UIAlertAction.Style.default, handler: nil))
         self.present(alert, animated: true, completion: nil)
     }
 }

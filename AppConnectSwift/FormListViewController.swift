@@ -11,7 +11,7 @@ class FormListViewController: UITableViewController {
     override func viewDidLoad() {
         super.viewDidLoad()
         
-        spinner = UIActivityIndicatorView.init(activityIndicatorStyle: .gray)
+        spinner = UIActivityIndicatorView.init(style: .gray)
         spinner.center = CGPoint(x: view.frame.size.width/2.0, y: 22);
         spinner.hidesWhenStopped = true;
         view.addSubview(spinner)
@@ -22,10 +22,10 @@ class FormListViewController: UITableViewController {
         // the logout button has now been set to do the appropriate search and fetch 
         // appconnect 2.0 calls that were stubbed out...
         
-        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.doLogout))
+        let backButton = UIBarButtonItem(title: "Log Out", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FormListViewController.doLogout))
         navigationItem.setLeftBarButton(backButton, animated: true)
         
-        let appConnectButton = UIBarButtonItem(title: "AppConnect2Way", style: UIBarButtonItemStyle.plain, target: self, action: #selector(FormListViewController.loadAppConnect))
+        let appConnectButton = UIBarButtonItem(title: "AppConnect2Way", style: UIBarButtonItem.Style.plain, target: self, action: #selector(FormListViewController.loadAppConnect))
         navigationItem.setRightBarButton(appConnectButton, animated: true)
         
         // Begin loading the forms for the logged-in user

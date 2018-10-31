@@ -48,7 +48,7 @@ class FieldViewController: UIViewController, UIPickerViewDelegate, UIPickerViewD
             
             df.subjectResponse = date
 
-            dateField.datePickerMode = UIDatePickerMode.date
+            dateField.datePickerMode = UIDatePicker.Mode.date
             dateField.date = date
             dateField.isHidden = false
         case is MDScaleField:
