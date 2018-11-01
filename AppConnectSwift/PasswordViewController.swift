@@ -12,44 +12,33 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         // Keep the confirm label hidden till password text fields submitted are satisfying criteria
         confirmPasswordsMatching.isHidden = true
-        passwordField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
-        passwordConfirmField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
+        passwordField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
+        passwordConfirmField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
     }
     
+    
+    // Valid password condition:
+    //    •  At least 8 characters long
+    //    •  At least one upper-case letter
+    //    •  At least one lower-case letter
+    //    •  At least one numeric digit
+    //    •  Spaces in the middle are allowed
+    
     @IBAction func doSubmit(_ sender: AnyObject) {
-        if passwordField.text == passwordConfirmField.text {
-            do {
-                // Valid password condition:
-                //    •  At least 8 characters long
-                //    •  At least one upper-case letter
-                //    •  At least one lower-case letter
-                //    •  At least one numeric digit
-                let passwordRegEx = try NSRegularExpression(pattern: "((?=.*\\d)(?=.*[a-z])(?=.*[A-Z])){8,}", options: .caseInsensitive)
-                if passwordField.text != nil && passwordRegEx.firstMatch(in: passwordField.text!, options: NSRegularExpression.MatchingOptions(rawValue: 0), range: NSMakeRange(0, passwordField.text!.characters.count)) != nil && passwordField.text!.characters.count >= 8 {
-                    self.performSegue(withIdentifier: "PasswordSuccess", sender: nil)
-                }
-                else {
-                    // Color the border of text field red
-                    confirmPasswordsMatching.isHidden = false
-                    confirmPasswordsMatching.text = "Password criteria is not met"
-                    confirmPasswordsMatching.textColor = UIColor.red
-                    passwordField.layer.borderWidth = 2.0
-                    passwordField.layer.cornerRadius = 5.0
-                    passwordField.layer.borderColor = UIColor.red.cgColor
-                }
-            }
-            catch {
-                print("Issue in regular expression")
-            }
+        // Trim leading and trailing white spaces
+        guard let password = passwordField.text?.trimmingCharacters(in: .whitespaces), let confirmedPassword = passwordConfirmField.text?.trimmingCharacters(in: .whitespaces) else {
+            return
         }
-        else {
-            // Color the border of text field red
-            confirmPasswordsMatching.isHidden = false
-            confirmPasswordsMatching.text = "Your passwords do not match"
-            confirmPasswordsMatching.textColor = UIColor.red
-            passwordConfirmField.layer.borderWidth = 2.0
-            passwordConfirmField.layer.cornerRadius = 5.0
-            passwordConfirmField.layer.borderColor = UIColor.red.cgColor
+        
+        guard password == confirmedPassword else {
+            setErrorMessage("Your passwords do not match")
+            return
+        }
+        
+        if PasswordViewController.validatePassword(password) {
+            self.performSegue(withIdentifier: "PasswordSuccess", sender: nil)
+        } else {
+            setErrorMessage("Password criteria is not met")
         }
     }
     
@@ -67,5 +56,26 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         confirmPasswordsMatching.isHidden = true
         textField.layer.borderWidth = 0.0
         textField.layer.cornerRadius = 0.0
+    }
+    
+    static func validatePassword(_ password: String) -> Bool {
+        do {
+            let passwordRegEx = try NSRegularExpression(pattern: "^(?=.*[a-z])(?=.*[A-Z])(?=.*\\d)[\\S\\s]{8,}$", options: [])
+            let range = NSRange(password.startIndex..., in: password)
+            let matchRange = passwordRegEx.rangeOfFirstMatch(in: password, options: .reportProgress, range: range)
+            
+            return matchRange.location != NSNotFound
+        } catch {
+            fatalError("Error initializing regular expressions. Exiting.")
+        }
+    }
+    
+    private func setErrorMessage(_ message: String) {
+        confirmPasswordsMatching.isHidden = false
+        confirmPasswordsMatching.text = message
+        confirmPasswordsMatching.textColor = UIColor.red
+        passwordField.layer.borderWidth = 2.0
+        passwordField.layer.cornerRadius = 5.0
+        passwordField.layer.borderColor = UIColor.red.cgColor
     }
 }

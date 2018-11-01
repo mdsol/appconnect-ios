@@ -41,10 +41,10 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         // Setup the PageViewController with its initial ViewController
         let startingViewController: FieldViewController = self.modelController.viewControllerAtIndex(0, storyboard: self.storyboard!) as! FieldViewController
         pageViewController!.setViewControllers([startingViewController], direction: .forward, animated: false, completion: {done in })
-        addChildViewController(self.pageViewController!)
+        addChild(self.pageViewController!)
         view.addSubview(self.pageViewController!.view)
         pageViewController!.view.frame = self.view.bounds.insetBy(dx: 0, dy: 40.0)
-        pageViewController!.didMove(toParentViewController: self)
+        pageViewController!.didMove(toParent: self)
 
         // Set the initial state of our Previous and Next buttons
         updateButtonState()
@@ -98,7 +98,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
             let index = modelController.indexOfField(field.objectID)
             let newViewController = modelController.viewControllerAtIndex(index+1, storyboard: self.storyboard!)
             
-            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.forward, animated: true) { done in
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewController.NavigationDirection.forward, animated: true) { done in
                 self.updateButtonState()
             }
         } else {
@@ -115,7 +115,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
             let index = modelController.indexOfField(fieldId)
             let newViewController = modelController.viewControllerAtIndex(index, storyboard: self.storyboard!)
             
-            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewControllerNavigationDirection.reverse, animated: true) { done in
+            pageViewController?.setViewControllers([newViewController!], direction: UIPageViewController.NavigationDirection.reverse, animated: true) { done in
                 self.updateButtonState()
             }
         }
@@ -125,7 +125,7 @@ class MultiPageFormViewController: UIViewController, UIPageViewControllerDelegat
         let reviewing = (stepSequencer.state == MDStepSequencerState.reviewing)
 
         previousButton.isEnabled = modelController.indexOfViewController(pageViewController!.viewControllers!.first!) != 0
-        nextButton.setTitle(reviewing ? "Submit" : "Next", for: UIControlState())
+        nextButton.setTitle(reviewing ? "Submit" : "Next", for: UIControl.State())
     }
     
     func pageViewController(_ pageViewController: UIPageViewController, didFinishAnimating finished: Bool, previousViewControllers: [UIViewController], transitionCompleted completed: Bool) {

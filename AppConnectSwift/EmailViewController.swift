@@ -11,8 +11,8 @@ class EmailViewController: UIViewController, UITextFieldDelegate {
         super.viewDidLoad()
         // Keep the confirm label hidden till email text fields submitted are satisfying criteria
         confirmLabelsMatching.isHidden = true;
-        emailTextField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
-        emailConfirmTextField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControlEvents.editingChanged)
+        emailTextField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
+        emailConfirmTextField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
     }
     
     @IBAction func doSubmit(_ sender: AnyObject) {
