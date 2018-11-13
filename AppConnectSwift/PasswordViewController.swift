@@ -16,7 +16,6 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         passwordConfirmField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
     }
     
-    
     // Valid password condition:
     //    •  At least 8 characters long
     //    •  At least one upper-case letter
@@ -43,12 +42,13 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "PasswordSuccess" {
-            let securityQuestionViewController = segue.destination as! SecurityQuestionViewController
-            // Pass the userEmail, userPassword for creating account
-            securityQuestionViewController.userEmail = userEmail
-            securityQuestionViewController.userPassword = passwordField.text
+        guard segue.identifier == "PasswordSuccess", let securityQuestionViewController = segue.destination as? SecurityQuestionViewController else {
+            return
         }
+        
+        // Pass the userEmail, userPassword for creating account
+        securityQuestionViewController.userEmail = userEmail
+        securityQuestionViewController.userPassword = passwordField.text?.trimmingCharacters(in: .whitespaces)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
