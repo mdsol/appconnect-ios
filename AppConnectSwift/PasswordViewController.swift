@@ -3,6 +3,7 @@ import UIKit
 class PasswordViewController: UIViewController, UITextFieldDelegate {
     
     var userEmail : String!
+    var userPassword : String = ""
     
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var passwordConfirmField: UITextField!
@@ -15,7 +16,6 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         passwordField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
         passwordConfirmField.addTarget(self, action: #selector(UITextFieldDelegate.textFieldDidBeginEditing(_:)), for: UIControl.Event.editingChanged)
     }
-    
     
     // Valid password condition:
     //    •  At least 8 characters long
@@ -36,6 +36,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         }
         
         if PasswordViewController.validatePassword(password) {
+            userPassword = password
             self.performSegue(withIdentifier: "PasswordSuccess", sender: nil)
         } else {
             setErrorMessage("Password criteria is not met")
@@ -43,12 +44,13 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
     }
     
     override func prepare(for segue: UIStoryboardSegue, sender: Any?) {
-        if segue.identifier == "PasswordSuccess" {
-            let securityQuestionViewController = segue.destination as! SecurityQuestionViewController
-            // Pass the userEmail, userPassword for creating account
-            securityQuestionViewController.userEmail = userEmail
-            securityQuestionViewController.userPassword = passwordField.text
+        guard segue.identifier == "PasswordSuccess", let securityQuestionViewController = segue.destination as? SecurityQuestionViewController else {
+            return
         }
+        
+        // Pass the userEmail, userPassword for creating account
+        securityQuestionViewController.userEmail = userEmail
+        securityQuestionViewController.userPassword = userPassword
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
