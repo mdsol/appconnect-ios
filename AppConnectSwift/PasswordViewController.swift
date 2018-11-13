@@ -3,7 +3,6 @@ import UIKit
 class PasswordViewController: UIViewController, UITextFieldDelegate {
     
     var userEmail : String!
-    var userPassword : String = ""
     
     @IBOutlet weak var passwordField: UITextField!
     @IBOutlet weak var passwordConfirmField: UITextField!
@@ -36,7 +35,6 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         }
         
         if PasswordViewController.validatePassword(password) {
-            userPassword = password
             self.performSegue(withIdentifier: "PasswordSuccess", sender: nil)
         } else {
             setErrorMessage("Password criteria is not met")
@@ -50,7 +48,7 @@ class PasswordViewController: UIViewController, UITextFieldDelegate {
         
         // Pass the userEmail, userPassword for creating account
         securityQuestionViewController.userEmail = userEmail
-        securityQuestionViewController.userPassword = userPassword
+        securityQuestionViewController.userPassword = passwordField.text?.trimmingCharacters(in: .whitespaces)
     }
     
     func textFieldDidBeginEditing(_ textField: UITextField) {
